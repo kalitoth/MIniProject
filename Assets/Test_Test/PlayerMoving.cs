@@ -41,7 +41,7 @@ public class PlayerMoving : MonoBehaviour
                 transform.rotation = Quaternion.LookRotation((vector3 - transform.position).normalized, Vector3.up);
                 _speed = 9;
             }
-
+            
         }
 
 

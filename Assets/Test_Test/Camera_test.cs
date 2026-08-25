@@ -27,8 +27,8 @@ public class Camera_test : MonoBehaviour
     private void LateUpdate()
     {
         Quaternion camToPlayer = Quaternion.LookRotation(_player.position - transform.position);
-        transform.position = Vector3.Lerp(transform.position, _player.position+ _player.rotation*offset, _interpole);
+        transform.position = Vector3.Lerp(transform.position, _player.position+ offset, _interpole);
         transform.rotation = Quaternion.Slerp(transform.rotation, camToPlayer, _interpole);
-        //transform.rotation = camToPlayer;
+         
     }
 }
