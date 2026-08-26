@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Ray_Test : MonoBehaviour
 {
@@ -18,11 +19,13 @@ public class Ray_Test : MonoBehaviour
         }
     }
     private void Update()
-    {
-        _ray = _camera.ScreenPointToRay(Input.mousePosition);
+    { 
+        
     }
     public void RayCamTo(out RaycastHit hit)
     {
+        _ray = _camera.ScreenPointToRay(Input.mousePosition);
+
         Physics.Raycast(_ray, out _hit);
 
         hit = _hit;
@@ -30,10 +33,6 @@ public class Ray_Test : MonoBehaviour
 
     public void RayVisual()
     { 
-        if (Input.GetMouseButtonDown(0))
-        {
-
-            Debug.DrawLine(_ray.origin, _hit.point, Color.red, 0.3f);
-        }
+       Debug.DrawLine(_ray.origin, _hit.point, Color.red, 0.3f);
     }
 }

@@ -8,4 +8,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Test_Test/New Scene.unity
     guid: 86b58d199d7274d4a85ac88cbc78a760
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 98cf9963beba3cc42b44ac0be52b5413, type: 2}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor; 
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
 public class PlayerMoving : MonoBehaviour
@@ -50,26 +51,34 @@ public class PlayerMoving : MonoBehaviour
             return;
         }
 
-        _ray_test.RayCamTo(out _hit);
+        //ui 위에서는 반응 안함
+        if (!EventSystem.current.IsPointerOverGameObject())
+        {
 
-         if (Input.GetMouseButtonDown(0))
-         {
-            if (_hit.collider != null)
-            {
-                vector3Round = Vector3Int.RoundToInt(_hit.point); // _hit.point.x y z 로 새로운 벡터를 만들어서 고정 가능 꼭 RoundToInt를 쓰지 않아도 된다
-
-                transform.rotation = Quaternion.LookRotation((vector3Round - transform.position).normalized, Vector3.up);
-
-               
-                _ray_test.RayVisual();
-            }
-            
-         }
         
-       _characterController.Move((vector3Round - transform.position)*Time.deltaTime);
-       _animator.SetFloat("FMoving", (vector3Round - transform.position).magnitude);
+            if (Input.GetMouseButtonDown(0))
+            {
+                _ray_test.RayCamTo(out _hit);
 
-       
+               if (_hit.collider != null)
+               {
+
+                   vector3Round = Vector3Int.RoundToInt(_hit.point); // _hit.point.x y z 로 새로운 벡터를 만들어서 고정 가능 꼭 RoundToInt를 쓰지 않아도 된다
+
+                   transform.rotation = Quaternion.LookRotation((vector3Round - transform.position).normalized, Vector3.up);
+
+                  
+                   _ray_test.RayVisual();
+               }
+               
+            }
+        }
+        
+        _characterController.Move((vector3Round - transform.position)*Time.deltaTime);
+        
+        _animator.SetFloat("FMoving", (vector3Round - transform.position).magnitude);
+
+        
 
     }
 
