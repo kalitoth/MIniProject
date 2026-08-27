@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine; 
 
 public class Camera_test : MonoBehaviour
@@ -13,7 +14,7 @@ public class Camera_test : MonoBehaviour
     private Transform _player;
     [SerializeField]
     Ray_Test _ray_Test;
-
+      
     [Header("캠 이동속도")]
     [SerializeField]
     private float _sharpness = 10;
@@ -50,9 +51,26 @@ public class Camera_test : MonoBehaviour
  
     private void LateUpdate()
     {
-        //레이 정보
-        _ray_Test.RayCamTo(out _hit);
 
+
+        //레이 정보
+        if (Input.GetMouseButtonDown(0))
+        {
+            _ray_Test.RayCamTo(out _hit);
+
+            if (_hit.collider != null)
+            {
+                //플레이어 바꾸기
+                if (_hit.collider.gameObject.CompareTag("Player"))
+                {
+
+                    _player = null;
+
+                    _player = _hit.collider.gameObject.GetComponent<Transform>();
+
+                }
+            }
+        }
 
         //자유 이동
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) || Input.GetAxisRaw("Mouse ScrollWheel") != 0)

@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class MakeSkillButton_Test : MonoBehaviour
 {
@@ -12,46 +14,76 @@ public class MakeSkillButton_Test : MonoBehaviour
     [SerializeField]
     private ScrollRect _scrollRect;
 
+     
+    [Header("버튼 스킬 저장소")]
     Dictionary<int, UnityEngine.Events.UnityAction> _skillAction = new Dictionary<int, UnityEngine.Events.UnityAction>();
+    Dictionary<int, Sprite> _skillsprites = new Dictionary<int, Sprite>();
 
-    Dictionary<UnityEngine.Events.UnityAction, Sprite> _skillsprites = new Dictionary<UnityEngine.Events.UnityAction, Sprite>();
-
+    [Header("버튼 오브젝트 관리")]
     List<Button> _skillButton = new List<Button>(10);
 
-    Skill_List_Test _skill_test;
+    //필요 없음
+    Skill_List_Test _skillList;
+    
+    //플레이어 스킬
+    Player_Test _player;
 
     private void Awake()
-    {
-        _skill_test = GetComponent<Skill_List_Test>();
+    { 
+        _skillList = GetComponent<Skill_List_Test>();
+        _player = GetComponent<Player_Test>();
     }
     void Start()
     { 
-        _skillAction.Add(0, _skill_test.Attack);
-        _skillAction.Add(1, _skill_test.Defence);
-        _skillsprites.Add(_skill_test.Attack, Resources.Load<Sprite>("Attack"));
-        _skillsprites.Add(_skill_test.Defence, Resources.Load<Sprite>("Defence"));
-
-        MakeSkillTree(); 
+        //버튼 저장소에 미리 저장해 놓는다
+        _skillAction.Add(0, Attack);
+        _skillsprites.Add(0, Resources.Load<Sprite>("Attack"));
+         _skillAction.Add(1, Defence);
+         _skillsprites.Add(1, Resources.Load<Sprite>("Defence"));
+        
+       MakeSkillTree(); 
     }
-
-
+    
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if(Input.GetKeyDown(KeyCode.Alpha1))
         {
-            RemoveSkill();
+            ListChange();
+            Debug.Log("체인지");
         }
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            ReviveSkill();
-        }
-        if(Input.GetKeyDown(KeyCode.K))
-        {
-            AddSkill();
-        }
+        
     }
 
-    void RemoveSkill()
+    void ListChange()
+    {
+       Button temp = _skillButton[0];
+       _skillButton[0] = _skillButton[1];
+       _skillButton[1] = temp;
+       
+        _skillButton[0].transform.SetSiblingIndex(0);
+
+    }
+  void MakeSkillTree()
+  {
+
+        foreach (KeyValuePair<int, Action<Player_Test>> skill in _player.PlayerSkill)
+        {
+            Button insbutton = Instantiate(_button, _scrollRect.content);
+
+
+            _skillButton.Add(insbutton);
+
+            insbutton.onClick.AddListener(_skillAction[skill.Key]);
+            insbutton.image.sprite = _skillsprites[skill.Key];
+
+        }
+  
+  }
+
+    #region MyRegion
+
+    
+    void RemoveSkillButton()
     {
         for (int i = 0; i < _skillAction.Count; i++)
         {
@@ -60,7 +92,7 @@ public class MakeSkillButton_Test : MonoBehaviour
         }
     }
 
-    void ReviveSkill()
+    void ReviveSkillButton()
     {
         for (int i = 0; i < _skillAction.Count; i++)
         {
@@ -69,34 +101,30 @@ public class MakeSkillButton_Test : MonoBehaviour
         }
     }
 
-    void AddSkill()
-    {
-
-
-        _skillAction.Add(_skillAction.Count, _skill_test.Moving);
-        _skillsprites.Add(_skillAction[_skillAction.Count-1], Resources.Load<Sprite>("Moving"));
-
+    void AddSkillButton()
+    { 
         Button insbutton = Instantiate(_button, _scrollRect.content);
-
+    
         _skillButton.Add(insbutton);
-
-        insbutton.onClick.AddListener(_skillAction[_skillAction.Count - 1]);
-        insbutton.image.sprite = _skillsprites[_skillAction[_skillAction.Count - 1]];
+    
+        insbutton.onClick.AddListener(_skillAction[1]);//스킬 리스트 add함수에서 키값 넣기
+        insbutton.image.sprite = _skillsprites[1];
     }
-    void MakeSkillTree()
+    #endregion
+
+
+    #region 버튼 목록
+
+    void Attack()
     {
-        for (int i = 0; i < _skillAction.Count; i++)
-        {
-
-            Button insbutton = Instantiate(_button, _scrollRect.content);
-
-            _skillButton.Add(insbutton);
-
-            insbutton.onClick.AddListener(_skillAction[i]);
-            insbutton.image.sprite = _skillsprites[_skillAction[i]];
-
-        }
-
+        _player._state = Player_Test.State.Skill;
+        _player._skillIndex = 0;
     }
+    void Defence()
+    {
+        _player._state = Player_Test.State.Skill;
+        _player._skillIndex = 1;
+    }
+    #endregion
 }
 

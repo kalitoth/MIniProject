@@ -1,25 +1,82 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
-public class Player_Test : MonoBehaviour
+public class Player_Test : Unit_Test
 {
-   //private int _strength = 10;
-   //private int _intelligence = 10;
-   //private int _dexterity = 10;
-   //private int _constitution = 10;
-   //
-   //private int _movement = 10;
-   //
-   //private int _hp = 100;
+  
+    //스킬 리스트
+    Skill_List_Test skill_List_Test;
+    
+    //이동
+    PlayerMoving _playerMoving;
+
+    //스킬 리스트
+    Dictionary<int, Action<Player_Test>> _playerSkill = new Dictionary<int, Action<Player_Test>>(); 
+
+    public Dictionary<int, Action<Player_Test>> PlayerSkill
+    {
+        get {  return _playerSkill; }
+    }
+    
+    //현재 플레이어
+    Player_Test _player;
+
+    //스킬 고유 번호
+    public int _skillIndex;
+
+    //상태
+    public State _state = State.None;
+    public enum State
+    {
+        None,
+        Skill
+    }
+
+    
+
     void Start()
     {
+        _playerMoving = GetComponent<PlayerMoving>();
+        skill_List_Test = GetComponent<Skill_List_Test>();
         
+        //능력치
+        //최대 체력 = 기본 점수 + 수정치 * (레벨 + 직업에 따른 점수) > 직업이 없으니 생략 
+        MAXHP = BasicHp + Mathf.FloorToInt((Constitution - 10)*0.5f)* Level;
+        HP = MAXHP;
+        _playerSkill.Add(0, Attack);
     }
 
     
     void Update()
     {
+        if (_state == State.None)
+        {
+            _playerMoving.Moving();
+        }
+
+           
+        if (_state == State.Skill)
+        {
+            if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+            {
+                _state = State.None;
+            }
+            _playerSkill[_skillIndex](_player);
+             
+        }
         
     }
+
+    
+
+    public void Attack(Player_Test player)
+    { 
+        skill_List_Test.Attack(player);
+    }
+
+  
 }
