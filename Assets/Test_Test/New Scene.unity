@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 17296698}
   - component: {fileID: 17296697}
   - component: {fileID: 17296699}
+  - component: {fileID: 17296700}
   m_Layer: 0
   m_Name: Related Ray
   m_TagString: Untagged
@@ -236,6 +237,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerMoving: {fileID: 1229595442}
+--- !u!114 &17296700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 17296692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d00266bfe5f8cd4199fff205947f9dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &47604598
 GameObject:
   m_ObjectHideFlags: 0

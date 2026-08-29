@@ -70,8 +70,15 @@ public class Player_Test : Unit_Test
             {
                 _state = State.None;
             }
+            
+            if(Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
+            {
+                _state = State.None;
+            }
+
             _playerSkill[_skillIndex](this);
              
+            
         }
         
     }

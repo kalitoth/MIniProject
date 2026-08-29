@@ -17,7 +17,6 @@ public class MakeSkillButton_Test : MonoBehaviour
     Ray_Test _ray_Test;
     RaycastHit _hit;
 
-
     [Header("버튼 스킬 저장소")]
     Dictionary<int, UnityEngine.Events.UnityAction> _skillAction = new Dictionary<int, UnityEngine.Events.UnityAction>();
     Dictionary<int, Sprite> _skillsprites = new Dictionary<int, Sprite>();
@@ -31,7 +30,6 @@ public class MakeSkillButton_Test : MonoBehaviour
 
     private void Awake()
     { 
-
         //버튼 저장소에 미리 저장해 놓는다
         _skillAction.Add(0, Attack);
         _skillsprites.Add(0, Resources.Load<Sprite>("Attack"));
@@ -39,8 +37,7 @@ public class MakeSkillButton_Test : MonoBehaviour
         _skillsprites.Add(1, Resources.Load<Sprite>("Defence"));
         _skillAction.Add(2, Moving);
         _skillsprites.Add(2, Resources.Load<Sprite>("Moving"));
-
-         
+ 
     }
     void Start()
     {
@@ -151,21 +148,31 @@ public class MakeSkillButton_Test : MonoBehaviour
 
 
     #region 버튼 목록
-
+    void Switch()
+    {
+        if (_player._state == Player_Test.State.None)
+        {
+            _player._state = Player_Test.State.Skill;
+        }
+        else
+        {
+            _player._state = Player_Test.State.None;
+        }
+    }
     void Attack()
     {
-        _player._state = Player_Test.State.Skill;
+        Switch();
         _player._skillIndex = 0;
     }
     void Defence()
     {
-        _player._state = Player_Test.State.Skill;
+        Switch();
         _player._skillIndex = 1;
     }
 
     void Moving()
     {
-        _player._state = Player_Test.State.Skill;
+        Switch();
         _player._skillIndex = 2;
     }
     #endregion
