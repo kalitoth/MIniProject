@@ -8,7 +8,12 @@ public class Ray_Test : MonoBehaviour
 
     [SerializeField]
     private Camera _camera;
-    public RaycastHit _hit;
+    private RaycastHit _hit;
+
+    public RaycastHit Hit
+    {
+        get { return _hit; }
+    }
     Ray _ray;
 
     void Start()
@@ -20,12 +25,10 @@ public class Ray_Test : MonoBehaviour
     }
     private void Update()
     {
-        //ui 위에서는 반응 안함
         if (!EventSystem.current.IsPointerOverGameObject())
         {
             if (Input.GetMouseButtonDown(0))
             {
-                Debug.Log("레이먼저?");
                 RayCamTo(out _hit);
                 RayVisual();
             }

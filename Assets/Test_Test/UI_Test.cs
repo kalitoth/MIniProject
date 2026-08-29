@@ -53,21 +53,21 @@ public class UI_Test : MonoBehaviour
         //현재 선택된 캐릭터 hp
         if (!EventSystem.current.IsPointerOverGameObject())
         {
-           
-            if (_ray_Test._hit.collider == null)
+            
+            if (_ray_Test.Hit.collider == null)
             {
                 return;
             }
 
-            if (_ray_Test._hit.collider.gameObject.CompareTag("Player"))
+            if (_ray_Test.Hit.collider.gameObject.CompareTag("Player"))
             {
 
-                if (_ray_Test._hit.collider.gameObject.GetComponent<Player_Test>() == null)
+                if (_ray_Test.Hit.collider.gameObject.GetComponent<Player_Test>() == null)
                 {
                     Debug.Log("플레이어 컴포넌트 없음");
                     return;
                 }
-                _currentPlayer = _ray_Test._hit.collider.gameObject.GetComponent<Player_Test>();
+                _currentPlayer = _ray_Test.Hit.collider.gameObject.GetComponent<Player_Test>();
             }
 
             _playerHPBar.value = (float)_currentPlayer.HP / _currentPlayer.MAXHP;
@@ -80,12 +80,12 @@ public class UI_Test : MonoBehaviour
         //유닛 hp
         if (!EventSystem.current.IsPointerOverGameObject())
         {
-           if (_ray_Test._hit.collider == null)
+           if (_ray_Test.Hit.collider == null)
            {
                return;
            }
 
-           _anyUnit = _ray_Test._hit.collider.gameObject.GetComponent<Unit_Test>();
+           _anyUnit = _ray_Test.Hit.collider.gameObject.GetComponent<Unit_Test>();
 
            if (_anyUnit == null)
            {

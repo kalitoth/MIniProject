@@ -58,15 +58,17 @@ public class Camera_test : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (_ray_Test._hit.collider != null)
+                _hit = _ray_Test.Hit;
+
+                if (_hit.collider != null)
                 {
                     //플레이어 바꾸기
-                    if (_ray_Test._hit.collider.gameObject.CompareTag("Player"))
+                    if (_hit.collider.gameObject.CompareTag("Player"))
                     {
 
                         _curruntPlayer = null;
 
-                        _curruntPlayer = _ray_Test._hit.collider.gameObject.GetComponent<Transform>();
+                        _curruntPlayer = _hit.collider.gameObject.GetComponent<Transform>();
 
                     }
                 }

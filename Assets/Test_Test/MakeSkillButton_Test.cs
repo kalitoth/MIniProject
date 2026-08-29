@@ -14,17 +14,20 @@ public class MakeSkillButton_Test : MonoBehaviour
     [SerializeField]
     private ScrollRect _scrollRect;
 
-     
+    Ray_Test _ray_Test;
+    RaycastHit _hit;
+
+
     [Header("버튼 스킬 저장소")]
     Dictionary<int, UnityEngine.Events.UnityAction> _skillAction = new Dictionary<int, UnityEngine.Events.UnityAction>();
     Dictionary<int, Sprite> _skillsprites = new Dictionary<int, Sprite>();
-
-    [Header("버튼 오브젝트 관리")]
-    List<Button> _skillButton = new List<Button>(10);
-
+     
     //플레이어 스킬
     [SerializeField]
     Player_Test _player;
+    [SerializeField]
+    Player_Test[] _playerParty = new Player_Test[4];
+
 
     private void Awake()
     { 
@@ -41,74 +44,109 @@ public class MakeSkillButton_Test : MonoBehaviour
     }
     void Start()
     {
+        _ray_Test = GetComponent<Ray_Test>();
 
+        // 모든 캐릭터의 스킬트리 만들기 + 모든 스킬 active false
         MakeSkillTree();
-
-
+        // 현재 캐릭터의 스킬트리만 active true
+        ReviveSkillButton();
     }
     
     void Update()
     {
-        
+        //클릭한 캐릭터의 스킬로 전환
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (_ray_Test.Hit.collider != null)
+            {
+                if (_hit.collider == _ray_Test.Hit.collider)
+                {
+                    return;
+                }
 
+                if (_ray_Test.Hit.collider.gameObject.CompareTag("Player"))
+                {
+                    _hit = _ray_Test.Hit;
+
+
+                    RemoveSkillButton();
+                    _player = _hit.collider.gameObject.GetComponent<Player_Test>();
+                    ReviveSkillButton();
+                }
+            }
+        }
+            
     }
 
-    
+    //초기 스킬트리
   void MakeSkillTree()
   {
+        foreach (Player_Test _player in _playerParty)
+        { 
+            if(_player != null)
+            {
+                foreach (KeyValuePair<int, Action<Player_Test>> skill in _player.PlayerSkill)
+                {
+                    Button insbutton = Instantiate(_button, _scrollRect.content);
 
-        foreach (KeyValuePair<int, Action<Player_Test>> skill in _player.PlayerSkill)
-        {
-            Button insbutton = Instantiate(_button, _scrollRect.content);
+                    
+                    _player.SkillButton.Add(insbutton);
 
+                    insbutton.onClick.AddListener(_skillAction[skill.Key]);
+                    insbutton.image.sprite = _skillsprites[skill.Key];
+                    insbutton.gameObject.SetActive(false);
 
-            _skillButton.Add(insbutton);
-
-            insbutton.onClick.AddListener(_skillAction[skill.Key]);
-            insbutton.image.sprite = _skillsprites[skill.Key];
-
+                }
+                Debug.Log("버튼이 생성됐나?");
+            }
+            
+            
         }
-        Debug.Log("버튼이 생성됐나?");
     }
 
     #region 옵션
+    //스킬 추가 버튼
+    public void AddSkillButton(int skillIndex)
+    {
+        Button insbutton = Instantiate(_button, _scrollRect.content);
+
+        _player.SkillButton.Add(insbutton);
+
+        insbutton.onClick.AddListener(_skillAction[skillIndex]);//스킬 리스트 add함수에서 키값 넣기
+        insbutton.image.sprite = _skillsprites[skillIndex];
+    }
+
+    //버튼의 순서 바꾸기 나중에 수정 필요
     void ListChange()
     {
-        Button temp = _skillButton[0];
-        _skillButton[0] = _skillButton[1];
-        _skillButton[1] = temp;
+        Button temp = _player.SkillButton[0];
+        _player.SkillButton[0] = _player.SkillButton[1];
+        _player.SkillButton[1] = temp;
 
-        _skillButton[0].transform.SetSiblingIndex(0);
+        _player.SkillButton[0].transform.SetSiblingIndex(0);
 
     }
 
+    //현재 플레이어의 스킬 버튼 비활성화
     void RemoveSkillButton()
     {
-        for (int i = 0; i < _skillButton.Count; i++)
+        for (int i = 0; i < _player.SkillButton.Count; i++)
         {
-            _skillButton[i].gameObject.SetActive(false);
+            _player.SkillButton[i].gameObject.SetActive(false);
 
         }
     }
-
+    //현재 플레이어의 스킬 버튼 활성화
     void ReviveSkillButton()
     {
-        for (int i = 0; i < _skillButton.Count; i++)
+        for (int i = 0; i < _player.SkillButton.Count; i++)
         {
-            _skillButton[i].gameObject.SetActive(true);
+            _player.SkillButton[i].gameObject.SetActive(true);
 
         }
     }
 
-    public void AddSkillButton()
-    { 
-        Button insbutton = Instantiate(_button, _scrollRect.content);
     
-        _skillButton.Add(insbutton);
-    
-        insbutton.onClick.AddListener(_skillAction[1]);//스킬 리스트 add함수에서 키값 넣기
-        insbutton.image.sprite = _skillsprites[1];
-    }
     #endregion
 
 

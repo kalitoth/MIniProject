@@ -29,18 +29,16 @@ public class PlayerMoving : MonoBehaviour
     Vector3 move;
     float gravity = -9.81f;
 
-    Vector3 _rayHitPoint;
-
-    bool _rotation = false;
+    Vector3 _rayHitPoint; 
 
    public Animator Animator => _animator;
          
 
     void Start()
     { 
-         _animator = this.GetComponent<Animator>();
-        _characterController = this.GetComponent<CharacterController>();
-        _currentPlayer = this.GetComponent<Transform>();
+         _animator = gameObject.GetComponent<Animator>();
+        _characterController = gameObject.GetComponent<CharacterController>();
+        _currentPlayer = gameObject.GetComponent<Transform>();
  
         if (_animator == null || _characterController == null)
         {
@@ -77,30 +75,27 @@ public class PlayerMoving : MonoBehaviour
                 Debug.Log("무빙먼저?");
                 Debug.Log($"{_hit.collider}");
 
-            
-
-            if (_hit.collider != null)
-            {
-                    Debug.Log($"콜라이더 밑");
-                 if (_hit.collider.gameObject.CompareTag("Ground"))
-                 { 
-                        //이전의 hit와 같다면 return
-                    if(_hit.point == _rayHitPoint)
-                    {
-                        return;
-                    }
-                     _rayHitPoint = _hit.point;
-                
-                     Debug.Log($"무빙{_hit.point}");
-                     _currentPlayer.rotation = Quaternion.LookRotation((_rayHitPoint - _currentPlayer.position).normalized, Vector3.up);
-                          
-                
+                 if (_hit.collider != null)
+                 {
+                         Debug.Log($"콜라이더 밑");
+                      if (_hit.collider.gameObject.CompareTag("Ground"))
+                      { 
+                             //이전의 hit와 같다면 return
+                         if(_hit.point == _rayHitPoint)
+                         {
+                             return;
+                         }
+                          _rayHitPoint = _hit.point;
+                     
+                          Debug.Log($"무빙{_hit.point}");
+                          _currentPlayer.rotation = Quaternion.LookRotation((_rayHitPoint - _currentPlayer.position).normalized, Vector3.up);
+                               
+                     
+                      }
                  }
-            }
             }
 
         }
-        
 
         _projectionRay = Vector3.ProjectOnPlane(_rayHitPoint, Vector3.up);
        _projectionPlayer = Vector3.ProjectOnPlane(_currentPlayer.position, Vector3.up);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
 using static UnityEditor.Experimental.GraphView.GraphView;
+using UnityEngine.UI;
 
 public class Player_Test : Unit_Test
 {
@@ -12,12 +13,21 @@ public class Player_Test : Unit_Test
     PlayerMoving _playerMoving;
 
     //스킬 리스트
-    Dictionary<int, Action<Player_Test>> _playerSkill = new Dictionary<int, Action<Player_Test>>(); 
+    Dictionary<int, Action<Player_Test>> _playerSkill = new Dictionary<int, Action<Player_Test>>();
+    //스킬 버튼
+    List<Button> _skillButton = new List<Button>(10);
 
     public Dictionary<int, Action<Player_Test>> PlayerSkill
     {
         get {  return _playerSkill; }
     }
+    public List<Button> SkillButton
+    {
+        get {  return _skillButton; }
+    }
+    //게임 초상화 이미지
+    //이건 캐릭터 선택에서 부여해야 한다
+    public Sprite _image;
 
     //스킬 고유 번호
     public int _skillIndex;

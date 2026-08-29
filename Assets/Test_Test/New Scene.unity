@@ -201,6 +201,11 @@ MonoBehaviour:
   _button: {fileID: 6571479161970120363, guid: 5692c000337aaf64eb92e8325d16a794, type: 3}
   _scrollRect: {fileID: 182749093}
   _player: {fileID: 1229595441}
+  _playerParty:
+  - {fileID: 1229595441}
+  - {fileID: 582460198}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &17296698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,7 +218,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6729fbf2f8b37e045b1b05422bf6c509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentPlayer: {fileID: 1229595441}
+  _playerParty:
+  - {fileID: 1229595441}
+  - {fileID: 582460198}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &17296699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1167,6 +1176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be3d1c2fa268603458874bb4f2e4bfb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _image: {fileID: 0}
   _skillIndex: 0
   _state: 0
 --- !u!114 &582460201
@@ -2431,6 +2441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be3d1c2fa268603458874bb4f2e4bfb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _image: {fileID: 0}
   _skillIndex: 0
   _state: 0
 --- !u!114 &1229595442
