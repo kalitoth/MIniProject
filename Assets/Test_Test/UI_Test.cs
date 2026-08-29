@@ -21,13 +21,15 @@ public class UI_Test : MonoBehaviour
     Slider _anyUnitHPBar; 
     Unit_Test _anyUnit;
 
-    [SerializeField]
+     
     Ray_Test _ray_Test;
     private RaycastHit _hit;
 
 
     void Start()
     {
+        _ray_Test = GetComponent<Ray_Test>();
+
         if (_playerHPBar == null)
         {
             Debug.Log("슬라이더 인스펙터 비어있다");
@@ -45,73 +47,57 @@ public class UI_Test : MonoBehaviour
     }
      
     void Update()
-    {   
-        
+    {
+
         //ui 동기화
         //현재 선택된 캐릭터 hp
         if (!EventSystem.current.IsPointerOverGameObject())
         {
-            if (Input.GetMouseButtonDown(0))
+           
+            if (_ray_Test._hit.collider == null)
             {
-                _ray_Test.RayCamTo(out _hit);
+                return;
+            }
 
-                if (_hit.collider == null)
+            if (_ray_Test._hit.collider.gameObject.CompareTag("Player"))
+            {
+
+                if (_ray_Test._hit.collider.gameObject.GetComponent<Player_Test>() == null)
                 {
+                    Debug.Log("플레이어 컴포넌트 없음");
                     return;
                 }
-                 
-                if (_hit.collider.gameObject.CompareTag("Player"))
-                {
-                    
-                    if (_hit.collider.gameObject.GetComponent<Player_Test>() == null)
-                    {
-                        Debug.Log("플레이어 컴포넌트 없음");
-                        return;
-                    }
-                    _currentPlayer = _hit.collider.gameObject.GetComponent<Player_Test>();
-                }
+                _currentPlayer = _ray_Test._hit.collider.gameObject.GetComponent<Player_Test>();
             }
+
+            _playerHPBar.value = (float)_currentPlayer.HP / _currentPlayer.MAXHP;
+
+            
         }
-        _playerHPBar.value = (float)_currentPlayer.HP / _currentPlayer.MAXHP;
+
 
 
         //유닛 hp
         if (!EventSystem.current.IsPointerOverGameObject())
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                _ray_Test.RayCamTo(out _hit);
+           if (_ray_Test._hit.collider == null)
+           {
+               return;
+           }
 
-                if (_hit.collider == null)
-                {
-                    return;
-                }
+           _anyUnit = _ray_Test._hit.collider.gameObject.GetComponent<Unit_Test>();
 
-                _anyUnit = _hit.collider.gameObject.GetComponent<Unit_Test>();
-
-                if (_anyUnit == null)
-                {
-                    _anyUnitHPBar.gameObject.SetActive(false);
-                }
-                else
-                {
-                    _anyUnitHPBar.gameObject.SetActive(true);
-                }
-
-                //if (_hit.collider.gameObject.CompareTag("Player") || _hit.collider.gameObject.CompareTag("Monster"))
-                //{
-                //    
-                //    if (_hit.collider.gameObject.GetComponent<Unit_Test>() == null)
-                //    {
-                //        Debug.Log("유닛 컴포넌트 없음");
-                //        return;
-                //    }
-                //    
-                //}
-               
-            }
+           if (_anyUnit == null)
+           {
+               _anyUnitHPBar.gameObject.SetActive(false);
+           }
+           else
+           {
+               _anyUnitHPBar.gameObject.SetActive(true);
+           }
         }
-
+        
+          
         if(_anyUnit == null)
         {
             return;

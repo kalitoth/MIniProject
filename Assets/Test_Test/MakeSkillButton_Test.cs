@@ -22,47 +22,38 @@ public class MakeSkillButton_Test : MonoBehaviour
     [Header("버튼 오브젝트 관리")]
     List<Button> _skillButton = new List<Button>(10);
 
-    //필요 없음
-    Skill_List_Test _skillList;
-    
     //플레이어 스킬
+    [SerializeField]
     Player_Test _player;
 
     private void Awake()
     { 
-        _skillList = GetComponent<Skill_List_Test>();
-        _player = GetComponent<Player_Test>();
-    }
-    void Start()
-    { 
+
         //버튼 저장소에 미리 저장해 놓는다
         _skillAction.Add(0, Attack);
         _skillsprites.Add(0, Resources.Load<Sprite>("Attack"));
-         _skillAction.Add(1, Defence);
-         _skillsprites.Add(1, Resources.Load<Sprite>("Defence"));
-        
-       MakeSkillTree(); 
+        _skillAction.Add(1, Defence);
+        _skillsprites.Add(1, Resources.Load<Sprite>("Defence"));
+        _skillAction.Add(2, Moving);
+        _skillsprites.Add(2, Resources.Load<Sprite>("Moving"));
+
+         
+    }
+    void Start()
+    {
+
+        MakeSkillTree();
+
+
     }
     
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            ListChange();
-            Debug.Log("체인지");
-        }
         
-    }
-
-    void ListChange()
-    {
-       Button temp = _skillButton[0];
-       _skillButton[0] = _skillButton[1];
-       _skillButton[1] = temp;
-       
-        _skillButton[0].transform.SetSiblingIndex(0);
 
     }
+
+    
   void MakeSkillTree()
   {
 
@@ -77,15 +68,23 @@ public class MakeSkillButton_Test : MonoBehaviour
             insbutton.image.sprite = _skillsprites[skill.Key];
 
         }
-  
-  }
+        Debug.Log("버튼이 생성됐나?");
+    }
 
-    #region MyRegion
+    #region 옵션
+    void ListChange()
+    {
+        Button temp = _skillButton[0];
+        _skillButton[0] = _skillButton[1];
+        _skillButton[1] = temp;
 
-    
+        _skillButton[0].transform.SetSiblingIndex(0);
+
+    }
+
     void RemoveSkillButton()
     {
-        for (int i = 0; i < _skillAction.Count; i++)
+        for (int i = 0; i < _skillButton.Count; i++)
         {
             _skillButton[i].gameObject.SetActive(false);
 
@@ -94,14 +93,14 @@ public class MakeSkillButton_Test : MonoBehaviour
 
     void ReviveSkillButton()
     {
-        for (int i = 0; i < _skillAction.Count; i++)
+        for (int i = 0; i < _skillButton.Count; i++)
         {
             _skillButton[i].gameObject.SetActive(true);
 
         }
     }
 
-    void AddSkillButton()
+    public void AddSkillButton()
     { 
         Button insbutton = Instantiate(_button, _scrollRect.content);
     
@@ -124,6 +123,12 @@ public class MakeSkillButton_Test : MonoBehaviour
     {
         _player._state = Player_Test.State.Skill;
         _player._skillIndex = 1;
+    }
+
+    void Moving()
+    {
+        _player._state = Player_Test.State.Skill;
+        _player._skillIndex = 2;
     }
     #endregion
 }

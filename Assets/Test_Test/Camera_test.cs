@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEngine; 
-
+using UnityEngine;
+using UnityEngine.EventSystems;
 public class Camera_test : MonoBehaviour
 {
 
@@ -11,7 +11,7 @@ public class Camera_test : MonoBehaviour
     //나중에 전투매니저에서 전투 목록을 리스트 같은걸로 관리하면 바꾸기
     [Header("목표물(플레이어,오브젝트)")]
     [SerializeField]
-    private Transform _player;
+    private Transform _curruntPlayer;
     [SerializeField]
     Ray_Test _ray_Test;
       
@@ -54,23 +54,26 @@ public class Camera_test : MonoBehaviour
 
 
         //레이 정보
-        if (Input.GetMouseButtonDown(0))
+        if (!EventSystem.current.IsPointerOverGameObject())
         {
-            _ray_Test.RayCamTo(out _hit);
-
-            if (_hit.collider != null)
+            if (Input.GetMouseButtonDown(0))
             {
-                //플레이어 바꾸기
-                if (_hit.collider.gameObject.CompareTag("Player"))
+                if (_ray_Test._hit.collider != null)
                 {
+                    //플레이어 바꾸기
+                    if (_ray_Test._hit.collider.gameObject.CompareTag("Player"))
+                    {
 
-                    _player = null;
+                        _curruntPlayer = null;
 
-                    _player = _hit.collider.gameObject.GetComponent<Transform>();
+                        _curruntPlayer = _ray_Test._hit.collider.gameObject.GetComponent<Transform>();
 
+                    }
                 }
+
             }
         }
+        
 
         //자유 이동
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) || Input.GetAxisRaw("Mouse ScrollWheel") != 0)
@@ -116,8 +119,8 @@ public class Camera_test : MonoBehaviour
 
         if(camState == CamState.None)
         {
-            camToSomething = Quaternion.LookRotation(_player.position - transform.position);
-            transform.position = Vector3.Lerp(transform.position, _player.position + offset, _interpole);
+            camToSomething = Quaternion.LookRotation(_curruntPlayer.position - transform.position);
+            transform.position = Vector3.Lerp(transform.position, _curruntPlayer.position + offset, _interpole);
             transform.rotation = Quaternion.Slerp(transform.rotation, camToSomething, _interpole);
         }
         else if(camState == CamState.Skill)
@@ -126,8 +129,8 @@ public class Camera_test : MonoBehaviour
             //플레이어가 스킬을 썼다는 것이 필요
             //플레이어의 레이 캐스트가 히트 한 몬스터의 좌표가 필요
             //지면이 아니라 몬스터를 맞추었을 때의 좌표가 필요
-            transform.position = Vector3.Lerp(transform.position, (_player.position + _hit.transform.position) * 0.5f + offset, _interpole);
-            camToSomething = Quaternion.LookRotation((_player.position+_hit.transform.position)*0.5f - transform.position);
+            transform.position = Vector3.Lerp(transform.position, (_curruntPlayer.position + _hit.transform.position) * 0.5f + offset, _interpole);
+            camToSomething = Quaternion.LookRotation((_curruntPlayer.position+_hit.transform.position)*0.5f - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, camToSomething, _interpole);
         }
         

@@ -7,23 +7,42 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Skill_List_Test : MonoBehaviour
-{
-    [SerializeField]
+{ 
     Ray_Test ray_Test;
     private RaycastHit _hit;
 
+    //직렬화는 기본 플레이어
+    //클릭 또는 턴이 넘어갔을 때 바뀔 수 있는 것
     [SerializeField]
     Player_Test _currentPlayer;
 
-    Player_Test _player;
+    MakeSkillButton_Test _button;
+
+    private void Awake()
+    {
+        _currentPlayer.PlayerSkill.Add(0, Attack);
+        _currentPlayer.PlayerSkill.Add(1, Defence);
+        Debug.Log("스킬이 들어갔나?");
+    }
 
     private void Start()
     {
-        ray_Test = GetComponent<Ray_Test>();
-        _currentPlayer = GetComponent<Player_Test>();
+        ray_Test = GetComponent<Ray_Test>(); 
+         
+        
+
     }
 
-    
+    void SkillAdd()
+    {
+
+        //_currentPlayer.PlayerSkill.Add()
+        //_button.AddSkillButton();
+
+    }
+    #region 스킬 목록
+
+   
     public void Attack(Player_Test player)
     {
         if (!EventSystem.current.IsPointerOverGameObject())
@@ -45,7 +64,7 @@ public class Skill_List_Test : MonoBehaviour
          //현재 플레이어와 현재 대상
         Debug.Log("Attack");
     }
-    public void Defence()
+    public void Defence(Player_Test player)
     {
         Debug.Log("Defence");
     }
@@ -54,6 +73,6 @@ public class Skill_List_Test : MonoBehaviour
         Debug.Log("Moving");
     }
 
-     
+    #endregion
 }
 

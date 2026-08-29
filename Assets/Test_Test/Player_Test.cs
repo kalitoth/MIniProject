@@ -7,11 +7,8 @@ using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Player_Test : Unit_Test
 {
-  
-    //스킬 리스트
-    Skill_List_Test skill_List_Test;
-    
-    //이동
+
+    //이동 
     PlayerMoving _playerMoving;
 
     //스킬 리스트
@@ -21,9 +18,6 @@ public class Player_Test : Unit_Test
     {
         get {  return _playerSkill; }
     }
-    
-    //현재 플레이어
-    Player_Test _player;
 
     //스킬 고유 번호
     public int _skillIndex;
@@ -36,25 +30,26 @@ public class Player_Test : Unit_Test
         Skill
     }
 
-    
-
     void Start()
     {
         _playerMoving = GetComponent<PlayerMoving>();
-        skill_List_Test = GetComponent<Skill_List_Test>();
-        
+
+        if (_playerMoving == null)
+        {
+            Debug.Log("플레이어에 플레이어 무빙이 없다");
+        }
+
         //능력치
         //최대 체력 = 기본 점수 + 수정치 * (레벨 + 직업에 따른 점수) > 직업이 없으니 생략 
         MAXHP = BasicHp + Mathf.FloorToInt((Constitution - 10)*0.5f)* Level;
         HP = MAXHP;
-        _playerSkill.Add(0, Attack);
     }
 
     
     void Update()
     {
         if (_state == State.None)
-        {
+        { 
             _playerMoving.Moving();
         }
 
@@ -65,18 +60,13 @@ public class Player_Test : Unit_Test
             {
                 _state = State.None;
             }
-            _playerSkill[_skillIndex](_player);
+            _playerSkill[_skillIndex](this);
              
         }
         
     }
 
     
-
-    public void Attack(Player_Test player)
-    { 
-        skill_List_Test.Attack(player);
-    }
 
   
 }
