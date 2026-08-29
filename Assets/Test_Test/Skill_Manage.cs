@@ -11,13 +11,12 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static UnityEditor.Experimental.GraphView.GraphView;
 
-public class Skill_List_Test : MonoBehaviour
+public class Skill_Manage : MonoBehaviour
 { 
     Ray_Test _ray_Test;
     private RaycastHit _hit;
      
     // 최대 4인팟 
-    //일단 처음에 정하는 걸로
     [SerializeField]
     Player_Test[] _playerParty = new Player_Test[4];
 
@@ -26,34 +25,26 @@ public class Skill_List_Test : MonoBehaviour
 
     MakeSkillButton_Test _button;
 
-    Skill_List skill_List = new Skill_List();
-    //이게 없으면 무기나 스킬 얻는 것마다 add를 해줘야 한다 << 이거 player필요함 << 결합도 올라감
     //스킬 목록
-    Dictionary<int, Action<Player_Test>> _skillList = new Dictionary<int, Action<Player_Test>>();
+    Skill_List Skill_List;
 
-    
     private void Awake()
     {
+        Skill_List = GetComponent<Skill_List>();
+        //기본 스킬
         foreach (Player_Test player in _playerParty)
         {
             if (player != null)
-            { 
-                AddBasicSkill(player);
+            {
+                for(int i = 0; i < 2; i++)
+                {
+                    player.PlayerSkill.Add(i, Skill_List.SkillList[i]); 
+                }
+               
             }
         }
-
-        _skillList.Add(0, Attack);
-        _skillList.Add(1, Defence);
-        _skillList.Add(2, Moving);
-       //Type type = skill_List.GetType();
-       //Debug.Log($"{type}");
-       //MethodInfo[] methods = type.GetMethods(BindingFlags.NonPublic);
-       //foreach (MethodInfo method in methods)
-       //{
-       //   //_skillList.Add(1, method);
-       //}
+      
     }
-
     private void Start()
     {
         _button = GetComponent<MakeSkillButton_Test>();
@@ -73,9 +64,7 @@ public class Skill_List_Test : MonoBehaviour
     }
 
     private void Update()
-    {
-        
-
+    { 
         //플레이어 바꾸기
         if (Input.GetMouseButtonDown(0))
         {
@@ -97,7 +86,7 @@ public class Skill_List_Test : MonoBehaviour
         }
 
         //스킬 에드
-        //SkillAdd 와 index 함수만 넣어주면 스킬 add가 된다
+        //SkillAdd함수와 그안에 index만 넣어주면 스킬 add가 된다
         if (Input.GetKeyDown(KeyCode.Alpha7))
         {
             Debug.Log("스킬 ADD");
@@ -116,50 +105,10 @@ public class Skill_List_Test : MonoBehaviour
             return;
         }
 
-        _player.PlayerSkill.Add(skillIndex, _skillList[skillIndex]);
+        _player.PlayerSkill.Add(skillIndex, Skill_List.SkillList[skillIndex]);
         _button.AddSkillButton(skillIndex);
     }
 
-    //기본 스킬
-    void AddBasicSkill(Player_Test player)
-    {
-        player.PlayerSkill.Add(0, Attack);
-        player.PlayerSkill.Add(1, Defence);
-        Debug.Log("스킬이 들어갔나?");
-    }
-    
-    #region 스킬 목록
-     
-    public void Attack(Player_Test player)
-    {
-        if (!EventSystem.current.IsPointerOverGameObject())
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                _ray_Test.RayCamTo(out _hit);
 
-                if(_hit.collider != null && _hit.collider.gameObject.CompareTag("Monster"))
-                {
-                    Monster_Test monster = _hit.collider.gameObject.GetComponent<Monster_Test>();
-                    monster.HP -= 1;
-
-                    player._state = Player_Test.State.None;
-                }
-                
-            }
-        }
-         //현재 플레이어와 현재 대상
-        Debug.Log("Attack");
-    }
-    public void Defence(Player_Test player)
-    {
-        Debug.Log("Defence");
-    }
-    public void Moving(Player_Test player)
-    {
-        Debug.Log("Moving");
-    }
-
-    #endregion
 }
 
