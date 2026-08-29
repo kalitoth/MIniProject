@@ -39,6 +39,7 @@ public class PlayerMovingShift : MonoBehaviour
             {
                 if (_hit.collider.gameObject.CompareTag("Player"))
                 {
+                    playerMoving = null;
                     playerMoving = _hit.collider.gameObject.GetComponent<PlayerMoving>();
 
                 }

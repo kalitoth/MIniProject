@@ -83,11 +83,16 @@ public class PlayerMoving : MonoBehaviour
             {
                     Debug.Log($"콜라이더 밑");
                  if (_hit.collider.gameObject.CompareTag("Ground"))
-                 {
+                 { 
+                        //이전의 hit와 같다면 return
+                    if(_hit.point == _rayHitPoint)
+                    {
+                        return;
+                    }
                      _rayHitPoint = _hit.point;
                 
-                         Debug.Log($"무빙{_hit.point}");
-                         _currentPlayer.rotation = Quaternion.LookRotation((_rayHitPoint - _currentPlayer.position).normalized, Vector3.up);
+                     Debug.Log($"무빙{_hit.point}");
+                     _currentPlayer.rotation = Quaternion.LookRotation((_rayHitPoint - _currentPlayer.position).normalized, Vector3.up);
                           
                 
                  }
@@ -97,7 +102,7 @@ public class PlayerMoving : MonoBehaviour
         }
         
 
-       _projectionRay = Vector3.ProjectOnPlane(_rayHitPoint, Vector3.up);
+        _projectionRay = Vector3.ProjectOnPlane(_rayHitPoint, Vector3.up);
        _projectionPlayer = Vector3.ProjectOnPlane(_currentPlayer.position, Vector3.up);
        move = _projectionRay - _projectionPlayer;
        move.y = gravity;
