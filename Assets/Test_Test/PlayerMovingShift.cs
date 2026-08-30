@@ -4,21 +4,28 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 public class PlayerMovingShift : MonoBehaviour
 {
-    Ray_Test _ray_Test;
+    
     //초기 플레이어
     [SerializeField]
     PlayerMoving playerMoving;
 
-    RaycastHit _hit;
+    [SerializeField]
+    private Camera _camera;
+    private RaycastHit _hit;
 
+    Ray _ray;
+
+    LayerMask _layerMask;
+
+    float _rayMaxDistance = 500f;
+    private void Awake()
+    {
+        _layerMask = 1 << LayerMask.NameToLayer("Ground");
+        _layerMask += 1 << LayerMask.NameToLayer("Player");
+    }
     void Start()
     {
-        _ray_Test = GetComponent<Ray_Test>();
-
-        if( _ray_Test == null )
-        {
-            Debug.Log("레이가 없다");
-        }
+       
         if(playerMoving == null)
         {
             Debug.Log("무빙 시프트에 플레이어 무빙이 없다");
@@ -32,7 +39,7 @@ public class PlayerMovingShift : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                _ray_Test.RayCamTo(out _hit);
+                RayCamTo(out _hit, _layerMask);
                 Debug.Log("무빙시프트에서 레이 발사");
             }
         }
@@ -59,4 +66,11 @@ public class PlayerMovingShift : MonoBehaviour
         }
     }
 
+    public void RayCamTo(out RaycastHit hit, LayerMask layerMask)
+    {
+        _ray = _camera.ScreenPointToRay(Input.mousePosition);
+
+        Physics.Raycast(_ray, out _hit, _rayMaxDistance, layerMask);
+        hit = _hit;
+    }
 }

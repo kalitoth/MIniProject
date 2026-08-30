@@ -7,7 +7,9 @@ using UnityEngine.UI;
 
 public class Player_Test : Unit_Test
 {
-    
+    [SerializeField]
+    Camera _camera;
+
     RaycastHit _hit;
     //¿Ãµø 
     PlayerMoving _playerMoving;
@@ -98,7 +100,7 @@ public class Player_Test : Unit_Test
     {
         if (!EventSystem.current.IsPointerOverGameObject())
         {
-            Ray target = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray target = _camera.ScreenPointToRay(Input.mousePosition);
 
             Physics.Raycast(target, out _hit);
 

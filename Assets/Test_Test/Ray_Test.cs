@@ -42,6 +42,7 @@ public class Ray_Test : MonoBehaviour
 
         hit = _hit;
     }
+    
 
     public void RayVisual()
     { 

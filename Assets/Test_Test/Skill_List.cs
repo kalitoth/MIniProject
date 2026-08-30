@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.EventSystems; 
 
@@ -10,6 +11,12 @@ public class Skill_List : MonoBehaviour
      
 
     Dictionary<int, Action<Player_Test,RaycastHit>> _skillList = new Dictionary<int, Action<Player_Test, RaycastHit>>();
+
+    Color _initialColor = Color.white;
+    Color _abledColor = Color.red;
+    Color _ableColor = Color.blue;
+    
+
 
     public Dictionary<int, Action<Player_Test, RaycastHit>> SkillList
     {
@@ -22,30 +29,52 @@ public class Skill_List : MonoBehaviour
         _skillList.Add(1, Defence);
         _skillList.Add(2, Moving);
     }
-    private void Start()
-    {
-         
-    }
+  
     #region 스킬 목록
 
-    public void Attack(Player_Test player, RaycastHit _hit)
+    public void Attack(Player_Test player, RaycastHit hit)
     {
         if (!EventSystem.current.IsPointerOverGameObject())
         {
-            if (Input.GetMouseButtonDown(0))
+            if(player._lineRenderer.startColor != _initialColor)
             {
-                if (_hit.collider != null && _hit.collider.gameObject.CompareTag("Monster"))
+                player._lineRenderer.startColor = _initialColor; 
+            }
+             
+            if (hit.collider != null && hit.collider.gameObject.CompareTag("Monster"))
+            {  
+                if ((hit.point - player.transform.position).sqrMagnitude > 3f)
                 {
-                    Monster_Test monster = _hit.collider.gameObject.GetComponent<Monster_Test>();
-                    monster.HP -= 1;
-
-                    player._state = Player_Test.State.None;
-                    player._lineRenderer.enabled = false;
+                    
+                    if (player._lineRenderer.startColor == _abledColor)
+                    {
+                        return;
+                    }
+                    player._lineRenderer.startColor = _abledColor; 
                 }
+                else
+                {
+                    if (player._lineRenderer.startColor != _ableColor)
+                    {
+                        player._lineRenderer.startColor = _ableColor;
+                    }
+                       
+                }
+                
+               if (Input.GetMouseButtonDown(0))
+               {
+                    Monster_Test monster = hit.collider.gameObject.GetComponent<Monster_Test>();
+                    if ((monster.transform.position - player.transform.position).sqrMagnitude <= 3f)
+                    {
+                       monster.HP -= 1;
 
+                       player._state = Player_Test.State.None;
+                       player._lineRenderer.enabled = false;
+                    }
+               }
+                    
             }
         }
-        //현재 플레이어와 현재 대상
         Debug.Log("Attack");
     }
     public void Defence(Player_Test player, RaycastHit _hit)
