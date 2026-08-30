@@ -2,18 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using static UnityEditor.Experimental.GraphView.GraphView;
+using UnityEngine.EventSystems; 
 
 
 public class Skill_List : MonoBehaviour
 {
-    Ray_Test _ray_Test;
-    RaycastHit _hit;
+     
 
-    Dictionary<int, Action<Player_Test>> _skillList = new Dictionary<int, Action<Player_Test>>();
+    Dictionary<int, Action<Player_Test,RaycastHit>> _skillList = new Dictionary<int, Action<Player_Test, RaycastHit>>();
 
-    public Dictionary<int, Action<Player_Test>> SkillList
+    public Dictionary<int, Action<Player_Test, RaycastHit>> SkillList
     {
         get { return _skillList; }
     }
@@ -26,29 +24,23 @@ public class Skill_List : MonoBehaviour
     }
     private void Start()
     {
-        _ray_Test = GetComponent<Ray_Test>();
-        if( _ray_Test == null )
-        {
-            Debug.Log("스킬 목록에 레이캐스트가 없다");
-        }
-
+         
     }
     #region 스킬 목록
 
-    public void Attack(Player_Test player)
+    public void Attack(Player_Test player, RaycastHit _hit)
     {
         if (!EventSystem.current.IsPointerOverGameObject())
         {
             if (Input.GetMouseButtonDown(0))
             {
-                _ray_Test.RayCamTo(out _hit);
-
                 if (_hit.collider != null && _hit.collider.gameObject.CompareTag("Monster"))
                 {
                     Monster_Test monster = _hit.collider.gameObject.GetComponent<Monster_Test>();
                     monster.HP -= 1;
 
                     player._state = Player_Test.State.None;
+                    player._lineRenderer.enabled = false;
                 }
 
             }
@@ -56,11 +48,11 @@ public class Skill_List : MonoBehaviour
         //현재 플레이어와 현재 대상
         Debug.Log("Attack");
     }
-    public void Defence(Player_Test player)
+    public void Defence(Player_Test player, RaycastHit _hit)
     {
         Debug.Log("Defence");
     }
-    public void Moving(Player_Test player)
+    public void Moving(Player_Test player, RaycastHit _hit)
     {
         Debug.Log("Moving");
     }

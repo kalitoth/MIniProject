@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class MakeSkillButton_Test : MonoBehaviour
 {
@@ -42,11 +40,7 @@ public class MakeSkillButton_Test : MonoBehaviour
     void Start()
     {
         _ray_Test = GetComponent<Ray_Test>();
-
-        // 모든 캐릭터의 스킬트리 만들기 + 모든 스킬 active false
-        MakeSkillTree();
-        // 현재 캐릭터의 스킬트리만 active true
-        ReviveSkillButton();
+       
     }
     
     void Update()
@@ -76,13 +70,13 @@ public class MakeSkillButton_Test : MonoBehaviour
     }
 
     //초기 스킬트리
-  void MakeSkillTree()
+  public void MakeSkillTree()
   {
         foreach (Player_Test _player in _playerParty)
         { 
             if(_player != null)
             {
-                foreach (KeyValuePair<int, Action<Player_Test>> skill in _player.PlayerSkill)
+                foreach (KeyValuePair<int, Action<Player_Test, RaycastHit>> skill in _player.PlayerSkill)
                 {
                     Button insbutton = Instantiate(_button, _scrollRect.content);
 
@@ -134,7 +128,7 @@ public class MakeSkillButton_Test : MonoBehaviour
         }
     }
     //현재 플레이어의 스킬 버튼 활성화
-    void ReviveSkillButton()
+    public void ReviveSkillButton()
     {
         for (int i = 0; i < _player.SkillButton.Count; i++)
         {
@@ -148,32 +142,42 @@ public class MakeSkillButton_Test : MonoBehaviour
 
 
     #region 버튼 목록
-    void Switch()
-    {
+    void Switch(int Index)
+    { 
         if (_player._state == Player_Test.State.None)
         {
             _player._state = Player_Test.State.Skill;
+            _player._lineRenderer.enabled = true;
+            _player._lineRenderer.SetPosition(1, _player.transform.position);
         }
         else
         {
+            if (Index != _player._skillIndex)
+            {
+                return;
+            }
             _player._state = Player_Test.State.None;
+            _player._lineRenderer.enabled = false;
         }
+        _player._skillIndex = Index;
+        
+         
     }
     void Attack()
     {
-        Switch();
-        _player._skillIndex = 0;
+        int Index = 0;
+        Switch(Index); 
     }
     void Defence()
     {
-        Switch();
-        _player._skillIndex = 1;
+        int Index = 1;
+        Switch(Index); 
     }
 
     void Moving()
     {
-        Switch();
-        _player._skillIndex = 2;
+        int Index = 2;
+        Switch(Index); 
     }
     #endregion
 }

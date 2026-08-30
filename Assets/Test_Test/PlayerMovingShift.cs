@@ -19,23 +19,25 @@ public class PlayerMovingShift : MonoBehaviour
         {
             Debug.Log("레이가 없다");
         }
+        if(playerMoving == null)
+        {
+            Debug.Log("무빙 시프트에 플레이어 무빙이 없다");
+        }
         
     }
-    private void Update()
+    
+    public void MovingShift()
     {
         if (!EventSystem.current.IsPointerOverGameObject())
         {
             if (Input.GetMouseButtonDown(0))
             {
                 _ray_Test.RayCamTo(out _hit);
+                Debug.Log("무빙시프트에서 레이 발사");
             }
         }
-            
-    }
-    public void MovingShift()
-    {
-        {
-            if (_hit.collider != null)
+
+        if (_hit.collider != null)
             {
                 if (_hit.collider.gameObject.CompareTag("Player"))
                 {
@@ -45,13 +47,16 @@ public class PlayerMovingShift : MonoBehaviour
                 }
             }
 
-        }
-
         if (playerMoving == null)
         {
             return;
         }
         playerMoving.Hit = _hit;
+        Debug.Log("무빙시프트에서 히트가 들어갔나?");
+        if(_hit.collider == null)
+        {
+            Debug.Log("무빙시프트에서 히트콜라이더 가 널");
+        }
     }
 
 }

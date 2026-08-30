@@ -13,6 +13,7 @@ public class PlayerMoving : MonoBehaviour
     private Animator _animator;
     private CharacterController _characterController;
     private Transform _currentPlayer;
+    [Header("무빙시프트")]
     [SerializeField]
     PlayerMovingShift _movingShift;
      
@@ -56,12 +57,6 @@ public class PlayerMoving : MonoBehaviour
 
     public void Moving()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            _movingShift.MovingShift();
-        }
-            
-
         if (_animator == null || _characterController == null)
         {
             Debug.Log("무빙에 애니메이터, 컨트롤러가 없다");
@@ -72,6 +67,7 @@ public class PlayerMoving : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
+                _movingShift.MovingShift();
                 Debug.Log("무빙먼저?");
                 Debug.Log($"{_hit.collider}");
 
@@ -96,15 +92,16 @@ public class PlayerMoving : MonoBehaviour
             }
 
         }
-
+        
         _projectionRay = Vector3.ProjectOnPlane(_rayHitPoint, Vector3.up);
        _projectionPlayer = Vector3.ProjectOnPlane(_currentPlayer.position, Vector3.up);
        move = _projectionRay - _projectionPlayer;
        move.y = gravity;
          
        _characterController.Move(move * Time.deltaTime);
-           
-       _animator.SetFloat("FMoving", (_rayHitPoint - _currentPlayer.position).magnitude);
+
+        //y가 다르게 생성되면 뛰면서 생성
+        _animator.SetFloat("FMoving", (_rayHitPoint - _currentPlayer.position).magnitude);
           
     }
 

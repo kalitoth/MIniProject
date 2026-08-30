@@ -1,5 +1,4 @@
-using Palmmedia.ReportGenerator.Core.Parser.Analysis;
-using System;
+ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
-using static UnityEditor.Experimental.GraphView.GraphView;
+using UnityEngine.UIElements; 
 
 public class Skill_Manage : MonoBehaviour
 { 
@@ -31,33 +29,39 @@ public class Skill_Manage : MonoBehaviour
     private void Awake()
     {
         Skill_List = GetComponent<Skill_List>();
+        _button = GetComponent<MakeSkillButton_Test>();
+        _ray_Test = GetComponent<Ray_Test>();
+
+        if (_button == null)
+        {
+            Debug.Log("스킬 리스트에 버튼이 없다");
+        }
+        if (_ray_Test == null)
+        {
+            Debug.Log("스킬 리스트에 레이가 없다");
+        }
+
+        
+      
+    }
+    private void Start()
+    {
         //기본 스킬
         foreach (Player_Test player in _playerParty)
         {
             if (player != null)
             {
-                for(int i = 0; i < 2; i++)
+                for (int i = 0; i < 2; i++)
                 {
-                    player.PlayerSkill.Add(i, Skill_List.SkillList[i]); 
+                    player.PlayerSkill.Add(i, Skill_List.SkillList[i]);
                 }
-               
+
             }
         }
-      
-    }
-    private void Start()
-    {
-        _button = GetComponent<MakeSkillButton_Test>();
-        _ray_Test = GetComponent<Ray_Test>();
-
-        if(_button == null)
-        {
-            Debug.Log("스킬 리스트에 버튼이 없다");
-        }
-        if(_ray_Test == null)
-        {
-            Debug.Log("스킬 리스트에 레이가 없다");
-        }
+        // 모든 캐릭터의 스킬트리 만들기 + 모든 스킬 active false
+        _button.MakeSkillTree();
+        // 현재 캐릭터의 스킬트리만 active true
+        _button.ReviveSkillButton();
 
         _player = _playerParty[0];
 
