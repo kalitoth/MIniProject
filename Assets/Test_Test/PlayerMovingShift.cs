@@ -20,8 +20,8 @@ public class PlayerMovingShift : MonoBehaviour
     float _rayMaxDistance = 500f;
     private void Awake()
     {
-        _layerMask = 1 << LayerMask.NameToLayer("Ground");
-        _layerMask += 1 << LayerMask.NameToLayer("Player");
+        _layerMask = 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Monster");
+         
     }
     void Start()
     {
@@ -32,7 +32,10 @@ public class PlayerMovingShift : MonoBehaviour
         }
         
     }
-    
+    public void Update()
+    {
+        
+    }
     public void MovingShift()
     {
         if (!EventSystem.current.IsPointerOverGameObject())
@@ -41,18 +44,20 @@ public class PlayerMovingShift : MonoBehaviour
             {
                 RayCamTo(out _hit, _layerMask);
                 Debug.Log("무빙시프트에서 레이 발사");
+
+                if (_hit.collider != null)
+                {
+                    if (_hit.collider.gameObject.CompareTag("Player"))
+                    {
+                        playerMoving = null;
+                        playerMoving = _hit.collider.gameObject.GetComponent<PlayerMoving>();
+
+                    }
+                }
+
             }
         }
 
-        if (_hit.collider != null)
-            {
-                if (_hit.collider.gameObject.CompareTag("Player"))
-                {
-                    playerMoving = null;
-                    playerMoving = _hit.collider.gameObject.GetComponent<PlayerMoving>();
-
-                }
-            }
 
         if (playerMoving == null)
         {

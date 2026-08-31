@@ -2,7 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.UI; 
 
 public class MakeSkillButton_Test : MonoBehaviour
 {
@@ -29,12 +30,14 @@ public class MakeSkillButton_Test : MonoBehaviour
     private void Awake()
     { 
         //버튼 저장소에 미리 저장해 놓는다
-        _skillAction.Add(0, Attack);
-        _skillsprites.Add(0, Resources.Load<Sprite>("Attack"));
-        _skillAction.Add(1, Defence);
-        _skillsprites.Add(1, Resources.Load<Sprite>("Defence"));
-        _skillAction.Add(2, Moving);
-        _skillsprites.Add(2, Resources.Load<Sprite>("Moving"));
+        _skillAction.Add(0, Sword);
+        _skillsprites.Add(0, Resources.Load<Sprite>("Sword"));
+        _skillAction.Add(1, Bow);
+        _skillsprites.Add(1, Resources.Load<Sprite>("Bow"));
+        _skillAction.Add(2, Fireball);
+        _skillsprites.Add(2, Resources.Load<Sprite>("Fireball"));
+        _skillAction.Add(3, Scroll);
+        _skillsprites.Add(3, Resources.Load<Sprite>("Scroll"));
  
     }
     void Start()
@@ -154,6 +157,7 @@ public class MakeSkillButton_Test : MonoBehaviour
         {
             if (Index != _player._skillIndex)
             {
+                _player._skillIndex = Index;
                 return;
             }
             _player._state = Player_Test.State.None;
@@ -163,20 +167,25 @@ public class MakeSkillButton_Test : MonoBehaviour
         
          
     }
-    void Attack()
+    void Sword()
     {
         int Index = 0;
         Switch(Index); 
     }
-    void Defence()
+    void Bow()
     {
         int Index = 1;
         Switch(Index); 
     }
 
-    void Moving()
+    void Fireball()
     {
         int Index = 2;
+        Switch(Index); 
+    }
+    void Scroll()
+    {
+        int Index = 3;
         Switch(Index); 
     }
     #endregion

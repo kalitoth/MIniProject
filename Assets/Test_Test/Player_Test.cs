@@ -103,9 +103,9 @@ public class Player_Test : Unit_Test
             Ray target = _camera.ScreenPointToRay(Input.mousePosition);
 
             Physics.Raycast(target, out _hit);
-
  
             Debug.DrawLine(transform.position, _hit.point, Color.blue, 0.000001f);
+
            _lineRenderer.SetPosition(0, transform.position);
             
             if(_hit.collider == null)

@@ -51,7 +51,7 @@ public class Skill_Manage : MonoBehaviour
         {
             if (player != null)
             {
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     player.PlayerSkill.Add(i, Skill_List.SkillList[i]);
                 }
@@ -91,12 +91,12 @@ public class Skill_Manage : MonoBehaviour
 
         //스킬 에드
         //SkillAdd함수와 그안에 index만 넣어주면 스킬 add가 된다
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            Debug.Log("스킬 ADD");
-            int moving = 2;
-            SkillAdd(moving);
-        }
+       //if (Input.GetKeyDown(KeyCode.Alpha7))
+       //{
+       //    Debug.Log("스킬 ADD");
+       //    int moving = 2;
+       //    SkillAdd(moving);
+       //}
 
     }
 
