@@ -26,6 +26,7 @@ public class MakeSkillButton_Test : MonoBehaviour
     [SerializeField]
     Player_Test[] _playerParty = new Player_Test[4];
 
+    PlayerMoving _moving;
 
     private void Awake()
     { 
@@ -42,6 +43,7 @@ public class MakeSkillButton_Test : MonoBehaviour
     }
     void Start()
     {
+        _moving = _player.GetComponent<PlayerMoving>();
         _ray_Test = GetComponent<Ray_Test>();
        
     }
@@ -150,6 +152,7 @@ public class MakeSkillButton_Test : MonoBehaviour
         if (_player._state == Player_Test.State.None)
         {
             _player._state = Player_Test.State.Skill;
+            _moving.enabled = false;
             _player._lineRenderer.enabled = true;
             _player._lineRenderer.SetPosition(1, _player.transform.position);
         }
@@ -161,6 +164,7 @@ public class MakeSkillButton_Test : MonoBehaviour
                 return;
             }
             _player._state = Player_Test.State.None;
+            _moving.enabled = true;
             _player._lineRenderer.enabled = false;
         }
         _player._skillIndex = Index;

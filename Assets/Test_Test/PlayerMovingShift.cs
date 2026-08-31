@@ -20,7 +20,7 @@ public class PlayerMovingShift : MonoBehaviour
     float _rayMaxDistance = 500f;
     private void Awake()
     {
-        _layerMask = 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Monster");
+        _layerMask = 1 << LayerMask.NameToLayer("Player") ;
          
     }
     void Start()
@@ -30,11 +30,11 @@ public class PlayerMovingShift : MonoBehaviour
         {
             Debug.Log("무빙 시프트에 플레이어 무빙이 없다");
         }
-        
+        playerMoving.enabled = true;
     }
     public void Update()
     {
-        
+        MovingShift();
     }
     public void MovingShift()
     {
@@ -49,33 +49,27 @@ public class PlayerMovingShift : MonoBehaviour
                 {
                     if (_hit.collider.gameObject.CompareTag("Player"))
                     {
-                        playerMoving = null;
-                        playerMoving = _hit.collider.gameObject.GetComponent<PlayerMoving>();
-
+                        Debug.Log("여기 들어오나?");
+                       if(playerMoving != null)
+                       {
+                           playerMoving.enabled = false;
+                       }
+                       playerMoving = _hit.collider.gameObject.GetComponent<PlayerMoving>();
+                       playerMoving.enabled = true; 
                     }
                 }
 
             }
         }
 
-
-        if (playerMoving == null)
-        {
-            return;
-        }
-        playerMoving.Hit = _hit;
-        Debug.Log("무빙시프트에서 히트가 들어갔나?");
-        if(_hit.collider == null)
-        {
-            Debug.Log("무빙시프트에서 히트콜라이더 가 널");
-        }
+         
     }
 
     public void RayCamTo(out RaycastHit hit, LayerMask layerMask)
     {
         _ray = _camera.ScreenPointToRay(Input.mousePosition);
 
-        Physics.Raycast(_ray, out _hit, _rayMaxDistance, layerMask);
-        hit = _hit;
+        Physics.Raycast(_ray, out hit, _rayMaxDistance, layerMask);
+         
     }
 }

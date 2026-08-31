@@ -68,22 +68,24 @@ public class Player_Test : Unit_Test
     
     void Update()
     {
-        if (_state == State.None)
-        { 
-            _playerMoving.Moving(); 
+
+        if ( _state ==  State.None)
+        {
+            _playerMoving.Moving();
         }
 
-           
         if (_state == State.Skill)
         {
             if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
             {
+                _playerMoving.enabled = true;
                 _lineRenderer.enabled = false;
                 _state = State.None;
             }
             
             if(Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
             {
+                _playerMoving.enabled = true;
                 _lineRenderer.enabled = false;
                 _state = State.None;
             }

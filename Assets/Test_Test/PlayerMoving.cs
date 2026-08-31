@@ -12,12 +12,19 @@ public class PlayerMoving : MonoBehaviour
     
     private Animator _animator;
     private CharacterController _characterController;
-    private Transform _currentPlayer;
+    private Transform _playertransform;
+
+    private Player_Test _player;
     [Header("무빙시프트")]
     [SerializeField]
     PlayerMovingShift _movingShift;
-     
+
+    [SerializeField]
+    private Camera _camera;
+    Ray _ray;
+    LayerMask _layerMask;
     private RaycastHit _hit;
+    float _rayMaxDistance = 500f;
 
     public RaycastHit Hit
     {
@@ -33,30 +40,41 @@ public class PlayerMoving : MonoBehaviour
     Vector3 _rayHitPoint; 
 
    public Animator Animator => _animator;
-         
+    private void Awake()
+    {
+        _layerMask = 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Monster");
 
-    void Start()
-    { 
-         _animator = gameObject.GetComponent<Animator>();
+        _player = GetComponent<Player_Test>();
+        _playertransform = gameObject.GetComponent<Transform>();
+
+        _animator = gameObject.GetComponent<Animator>();
         _characterController = gameObject.GetComponent<CharacterController>();
-        _currentPlayer = gameObject.GetComponent<Transform>();
- 
+
         if (_animator == null || _characterController == null)
         {
             Debug.Log("무빙에 애니메이터, 컨트롤러가 없다");
 
-        } 
-        if(_currentPlayer == null)
+        }
+        if (_playertransform == null)
         {
             Debug.Log("무빙에 현재 플레이어가 없다");
         }
-         
-        _rayHitPoint = _currentPlayer.position;
-        
+
+        _rayHitPoint = _playertransform.position;
+
+        enabled = false;
     }
 
+    void Start()
+    { 
+     
+        
+    }
+   
     public void Moving()
     {
+        
+
         if (_animator == null || _characterController == null)
         {
             Debug.Log("무빙에 애니메이터, 컨트롤러가 없다");
@@ -67,7 +85,15 @@ public class PlayerMoving : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                _movingShift.MovingShift();
+                
+                RayCamTo(out _hit, _layerMask);
+
+                if (!enabled)
+                {
+                    return;
+                }
+
+
                 Debug.Log("무빙먼저?");
                 Debug.Log($"{_hit.collider}");
 
@@ -84,7 +110,7 @@ public class PlayerMoving : MonoBehaviour
                           _rayHitPoint = _hit.point;
                      
                           Debug.Log($"무빙{_hit.point}");
-                          _currentPlayer.rotation = Quaternion.LookRotation((_rayHitPoint - _currentPlayer.position).normalized, Vector3.up);
+                          _playertransform.rotation = Quaternion.LookRotation((_rayHitPoint - _playertransform.position).normalized, Vector3.up);
                                
                      
                       }
@@ -94,16 +120,22 @@ public class PlayerMoving : MonoBehaviour
         }
         
         _projectionRay = Vector3.ProjectOnPlane(_rayHitPoint, Vector3.up);
-       _projectionPlayer = Vector3.ProjectOnPlane(_currentPlayer.position, Vector3.up);
+       _projectionPlayer = Vector3.ProjectOnPlane(_playertransform.position, Vector3.up);
        move = _projectionRay - _projectionPlayer;
        move.y = gravity;
          
        _characterController.Move(move * Time.deltaTime);
 
         //y가 다르게 생성되면 뛰면서 생성
-        _animator.SetFloat("FMoving", (_rayHitPoint - _currentPlayer.position).magnitude);
+        _animator.SetFloat("FMoving", (_rayHitPoint - _playertransform.position).magnitude);
           
     }
+    public void RayCamTo(out RaycastHit hit, LayerMask layerMask)
+    {
+        _ray = _camera.ScreenPointToRay(Input.mousePosition);
 
- 
+        Physics.Raycast(_ray, out hit, _rayMaxDistance, layerMask);
+
+    }
+
 }

@@ -21,6 +21,7 @@ public class Skill_List : MonoBehaviour
     Collider[] _colliders = new Collider[20];
     LayerMask _layerMaskUnit;
 
+     
     public Dictionary<int, Action<Player_Test, RaycastHit>> SkillList
     {
         get { return _skillList; }
@@ -118,7 +119,7 @@ public class Skill_List : MonoBehaviour
                     if ((hit.point - player.transform.position).sqrMagnitude <= 300f)
                     {
                         monster.HP -= 1;
-
+                        
                         player._state = Player_Test.State.None;
                         player._lineRenderer.enabled = false;
                     }
@@ -184,10 +185,10 @@ public class Skill_List : MonoBehaviour
                              
                             _colliders[i].gameObject.GetComponent<Unit_Test>().HP -= 1;
                           } 
-                        Debug.Log("여기 들어오니?333"); 
-                          
-
+                        Debug.Log("여기 들어오니?333");
+                         
                            player._state = Player_Test.State.None;
+                           player.GetComponent<PlayerMoving>().enabled = true;
                            player._lineRenderer.enabled = false;
 
                     }

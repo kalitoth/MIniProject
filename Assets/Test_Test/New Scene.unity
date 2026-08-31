@@ -1135,7 +1135,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 47604599}
   m_Direction: 2
   m_Value: 1.0001138
-  m_Size: 0.8680177
+  m_Size: 0.86801755
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1447,6 +1447,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _movingShift: {fileID: 17296699}
+  _camera: {fileID: 1156426866}
 --- !u!120 &582460204
 LineRenderer:
   serializedVersion: 2
@@ -2901,6 +2902,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _movingShift: {fileID: 17296699}
+  _camera: {fileID: 1156426866}
 --- !u!120 &1229595444
 LineRenderer:
   serializedVersion: 2
