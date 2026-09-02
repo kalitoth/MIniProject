@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Ray_Test : MonoBehaviour
+public class Ray_Camera_UI : MonoBehaviour
 {
 
     [SerializeField]
@@ -16,6 +16,13 @@ public class Ray_Test : MonoBehaviour
     }
     Ray _ray;
 
+    LayerMask _layer;
+
+    float _distance = 500f;
+    private void Awake()
+    {
+        _layer = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Monster")| 1 << LayerMask.NameToLayer("Ground");
+    }
     void Start()
     {
         if(_camera == null)
@@ -38,9 +45,7 @@ public class Ray_Test : MonoBehaviour
     {
         _ray = _camera.ScreenPointToRay(Input.mousePosition);
 
-        Physics.Raycast(_ray, out _hit);
-
-        hit = _hit;
+        Physics.Raycast(_ray, out hit, _distance, _layer); 
     }
     
 

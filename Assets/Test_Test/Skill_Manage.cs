@@ -10,8 +10,8 @@ using UnityEngine.UI;
 using UnityEngine.UIElements; 
 
 public class Skill_Manage : MonoBehaviour
-{ 
-    Ray_Test _ray_Test;
+{
+    Ray_Skill_SkillButton _ray_Test;
     private RaycastHit _hit;
      
     // 최대 4인팟 
@@ -30,7 +30,7 @@ public class Skill_Manage : MonoBehaviour
     {
         Skill_List = GetComponent<Skill_List>();
         _button = GetComponent<MakeSkillButton_Test>();
-        _ray_Test = GetComponent<Ray_Test>();
+        _ray_Test = GetComponent<Ray_Skill_SkillButton>();
 
         if (_button == null)
         {
@@ -68,7 +68,14 @@ public class Skill_Manage : MonoBehaviour
     }
 
     private void Update()
-    { 
+    {
+
+        if (_player._state.HasFlag(Player_Test.State.Skill))
+        {
+            Debug.Log("스킬바꾸기 안들어감");
+            return;
+        }
+
         //플레이어 바꾸기
         if (Input.GetMouseButtonDown(0))
         {
@@ -88,15 +95,15 @@ public class Skill_Manage : MonoBehaviour
                 }
             }
         }
-
+        
         //스킬 에드
         //SkillAdd함수와 그안에 index만 넣어주면 스킬 add가 된다
-       //if (Input.GetKeyDown(KeyCode.Alpha7))
-       //{
-       //    Debug.Log("스킬 ADD");
-       //    int moving = 2;
-       //    SkillAdd(moving);
-       //}
+        //if (Input.GetKeyDown(KeyCode.Alpha7))
+        //{
+        //    Debug.Log("스킬 ADD");
+        //    int moving = 2;
+        //    SkillAdd(moving);
+        //}
 
     }
 

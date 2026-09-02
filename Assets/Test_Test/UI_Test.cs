@@ -21,14 +21,14 @@ public class UI_Test : MonoBehaviour
     Slider _anyUnitHPBar; 
     Unit_Test _anyUnit;
 
-     
-    Ray_Test _ray_Test;
+
+    Ray_Camera_UI _ray_Test;
     private RaycastHit _hit;
 
 
     void Start()
     {
-        _ray_Test = GetComponent<Ray_Test>();
+        _ray_Test = GetComponent<Ray_Camera_UI>();
 
         if (_playerHPBar == null)
         {

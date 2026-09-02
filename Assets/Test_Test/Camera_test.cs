@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEditor.Experimental.GraphView.GraphView;
 public class Camera_test : MonoBehaviour
 {
 
     //플레이어가 계속 바뀔 수 있어야 한다?
     //몬스터도 이 카메라 써야함
     //나중에 전투매니저에서 전투 목록을 리스트 같은걸로 관리하면 바꾸기
-    [Header("목표물(플레이어,오브젝트)")]
+    
+    private Player_Test _curruntPlayer;
     [SerializeField]
-    private Transform _curruntPlayer;
+    PlayerMovingShift _playerMovingShift;
     [SerializeField]
-    Ray_Test _ray_Test;
+    Ray_Camera_UI _ray_Test;
       
     [Header("캠 이동속도")]
     [SerializeField]
@@ -28,7 +30,9 @@ public class Camera_test : MonoBehaviour
     Vector3 offset = new Vector3(0,10,-5);
     Vector3 mouseWheel = Vector3.zero;
     Quaternion camToSomething;
-     
+
+    
+
     CamState camState = CamState.None;
     enum CamState
     {
@@ -46,36 +50,44 @@ public class Camera_test : MonoBehaviour
         {
             Debug.Log("카메라에 레이 인스펙터가 없다");
         }
+
+        _curruntPlayer = _playerMovingShift.Player;
     }
 
  
     private void LateUpdate()
     {
 
-
+        if (!_curruntPlayer._state.HasFlag(Player_Test.State.Skill))
+        {
+           
+        
         //레이 정보
         if (!EventSystem.current.IsPointerOverGameObject())
         {
             if (Input.GetMouseButtonDown(0))
             {
-                _hit = _ray_Test.Hit;
-
-                if (_hit.collider != null)
-                {
-                    //플레이어 바꾸기
-                    if (_hit.collider.gameObject.CompareTag("Player"))
-                    {
-
-                        _curruntPlayer = null;
-
-                        _curruntPlayer = _hit.collider.gameObject.GetComponent<Transform>();
-
-                    }
-                }
+                    _curruntPlayer = _playerMovingShift.Player;
+               //    _hit = _ray_Test.Hit;
+               //
+               //        Debug.Log("카메라 여기 111");
+               //if (_hit.collider != null)
+               //{
+               //        Debug.Log("카메라 여기 222");
+               //    //플레이어 바꾸기
+               //    if (_hit.collider.gameObject.CompareTag("Player"))
+               //    {
+               //        Debug.Log("카메라 여기 333"); 
+               //        _curruntPlayer = null;
+               //
+               //        _curruntPlayer = _hit.collider.gameObject.GetComponent<Player_Test>();
+               //
+               //    }
+               //}
 
             }
         }
-        
+        }
 
         //자유 이동
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) || Input.GetAxisRaw("Mouse ScrollWheel") != 0)
@@ -121,8 +133,8 @@ public class Camera_test : MonoBehaviour
 
         if(camState == CamState.None)
         {
-            camToSomething = Quaternion.LookRotation(_curruntPlayer.position - transform.position);
-            transform.position = Vector3.Lerp(transform.position, _curruntPlayer.position + offset, _interpole);
+            camToSomething = Quaternion.LookRotation(_curruntPlayer.transform.position - transform.position);
+            transform.position = Vector3.Lerp(transform.position, _curruntPlayer.transform.position + offset, _interpole);
             transform.rotation = Quaternion.Slerp(transform.rotation, camToSomething, _interpole);
         }
         else if(camState == CamState.Skill)
@@ -131,8 +143,8 @@ public class Camera_test : MonoBehaviour
             //플레이어가 스킬을 썼다는 것이 필요
             //플레이어의 레이 캐스트가 히트 한 몬스터의 좌표가 필요
             //지면이 아니라 몬스터를 맞추었을 때의 좌표가 필요
-            transform.position = Vector3.Lerp(transform.position, (_curruntPlayer.position + _hit.transform.position) * 0.5f + offset, _interpole);
-            camToSomething = Quaternion.LookRotation((_curruntPlayer.position+_hit.transform.position)*0.5f - transform.position);
+            transform.position = Vector3.Lerp(transform.position, (_curruntPlayer.transform.position + _hit.transform.position) * 0.5f + offset, _interpole);
+            camToSomething = Quaternion.LookRotation((_curruntPlayer.transform.position + _hit.transform.position)*0.5f - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, camToSomething, _interpole);
         }
         

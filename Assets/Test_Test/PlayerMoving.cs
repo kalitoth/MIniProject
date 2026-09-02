@@ -19,6 +19,7 @@ public class PlayerMoving : MonoBehaviour
     [SerializeField]
     PlayerMovingShift _movingShift;
 
+    [Header("레이")]
     [SerializeField]
     private Camera _camera;
     Ray _ray;
@@ -26,19 +27,21 @@ public class PlayerMoving : MonoBehaviour
     private RaycastHit _hit;
     float _rayMaxDistance = 500f;
 
-    public RaycastHit Hit
-    {
-        get { return _hit; }
-        set { _hit = value; }
-    }
-
+    
     Vector3 _projectionRay;
     Vector3 _projectionPlayer;
     Vector3 move;
     float gravity = -9.81f;
 
-    Vector3 _rayHitPoint; 
+    public Vector3 _rayHitPoint; 
 
+    public Vector3 RayHitPoint
+    {
+        get { return _rayHitPoint; }
+        set { _rayHitPoint = value; }
+    }
+ 
+    public CharacterController CharacterController => _characterController;
    public Animator Animator => _animator;
     private void Awake()
     {
@@ -64,13 +67,8 @@ public class PlayerMoving : MonoBehaviour
 
         enabled = false;
     }
+ 
 
-    void Start()
-    { 
-     
-        
-    }
-   
     public void Moving()
     {
         
@@ -85,18 +83,17 @@ public class PlayerMoving : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                
-                RayCamTo(out _hit, _layerMask);
-
+                //이동은 하지만 새로운 ray가 들어가지 않음
                 if (!enabled)
                 {
                     return;
                 }
-
+                
+                RayCamTo(out _hit, _layerMask);
 
                 Debug.Log("무빙먼저?");
                 Debug.Log($"{_hit.collider}");
-
+                 
                  if (_hit.collider != null)
                  {
                          Debug.Log($"콜라이더 밑");
@@ -125,10 +122,10 @@ public class PlayerMoving : MonoBehaviour
        move.y = gravity;
          
        _characterController.Move(move * Time.deltaTime);
-
+         
         //y가 다르게 생성되면 뛰면서 생성
         _animator.SetFloat("FMoving", (_rayHitPoint - _playertransform.position).magnitude);
-          
+        
     }
     public void RayCamTo(out RaycastHit hit, LayerMask layerMask)
     {

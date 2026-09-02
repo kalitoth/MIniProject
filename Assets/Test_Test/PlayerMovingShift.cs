@@ -2,22 +2,28 @@ using System.Collections;
 using System.Collections.Generic; 
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEditor.Experimental.GraphView.GraphView;
 public class PlayerMovingShift : MonoBehaviour
 {
     
-    //초기 플레이어
+    //초기 플레이어 
     [SerializeField]
-    PlayerMoving playerMoving;
+    Player_Test _player;
+    //이거 나중에 고치기
+    //플레이어 4명일때 
+    [SerializeField]
+    Player_Test[] _players = new Player_Test[4];
 
+    //레이
     [SerializeField]
     private Camera _camera;
     private RaycastHit _hit;
-
     Ray _ray;
-
     LayerMask _layerMask;
-
     float _rayMaxDistance = 500f;
+
+    public Player_Test Player => _player;
+
     private void Awake()
     {
         _layerMask = 1 << LayerMask.NameToLayer("Player") ;
@@ -26,11 +32,11 @@ public class PlayerMovingShift : MonoBehaviour
     void Start()
     {
        
-        if(playerMoving == null)
-        {
-            Debug.Log("무빙 시프트에 플레이어 무빙이 없다");
-        }
-        playerMoving.enabled = true;
+       if(_player == null)
+       {
+           Debug.Log("무빙 시프트에 플레이어가 없다");
+       }
+        _player._playerMoving.enabled = true; 
     }
     public void Update()
     {
@@ -38,6 +44,11 @@ public class PlayerMovingShift : MonoBehaviour
     }
     public void MovingShift()
     {
+        if(_player._state.HasFlag(Player_Test.State.Skill))
+        {
+            return;
+        }
+
         if (!EventSystem.current.IsPointerOverGameObject())
         {
             if (Input.GetMouseButtonDown(0))
@@ -50,19 +61,19 @@ public class PlayerMovingShift : MonoBehaviour
                     if (_hit.collider.gameObject.CompareTag("Player"))
                     {
                         Debug.Log("여기 들어오나?");
-                       if(playerMoving != null)
+                       if(_player != null)
                        {
-                           playerMoving.enabled = false;
+                            _player._playerMoving.enabled = false; 
                        }
-                       playerMoving = _hit.collider.gameObject.GetComponent<PlayerMoving>();
-                       playerMoving.enabled = true; 
+                        _player = _hit.collider.gameObject.GetComponent<Player_Test>(); 
+                        _player._playerMoving.enabled = true;
                     }
                 }
 
             }
         }
 
-         
+        
     }
 
     public void RayCamTo(out RaycastHit hit, LayerMask layerMask)

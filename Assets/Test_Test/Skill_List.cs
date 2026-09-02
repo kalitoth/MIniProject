@@ -39,44 +39,29 @@ public class Skill_List : MonoBehaviour
  
     #region 스킬 목록
 
+    //  1. 근접 단일 공격
     public void Sword(Player_Test player, RaycastHit hit)
     {
+        float range = 2;
+        float sqrRange = range * range;
+
         if (!EventSystem.current.IsPointerOverGameObject())
         {
-            if(player._lineRenderer.startColor != _initialColor)
-            {
-                player._lineRenderer.startColor = _initialColor; 
-            }
-             
+            LineColorInitial(player);
+           
+            
             if (hit.collider != null && hit.collider.gameObject.CompareTag("Monster"))
-            {  
-                if ((hit.point - player.transform.position).sqrMagnitude > 3f)
-                {
-                    
-                    if (player._lineRenderer.startColor == _abledColor)
-                    {
-                        return;
-                    }
-                    player._lineRenderer.startColor = _abledColor; 
-                }
-                else
-                {
-                    if (player._lineRenderer.startColor != _ableColor)
-                    {
-                        player._lineRenderer.startColor = _ableColor;
-                    }
-                       
-                }
-                
+            {
+                LineColorChangable(player, hit, sqrRange);
+
                if (Input.GetMouseButtonDown(0))
                {
-                    Monster_Test monster = hit.collider.gameObject.GetComponent<Monster_Test>();
-                    if ((hit.point - player.transform.position).sqrMagnitude <= 3f)
+                    if ((hit.point - player.transform.position).sqrMagnitude <= sqrRange)
                     {
+                       Monster_Test monster = hit.collider.gameObject.GetComponent<Monster_Test>();
                        monster.HP -= 1;
 
-                       player._state = Player_Test.State.None;
-                       player._lineRenderer.enabled = false;
+                        Initialized(player);
                     }
                }
                     
@@ -84,44 +69,29 @@ public class Skill_List : MonoBehaviour
         }
         Debug.Log("Sword");
     }
+
+    //  2. 원거리 단일 공격
     public void Bow(Player_Test player, RaycastHit hit)
     {
+        float range = 15;
+        float sqrRange = range * range;
+
         if (!EventSystem.current.IsPointerOverGameObject())
         {
-            if (player._lineRenderer.startColor != _initialColor)
-            {
-                player._lineRenderer.startColor = _initialColor;
-            }
+            LineColorInitial(player);
 
             if (hit.collider != null && hit.collider.gameObject.CompareTag("Monster"))
             {
-                if ((hit.point - player.transform.position).sqrMagnitude > 300f)
-                {
-
-                    if (player._lineRenderer.startColor == _abledColor)
-                    {
-                        return;
-                    }
-                    player._lineRenderer.startColor = _abledColor;
-                }
-                else
-                {
-                    if (player._lineRenderer.startColor != _ableColor)
-                    {
-                        player._lineRenderer.startColor = _ableColor;
-                    }
-
-                }
+                LineColorChangable(player, hit, sqrRange);
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    Monster_Test monster = hit.collider.gameObject.GetComponent<Monster_Test>();
-                    if ((hit.point - player.transform.position).sqrMagnitude <= 300f)
+                    if ((hit.point - player.transform.position).sqrMagnitude <= sqrRange)
                     {
+                        Monster_Test monster = hit.collider.gameObject.GetComponent<Monster_Test>();
                         monster.HP -= 1;
-                        
-                        player._state = Player_Test.State.None;
-                        player._lineRenderer.enabled = false;
+
+                        Initialized(player);
                     }
                 }
 
@@ -129,44 +99,30 @@ public class Skill_List : MonoBehaviour
         }
         Debug.Log("Bow");
     }
-   
+   //   3. 원거리 범위 공격
     public void Fireball(Player_Test player, RaycastHit hit)
     {
+        float range = 15;
+        float sqrRange = range * range;
+        float fierballRange = 3f;
+
         if (!EventSystem.current.IsPointerOverGameObject())
         {
-            if (player._lineRenderer.startColor != _initialColor)
-            {
-                player._lineRenderer.startColor = _initialColor;
-            }
+            LineColorInitial(player);
 
             if (hit.collider != null)
             {
-                if ((hit.point - player.transform.position).sqrMagnitude > 200f)
-                {
+                LineColorChangable(player, hit, sqrRange);
 
-                    if (player._lineRenderer.startColor == _abledColor)
-                    {
-                        return;
-                    }
-                    player._lineRenderer.startColor = _abledColor;
-                }
-                else
-                {
-                    if (player._lineRenderer.startColor != _ableColor)
-                    {
-                        player._lineRenderer.startColor = _ableColor;
-                    }
-
-                }
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    if ((hit.point - player.transform.position).sqrMagnitude <= 200f)
+                    if ((hit.point - player.transform.position).sqrMagnitude <= sqrRange)
                     {
                         Debug.Log("여기 들어오니?111");
                     
-                        //이거 다시 정리
-                          int monsterNumber = Physics.OverlapSphereNonAlloc(hit.point, 100f, _colliders, _layerMaskUnit);
+                        
+                          int monsterNumber = Physics.OverlapSphereNonAlloc(hit.point, fierballRange, _colliders, _layerMaskUnit);
 
                         Debug.Log("여기 들어오니?222");
                         Debug.Log($"{monsterNumber}");
@@ -175,8 +131,7 @@ public class Skill_List : MonoBehaviour
 
                         if(monsterNumber == 0)
                         {
-                            Debug.Log("혹시 0?");
-                            return;
+                            Debug.Log("혹시 0?"); 
 
                         }
 
@@ -185,11 +140,9 @@ public class Skill_List : MonoBehaviour
                              
                             _colliders[i].gameObject.GetComponent<Unit_Test>().HP -= 1;
                           } 
-                        Debug.Log("여기 들어오니?333");
-                         
-                           player._state = Player_Test.State.None;
-                           player.GetComponent<PlayerMoving>().enabled = true;
-                           player._lineRenderer.enabled = false;
+                            Debug.Log("여기 들어오니?333");
+
+                        Initialized(player);
 
                     }
                 }
@@ -199,13 +152,99 @@ public class Skill_List : MonoBehaviour
 
         Debug.Log("파이어볼");
     }
+    //  4. 원거리 단일 스택 공격
     public void Scroll(Player_Test player, RaycastHit hit)
     {
+        float range = 15;
+        float sqrRange = range * range;
+        
+
+        if (!EventSystem.current.IsPointerOverGameObject())
+        {
+            LineColorInitial(player);
+
+            if (hit.collider != null && hit.collider.gameObject.CompareTag("Monster"))
+            {
+                LineColorChangable(player, hit, sqrRange);
+
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if ((hit.point - player.transform.position).sqrMagnitude <= sqrRange)
+                    {
+                            Debug.Log($"스크롤 들어오나?1111");
+                        Monster_Test monster = hit.collider.gameObject.GetComponent<Monster_Test>();
+
+                        if (monster == null)
+                        {
+                            Debug.Log($"monster가 null");
+                            return;
+                        }
+
+                        _monster[player._skillNum] = monster;
+                        player._skillNum++;
+                            Debug.Log($"스크롤 들어오나?2222");
+                            Debug.Log($"{player._skillNum}");
+                        if(player._skillNum == 3)
+                        {
+                            for(int i = 0; i < player._skillNum; i++)
+                            {
+                                _monster[i].HP -= 1;
+                            }
+
+                            Initialized(player);
+                            player._skillNum = 0;
+                        }
+                         
+                    }
+                }
+
+            }
+        } 
         Debug.Log("Scroll");
     }
     public void Moving(Player_Test player, RaycastHit hit)
     {
         Debug.Log("Moving");
     }
+    #endregion
+
+
+    #region 함수 목록
+
+    
+    void LineColorInitial(Player_Test player)
+    {
+        if (player._lineRenderer.startColor != _initialColor)
+        {
+            player._lineRenderer.startColor = _initialColor;
+        }
+    }
+    void LineColorChangable(Player_Test player, RaycastHit hit, float sqrRange)
+    {
+        if ((hit.point - player.transform.position).sqrMagnitude > sqrRange)
+        {
+
+            if (player._lineRenderer.startColor == _abledColor)
+            {
+                return;
+            }
+            player._lineRenderer.startColor = _abledColor;
+        }
+        else
+        {
+            if (player._lineRenderer.startColor != _ableColor)
+            {
+                player._lineRenderer.startColor = _ableColor;
+            }
+
+        }
+    }
+    void Initialized(Player_Test player)
+    {
+        player._state &= ~Player_Test.State.Skill;
+        player.GetComponent<PlayerMoving>().enabled = true;
+        player._lineRenderer.enabled = false;
+    }
+
     #endregion
 }

@@ -9,10 +9,14 @@ public class Player_Test : Unit_Test
 {
     [SerializeField]
     Camera _camera;
+    [SerializeField]
+    GameObject _playerSight;
 
     RaycastHit _hit;
+    LayerMask _layerMask;
+    float _distance = 500;
     //이동 
-    PlayerMoving _playerMoving;
+    public PlayerMoving _playerMoving;
     public LineRenderer _lineRenderer;
 
     //스킬 리스트
@@ -34,19 +38,29 @@ public class Player_Test : Unit_Test
 
     //스킬 고유 번호
     public int _skillIndex;
+    //스킬 사용 횟수
+    public int _skillNum = 0;
+    public int _attackNum = 0;
 
     float _lineWidth = 0.05f;
 
     //상태
-    public State _state = State.None;
-    public enum State
-    {
-        None,
-        Skill
-    }
+    public State _state;
 
-    void Start()
-    { 
+    [Flags]
+    public enum State : byte 
+    {
+        Nothing = 0b0000,
+        None = 0b0001,
+        Skill = 0b0010,
+        Battle = 0b0100,
+    }
+    private void Awake()
+    {
+        _state = State.None;
+        Instantiate(_playerSight,gameObject.transform);
+        _layerMask = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Monster") | 1 << LayerMask.NameToLayer("Ground");
+
         _lineRenderer = GetComponent<LineRenderer>();
         _playerMoving = GetComponent<PlayerMoving>();
 
@@ -58,44 +72,103 @@ public class Player_Test : Unit_Test
         _lineRenderer.positionCount = 2;
         _lineRenderer.startWidth = _lineWidth;
         _lineRenderer.endWidth = _lineWidth;
-        
+
         //능력치
         //최대 체력 = 기본 점수 + 수정치 * (레벨 + 직업에 따른 점수) > 직업이 없으니 생략 
-        MAXHP = BasicHp + Mathf.FloorToInt((Constitution - 10)*0.5f)* Level;
+        MAXHP = BasicHp + Mathf.FloorToInt((Constitution - 10) * 0.5f) * Level;
         HP = MAXHP;
+    }
+    void Start()
+    {
+        
+        
+
+        
+
+        
+        
+        
     }
 
     
     void Update()
     {
+         
 
-        if ( _state ==  State.None)
+        //임시 - 네브메쉬 들어가면 뺄 것
+        if (Input.GetKeyDown(KeyCode.BackQuote))
         {
-            _playerMoving.Moving();
+            _playerMoving.enabled = true;
         }
 
-        if (_state == State.Skill)
+        if (_state.HasFlag(State.None))
+        {
+            _playerMoving.Moving(); 
+        }
+
+        if (_state.HasFlag(State.Skill))
+        {
+            PlayerUseSkill();
+        }
+        
+        if (_state.HasFlag(State.Battle))
         {
             if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
             {
-                _playerMoving.enabled = true;
-                _lineRenderer.enabled = false;
-                _state = State.None;
+                _playerMoving.RayHitPoint = transform.position;
+                _playerMoving.Animator.SetFloat("FMoving", 0);
             }
-            
-            if(Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
+            //턴이 돌아오면 movement 초기화
+             
+            _state |= State.None;
+
+            Movement -= _playerMoving.CharacterController.velocity.magnitude * Time.deltaTime;
+            Debug.Log($"설마 무브먼트 너냐 : {Movement}");
+            if (Movement < 0)
             {
-                _playerMoving.enabled = true;
-                _lineRenderer.enabled = false;
-                _state = State.None;
+                _state &= ~State.None;
+                Movement = 9;
             }
 
-            PlayerTarget();
-
-             _playerSkill[_skillIndex](this, _hit);
-              
         }
-        
+    }
+
+    void PlayerUseSkill()
+    {
+
+        if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+        {
+            //스킬 쓰면 스킬 취소
+            //_playerMoving.enabled = true;
+            //_lineRenderer.enabled = false;
+            //_state = State.None;
+
+            //스킬 쓰면 이동 취소 
+            _playerMoving.RayHitPoint = transform.position;
+            _playerMoving.Animator.SetFloat("FMoving", 0);
+        }
+
+
+       //if (!_skillButton[0].IsActive())
+       //{
+       //    _lineRenderer.enabled = false;
+       //    _state &= ~State.Skill;
+       //    return;
+       //}
+
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
+        {
+            _playerMoving.enabled = true;
+            _lineRenderer.enabled = false;
+            //_state = State.None;
+            _state &= ~State.Skill;
+            _skillNum = 0;
+        }
+
+        PlayerTarget();
+
+        _playerSkill[_skillIndex](this, _hit);
+         
     }
 
     void PlayerTarget()
@@ -104,9 +177,11 @@ public class Player_Test : Unit_Test
         {
             Ray target = _camera.ScreenPointToRay(Input.mousePosition);
 
-            Physics.Raycast(target, out _hit);
+            Physics.Raycast(target, out _hit, _distance,_layerMask);
  
             Debug.DrawLine(transform.position, _hit.point, Color.blue, 0.000001f);
+
+          
 
            _lineRenderer.SetPosition(0, transform.position);
             
@@ -122,6 +197,6 @@ public class Player_Test : Unit_Test
     }
 
     
-
+   
   
 }

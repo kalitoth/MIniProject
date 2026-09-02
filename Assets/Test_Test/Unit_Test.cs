@@ -9,7 +9,10 @@ public class Unit_Test : MonoBehaviour
     private int _dexterity = 10;
     private int _constitution = 10;
 
-    private int _movement = 10;
+    //이동력
+    private float _movement = 10;
+    //스피드
+    private int _speed = 8;
 
     private int _hp;
     private int _maxHp;
@@ -37,6 +40,16 @@ public class Unit_Test : MonoBehaviour
     {
         get { return _constitution; }
         set { _constitution = value; }
+    }
+    public float Movement
+    {
+        get { return _movement; }
+        set { _movement = value; }
+    }
+    public int Speed
+    {
+        get { return _speed; }
+        set { _speed = value; }
     }
     public int Level
     {

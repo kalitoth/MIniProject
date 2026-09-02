@@ -13,7 +13,7 @@ public class MakeSkillButton_Test : MonoBehaviour
     [SerializeField]
     private ScrollRect _scrollRect;
 
-    Ray_Test _ray_Test;
+    Ray_Skill_SkillButton _ray_Test;
     RaycastHit _hit;
 
     [Header("버튼 스킬 저장소")]
@@ -26,7 +26,7 @@ public class MakeSkillButton_Test : MonoBehaviour
     [SerializeField]
     Player_Test[] _playerParty = new Player_Test[4];
 
-    PlayerMoving _moving;
+     
 
     private void Awake()
     { 
@@ -42,35 +42,40 @@ public class MakeSkillButton_Test : MonoBehaviour
  
     }
     void Start()
-    {
-        _moving = _player.GetComponent<PlayerMoving>();
-        _ray_Test = GetComponent<Ray_Test>();
+    { 
+        _ray_Test = GetComponent<Ray_Skill_SkillButton>();
        
     }
     
     void Update()
     {
-        //클릭한 캐릭터의 스킬로 전환
-        if (Input.GetMouseButtonDown(0))
+        if (_player._state.HasFlag(Player_Test.State.Skill))
         {
-            if (_ray_Test.Hit.collider != null)
+            return;
+        }
+
+            //클릭한 캐릭터의 스킬로 전환
+            if (Input.GetMouseButtonDown(0))
             {
-                if (_hit.collider == _ray_Test.Hit.collider)
+                if (_ray_Test.Hit.collider != null)
                 {
-                    return;
-                }
+                    if (_hit.collider == _ray_Test.Hit.collider)
+                    {
+                        return;
+                    }
 
-                if (_ray_Test.Hit.collider.gameObject.CompareTag("Player"))
-                {
-                    _hit = _ray_Test.Hit;
+                    if (_ray_Test.Hit.collider.gameObject.CompareTag("Player"))
+                    {
+                        _hit = _ray_Test.Hit;
 
-
-                    RemoveSkillButton();
-                    _player = _hit.collider.gameObject.GetComponent<Player_Test>();
-                    ReviveSkillButton();
+                        Debug.Log("버튼 삭제먼저?");
+                        RemoveSkillButton();
+                        _player = _hit.collider.gameObject.GetComponent<Player_Test>();
+                        ReviveSkillButton();
+                    }
                 }
             }
-        }
+        
             
     }
 
@@ -149,27 +154,29 @@ public class MakeSkillButton_Test : MonoBehaviour
     #region 버튼 목록
     void Switch(int Index)
     { 
-        if (_player._state == Player_Test.State.None)
+        if (!_player._state.HasFlag(Player_Test.State.Skill))
         {
-            _player._state = Player_Test.State.Skill;
-            _moving.enabled = false;
+            _player._state |= Player_Test.State.Skill;
+            _player._playerMoving.enabled = false; 
             _player._lineRenderer.enabled = true;
             _player._lineRenderer.SetPosition(1, _player.transform.position);
+           
         }
         else
         {
             if (Index != _player._skillIndex)
             {
                 _player._skillIndex = Index;
+                _player._skillNum = 0;
                 return;
             }
-            _player._state = Player_Test.State.None;
-            _moving.enabled = true;
+            _player._state &= ~Player_Test.State.Skill;
+            _player._playerMoving.enabled = true;
             _player._lineRenderer.enabled = false;
         }
         _player._skillIndex = Index;
-        
-         
+        _player._skillNum = 0;
+
     }
     void Sword()
     {
