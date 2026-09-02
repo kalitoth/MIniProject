@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using static UnityEditor.Experimental.GraphView.GraphView;
+using UnityEngine.EventSystems; 
 
 public class Ray_Skill_SkillButton : MonoBehaviour
 {

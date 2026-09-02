@@ -13,6 +13,8 @@ public class UI_Test : MonoBehaviour
     [SerializeField]
     Slider _playerHPBar;
     [SerializeField]
+    Button _turnButton;
+     
     Player_Test _currentPlayer;
 
     //어떤 유닛을 클릭했을 때 hp
@@ -21,13 +23,14 @@ public class UI_Test : MonoBehaviour
     Slider _anyUnitHPBar; 
     Unit_Test _anyUnit;
 
-
+    PlayerMovingShift _playerMovingShift;
     Ray_Camera_UI _ray_Test;
     private RaycastHit _hit;
 
 
     void Start()
     {
+        _playerMovingShift = GetComponent<PlayerMovingShift>();
         _ray_Test = GetComponent<Ray_Camera_UI>();
 
         if (_playerHPBar == null)
@@ -44,6 +47,8 @@ public class UI_Test : MonoBehaviour
         }
 
         _anyUnitHPBar.gameObject.SetActive(false);
+
+        _currentPlayer = _playerMovingShift.Player;
     }
      
     void Update()
@@ -51,30 +56,15 @@ public class UI_Test : MonoBehaviour
 
         //ui 동기화
         //현재 선택된 캐릭터 hp
-        if (!EventSystem.current.IsPointerOverGameObject())
+        _currentPlayer = _playerMovingShift.Player;
+        _playerHPBar.value = (float)_currentPlayer.HP / _currentPlayer.MAXHP;
+
+        _turnButton.onClick.AddListener(CurrentPlayerTurn);
+
+        void CurrentPlayerTurn()
         {
-            
-            if (_ray_Test.Hit.collider == null)
-            {
-                return;
-            }
-
-            if (_ray_Test.Hit.collider.gameObject.CompareTag("Player"))
-            {
-
-                if (_ray_Test.Hit.collider.gameObject.GetComponent<Player_Test>() == null)
-                {
-                    Debug.Log("플레이어 컴포넌트 없음");
-                    return;
-                }
-                _currentPlayer = _ray_Test.Hit.collider.gameObject.GetComponent<Player_Test>();
-            }
-
-            _playerHPBar.value = (float)_currentPlayer.HP / _currentPlayer.MAXHP;
-
-            
+            _currentPlayer.BattleEnd = true;
         }
-
 
 
         //유닛 hp

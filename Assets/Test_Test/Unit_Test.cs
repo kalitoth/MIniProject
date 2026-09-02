@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +21,11 @@ public class Unit_Test : MonoBehaviour
 
     private int _level = 1;
 
+    private bool _turnEnable;
 
+    private bool _battleEnd;
+
+    
     public int HP
     {
         get { return _hp; }
@@ -56,14 +61,34 @@ public class Unit_Test : MonoBehaviour
         get { return _level; }
         set { _level = value; }
     }
-    void Start()
+    public bool TurnEnable
     {
-        
+        get { return _turnEnable; }
+        set { _turnEnable = value; }
+    }
+    public bool BattleEnd
+    {
+        get { return _battleEnd; }
+        set { _battleEnd = value; }
     }
 
-    
-    void Update()
+
+    public void BattleTurnTrigger()
     {
-        
+        TurnEnable = true;
     }
+
+   //State _state = State.None;
+   //[Flags]
+   //public enum State : byte
+   //{
+   //    Nothing = 0b0000,
+   //    None = 0b0001,
+   //    Skill = 0b0010,
+   //    Battle = 0b0100,
+   //}
+   //public void EnterBattleUnit()
+   //{
+   //    _state = State.Battle;
+   //}
 }

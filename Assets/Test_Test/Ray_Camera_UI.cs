@@ -21,7 +21,7 @@ public class Ray_Camera_UI : MonoBehaviour
     float _distance = 500f;
     private void Awake()
     {
-        _layer = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Monster")| 1 << LayerMask.NameToLayer("Ground");
+        _layer = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Monster");
     }
     void Start()
     {

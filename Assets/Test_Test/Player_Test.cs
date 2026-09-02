@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Collections.Generic; 
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI; 
@@ -46,7 +46,13 @@ public class Player_Test : Unit_Test
 
     //상태
     public State _state;
+     
 
+    //배틀 턴 
+    private bool _battleReady = true;
+    private bool _battleStart = true;
+  
+     
     [Flags]
     public enum State : byte 
     {
@@ -80,13 +86,7 @@ public class Player_Test : Unit_Test
     }
     void Start()
     {
-        
-        
-
-        
-
-        
-        
+         
         
     }
 
@@ -110,27 +110,87 @@ public class Player_Test : Unit_Test
         {
             PlayerUseSkill();
         }
-        
-        if (_state.HasFlag(State.Battle))
+
+       
+            if (_state.HasFlag(State.Battle))
+            {
+                if(_battleReady)
+                {
+                    // 이건 배틀 상태가 될 때 한번
+                    if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                    {
+                        _playerMoving.RayHitPoint = transform.position;
+                        _playerMoving.Animator.SetFloat("FMoving", 0);
+                    }
+                    //배틀이 끝나면 다시 켜기
+                    _battleReady = false;
+                }
+                
+            if (TurnEnable)
+                {
+                 
+                    // 배틀 시작할 때 주는 것
+                   if(_battleStart)
+                   {
+                    
+                       _state |= State.None;
+
+                    //턴 넘기기 버튼에서 true
+                       _battleStart = false;
+                   }
+
+
+                if (_state.HasFlag(State.None))
+                {
+                    Movement -= _playerMoving.CharacterController.velocity.magnitude * Time.deltaTime;
+                    Debug.Log($"무브먼트  : {Movement}");
+                }
+                    
+                //배틀 도중에 없어져야 할 것
+                //스킬 횟수 공격 횟수
+                if (Movement <= 0)
+                {
+                    Debug.Log($"이동불가");
+
+                    _state &= ~State.None;
+                    if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                    {
+                        _playerMoving.RayHitPoint = transform.position;
+                        _playerMoving.Animator.SetFloat("FMoving", 0);
+                    }
+
+                    Movement = 9;
+                }
+               
+                
+                     
+                
+
+                if(BattleEnd)
+                {
+                    Debug.Log("배틀 끝");
+                    TurnEnable = false;
+                    _battleStart = true;
+
+                    BattleEnd = false;
+                }
+            }
+            }
+       
+
+            //임시
+        if(Input.GetKeyDown(KeyCode.Alpha2))
         {
-            if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-            {
-                _playerMoving.RayHitPoint = transform.position;
-                _playerMoving.Animator.SetFloat("FMoving", 0);
-            }
-            //턴이 돌아오면 movement 초기화
-             
-            _state |= State.None;
-
-            Movement -= _playerMoving.CharacterController.velocity.magnitude * Time.deltaTime;
-            Debug.Log($"설마 무브먼트 너냐 : {Movement}");
-            if (Movement < 0)
-            {
-                _state &= ~State.None;
-                Movement = 9;
-            }
-
+            TurnEnable = true;
+            Debug.Log("턴 시작");
         }
+        
+        if(Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            _state = State.Battle;
+            Debug.Log("배틀 시작");
+        }
+        
     }
 
     void PlayerUseSkill()
@@ -147,15 +207,7 @@ public class Player_Test : Unit_Test
             _playerMoving.RayHitPoint = transform.position;
             _playerMoving.Animator.SetFloat("FMoving", 0);
         }
-
-
-       //if (!_skillButton[0].IsActive())
-       //{
-       //    _lineRenderer.enabled = false;
-       //    _state &= ~State.Skill;
-       //    return;
-       //}
-
+ 
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
         {
             _playerMoving.enabled = true;

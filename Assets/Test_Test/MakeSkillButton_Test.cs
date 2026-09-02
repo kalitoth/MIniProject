@@ -54,27 +54,26 @@ public class MakeSkillButton_Test : MonoBehaviour
             return;
         }
 
-            //클릭한 캐릭터의 스킬로 전환
-            if (Input.GetMouseButtonDown(0))
+        
+        //클릭한 캐릭터의 스킬로 전환
+        if (_ray_Test.Hit.collider != null)
+        {
+            if (_hit.collider == _ray_Test.Hit.collider)
             {
-                if (_ray_Test.Hit.collider != null)
-                {
-                    if (_hit.collider == _ray_Test.Hit.collider)
-                    {
-                        return;
-                    }
-
-                    if (_ray_Test.Hit.collider.gameObject.CompareTag("Player"))
-                    {
-                        _hit = _ray_Test.Hit;
-
-                        Debug.Log("버튼 삭제먼저?");
-                        RemoveSkillButton();
-                        _player = _hit.collider.gameObject.GetComponent<Player_Test>();
-                        ReviveSkillButton();
-                    }
-                }
+                return;
             }
+
+            if (_ray_Test.Hit.collider.gameObject.CompareTag("Player"))
+            {
+                _hit = _ray_Test.Hit;
+
+                Debug.Log("버튼 삭제먼저?");
+                RemoveSkillButton();
+                _player = _hit.collider.gameObject.GetComponent<Player_Test>();
+                ReviveSkillButton();
+            }
+        }
+        
         
             
     }
