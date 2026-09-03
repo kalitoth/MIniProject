@@ -45,25 +45,17 @@ public class Player_Test : Unit_Test
     float _lineWidth = 0.05f;
 
     //상태
-    public State _state;
+     
      
 
     //배틀 턴 
     private bool _battleReady = true;
     private bool _battleStart = true;
   
-     
-    [Flags]
-    public enum State : byte 
-    {
-        Nothing = 0b0000,
-        None = 0b0001,
-        Skill = 0b0010,
-        Battle = 0b0100,
-    }
+   
     private void Awake()
     {
-        _state = State.None;
+        UnitState = State.None;
         Instantiate(_playerSight,gameObject.transform);
         _layerMask = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Monster") | 1 << LayerMask.NameToLayer("Ground");
 
@@ -101,18 +93,18 @@ public class Player_Test : Unit_Test
             _playerMoving.enabled = true;
         }
 
-        if (_state.HasFlag(State.None))
+        if (UnitState.HasFlag(State.None))
         {
             _playerMoving.Moving(); 
         }
 
-        if (_state.HasFlag(State.Skill))
+        if (UnitState.HasFlag(State.Skill))
         {
             PlayerUseSkill();
         }
 
        
-            if (_state.HasFlag(State.Battle))
+            if (UnitState.HasFlag(State.Battle))
             {
                 if(_battleReady)
                 {
@@ -132,18 +124,18 @@ public class Player_Test : Unit_Test
                     // 배틀 시작할 때 주는 것
                    if(_battleStart)
                    {
-                    
-                       _state |= State.None;
+
+                    UnitState |= State.None;
 
                     //턴 넘기기 버튼에서 true
                        _battleStart = false;
                    }
 
 
-                if (_state.HasFlag(State.None))
+                if (UnitState.HasFlag(State.None))
                 {
                     Movement -= _playerMoving.CharacterController.velocity.magnitude * Time.deltaTime;
-                    Debug.Log($"무브먼트  : {Movement}");
+                    //Debug.Log($"무브먼트  : {Movement}");
                 }
                     
                 //배틀 도중에 없어져야 할 것
@@ -152,7 +144,7 @@ public class Player_Test : Unit_Test
                 {
                     Debug.Log($"이동불가");
 
-                    _state &= ~State.None;
+                    UnitState &= ~State.None;
                     if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
                     {
                         _playerMoving.RayHitPoint = transform.position;
@@ -166,13 +158,13 @@ public class Player_Test : Unit_Test
                      
                 
 
-                if(BattleEnd)
+                if(TurnEnd)
                 {
-                    Debug.Log("배틀 끝");
+                    Debug.Log("턴 끝");
                     TurnEnable = false;
                     _battleStart = true;
 
-                    BattleEnd = false;
+                    
                 }
             }
             }
@@ -187,7 +179,7 @@ public class Player_Test : Unit_Test
         
         if(Input.GetKeyDown(KeyCode.Alpha3))
         {
-            _state = State.Battle;
+            UnitState = State.Battle;
             Debug.Log("배틀 시작");
         }
         
@@ -213,7 +205,7 @@ public class Player_Test : Unit_Test
             _playerMoving.enabled = true;
             _lineRenderer.enabled = false;
             //_state = State.None;
-            _state &= ~State.Skill;
+            UnitState &= ~State.Skill;
             _skillNum = 0;
         }
 

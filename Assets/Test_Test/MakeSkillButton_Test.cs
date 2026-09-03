@@ -49,7 +49,7 @@ public class MakeSkillButton_Test : MonoBehaviour
     
     void Update()
     {
-        if (_player._state.HasFlag(Player_Test.State.Skill))
+        if (_player.UnitState.HasFlag(Unit_Test.State.Skill))
         {
             return;
         }
@@ -153,9 +153,9 @@ public class MakeSkillButton_Test : MonoBehaviour
     #region 버튼 목록
     void Switch(int Index)
     { 
-        if (!_player._state.HasFlag(Player_Test.State.Skill))
+        if (!_player.UnitState.HasFlag(Unit_Test.State.Skill))
         {
-            _player._state |= Player_Test.State.Skill;
+            _player.UnitState |= Unit_Test.State.Skill;
             _player._playerMoving.enabled = false; 
             _player._lineRenderer.enabled = true;
             _player._lineRenderer.SetPosition(1, _player.transform.position);
@@ -169,7 +169,7 @@ public class MakeSkillButton_Test : MonoBehaviour
                 _player._skillNum = 0;
                 return;
             }
-            _player._state &= ~Player_Test.State.Skill;
+            _player.UnitState &= ~Unit_Test.State.Skill;
             _player._playerMoving.enabled = true;
             _player._lineRenderer.enabled = false;
         }

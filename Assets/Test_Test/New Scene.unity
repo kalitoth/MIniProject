@@ -905,7 +905,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8189980434977739222, guid: 2dfbb63c9cdf7504faf4ff26b0581598, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8189980434977739222, guid: 2dfbb63c9cdf7504faf4ff26b0581598, type: 3}
       propertyPath: m_TagString
@@ -929,7 +929,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8855052669661678444, guid: 2dfbb63c9cdf7504faf4ff26b0581598, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -16.124912
+      value: -12.02
       objectReference: {fileID: 0}
     - target: {fileID: 8855052669661678444, guid: 2dfbb63c9cdf7504faf4ff26b0581598, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1153,8 +1153,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 47604600}
   m_HandleRect: {fileID: 47604599}
   m_Direction: 2
-  m_Value: 1.0001129
-  m_Size: 0.86801755
+  m_Value: 1.0001138
+  m_Size: 0.8680177
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1210,6 +1210,7 @@ GameObject:
   - component: {fileID: 437629400}
   - component: {fileID: 437629399}
   - component: {fileID: 437629403}
+  - component: {fileID: 437629404}
   m_Layer: 7
   m_Name: Monster
   m_TagString: Monster
@@ -1297,7 +1298,7 @@ Transform:
   m_GameObject: {fileID: 437629398}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.91, y: 0.5, z: -13.01}
+  m_LocalPosition: {x: 13.91, y: 0.5, z: -4.67}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1316,7 +1317,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monsterSight: {fileID: 3132396630843239594, guid: 781aad13e2b9ddd42898e0b1dcc204f6, type: 3}
-  _BattleSystem: {fileID: 0}
+  _BattleSystem: {fileID: 3556484609650414713, guid: 66dfb466c46894c4faac1c7b927eb555, type: 3}
+--- !u!54 &437629404
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 437629398}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &557022055
 GameObject:
   m_ObjectHideFlags: 0
@@ -1458,7 +1486,6 @@ MonoBehaviour:
   _skillIndex: 0
   _skillNum: 0
   _attackNum: 0
-  _state: 0
 --- !u!114 &582460201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2911,7 +2938,6 @@ MonoBehaviour:
   _skillIndex: 0
   _skillNum: 0
   _attackNum: 0
-  _state: 0
 --- !u!114 &1229595442
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3486,7 +3512,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0000069287403, y: -0.0009623798}
+  m_AnchoredPosition: {x: -0.000008389002, y: -0.0009623798}
   m_SizeDelta: {x: -2.052597, y: 64.5117}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1543494823
@@ -3938,7 +3964,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monsterSight: {fileID: 3132396630843239594, guid: 781aad13e2b9ddd42898e0b1dcc204f6, type: 3}
-  _BattleSystem: {fileID: 0}
+  _BattleSystem: {fileID: 3556484609650414713, guid: 66dfb466c46894c4faac1c7b927eb555, type: 3}
 --- !u!143 &1913533345
 CharacterController:
   m_ObjectHideFlags: 0
@@ -4329,7 +4355,7 @@ SceneRoots:
   - {fileID: 235054083}
   - {fileID: 706908739}
   - {fileID: 17296695}
-  - {fileID: 437629402}
   - {fileID: 2041884444}
   - {fileID: 251442592}
+  - {fileID: 437629402}
   - {fileID: 946254699}

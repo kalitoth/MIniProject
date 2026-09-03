@@ -14,12 +14,7 @@ public class Monster_Test : Unit_Test
 
     MonsterSight _getSight;
 
-    MonsterState _state = MonsterState.None;
-    enum MonsterState
-    {
-        None,
-        Battle
-    }
+  
     private void Awake()
     {
         MAXHP = BasicHp + Mathf.FloorToInt((Constitution - 10) * 0.5f) * Level;
@@ -52,22 +47,31 @@ public class Monster_Test : Unit_Test
         }
 
 
-        if(_state == MonsterState.None)
+        if(UnitState == State.None)
         {
             if (_getSight._playerList.Count > 0)
             {
 
-                 Instantiate(_BattleSystem);
+                 Instantiate(_BattleSystem,transform.position,transform.rotation, transform);
 
-                _state = MonsterState.Battle;
+                UnitState = State.Battle;
             }
         }
          
-        if(_state == MonsterState.Battle)
+        if(UnitState == State.Battle)
         {
-             //여기에 ai
+            if(TurnEnable)
+            {
+                //여기에 ai
+                Debug.Log("몬스터 행동");
+
+                TurnEnable = false;
+                TurnEnd = true;
+                Debug.Log("몬스터 턴 끝");
+            }
+
         }
     }
-   
 
+   
 }

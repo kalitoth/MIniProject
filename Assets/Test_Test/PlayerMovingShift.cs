@@ -43,7 +43,7 @@ public class PlayerMovingShift : MonoBehaviour
     }
     public void MovingShift()
     {
-        if(_player._state.HasFlag(Player_Test.State.Skill))
+        if(_player.UnitState.HasFlag(Unit_Test.State.Skill))
         {
             return;
         }

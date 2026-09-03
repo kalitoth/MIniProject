@@ -61,9 +61,10 @@ public class UI_Test : MonoBehaviour
 
         _turnButton.onClick.AddListener(CurrentPlayerTurn);
 
+        //현재 플레이어 turn 넘김 버튼
         void CurrentPlayerTurn()
         {
-            _currentPlayer.BattleEnd = true;
+            _currentPlayer.TurnEnd = true;
         }
 
 

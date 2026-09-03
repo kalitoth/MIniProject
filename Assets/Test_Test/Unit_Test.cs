@@ -23,7 +23,7 @@ public class Unit_Test : MonoBehaviour
 
     private bool _turnEnable;
 
-    private bool _battleEnd;
+    private bool _turnEnd;
 
     
     public int HP
@@ -66,10 +66,10 @@ public class Unit_Test : MonoBehaviour
         get { return _turnEnable; }
         set { _turnEnable = value; }
     }
-    public bool BattleEnd
+    public bool TurnEnd
     {
-        get { return _battleEnd; }
-        set { _battleEnd = value; }
+        get { return _turnEnd; }
+        set { _turnEnd = value; }
     }
 
 
@@ -78,17 +78,26 @@ public class Unit_Test : MonoBehaviour
         TurnEnable = true;
     }
 
-   //State _state = State.None;
-   //[Flags]
-   //public enum State : byte
-   //{
-   //    Nothing = 0b0000,
-   //    None = 0b0001,
-   //    Skill = 0b0010,
-   //    Battle = 0b0100,
-   //}
-   //public void EnterBattleUnit()
-   //{
-   //    _state = State.Battle;
-   //}
+     State _state = State.None;
+
+    public State UnitState
+    {
+        get { return _state; }
+        set { _state = value; }
+    }
+
+
+    [Flags]
+   public enum State : byte
+   {
+       Nothing = 0b0000,
+       None = 0b0001,
+       Skill = 0b0010,
+       Battle = 0b0100,
+   }
+
+   public void EnterBattleUnit()
+   {
+       _state = State.Battle;
+   }
 }

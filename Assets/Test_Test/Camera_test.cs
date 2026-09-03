@@ -59,7 +59,7 @@ public class Camera_test : MonoBehaviour
     private void LateUpdate()
     {
 
-        if (!_curruntPlayer._state.HasFlag(Player_Test.State.Skill))
+        if (!_curruntPlayer.UnitState.HasFlag(Unit_Test.State.Skill))
         {
            
         

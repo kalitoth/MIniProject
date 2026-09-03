@@ -57,7 +57,7 @@ public class Ray_Skill_SkillButton : MonoBehaviour
 
                 if (hit.collider != null)
                 {
-                   if (!_player._state.HasFlag(Player_Test.State.Skill))
+                   if (!_player.UnitState.HasFlag(Unit_Test.State.Skill))
                    {
                        _hit = hit;
                    }

@@ -70,7 +70,7 @@ public class Skill_Manage : MonoBehaviour
     private void Update()
     {
 
-        if (_player._state.HasFlag(Player_Test.State.Skill))
+        if (_player.UnitState.HasFlag(Unit_Test.State.Skill))
         {
             Debug.Log("스킬바꾸기 안들어감");
             return;

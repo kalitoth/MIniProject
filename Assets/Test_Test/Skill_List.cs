@@ -241,7 +241,7 @@ public class Skill_List : MonoBehaviour
     }
     void Initialized(Player_Test player)
     {
-        player._state &= ~Player_Test.State.Skill;
+        player.UnitState &= ~Unit_Test.State.Skill;
         player.GetComponent<PlayerMoving>().enabled = true;
         player._lineRenderer.enabled = false;
     }
