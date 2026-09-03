@@ -14,10 +14,10 @@ public class PlayerMoving : MonoBehaviour
     private CharacterController _characterController;
     private Transform _playertransform;
 
-    private Player_Test _player;
-    [Header("무빙시프트")]
-    [SerializeField]
-    PlayerMovingShift _movingShift;
+  // private Player_Test _player;
+  // [Header("무빙시프트")]
+  // [SerializeField]
+  //  PlayerShift _movingShift;
 
     [Header("레이")]
     [SerializeField]
@@ -47,7 +47,7 @@ public class PlayerMoving : MonoBehaviour
     {
         _layerMask = 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Monster");
 
-        _player = GetComponent<Player_Test>();
+        //_player = GetComponent<Player_Test>();
         _playertransform = gameObject.GetComponent<Transform>();
 
         _animator = gameObject.GetComponent<Animator>();
@@ -70,9 +70,7 @@ public class PlayerMoving : MonoBehaviour
  
 
     public void Moving()
-    {
-        
-
+    { 
         if (_animator == null || _characterController == null)
         {
             Debug.Log("무빙에 애니메이터, 컨트롤러가 없다");

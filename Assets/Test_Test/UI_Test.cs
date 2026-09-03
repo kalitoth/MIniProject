@@ -13,8 +13,21 @@ public class UI_Test : MonoBehaviour
     [SerializeField]
     Slider _playerHPBar;
     [SerializeField]
+    Text _text;
+    [SerializeField]
+    TextMeshProUGUI _textMeshPro;
+    [SerializeField]
     Button _turnButton;
+    
+    [SerializeField]
+    Image _playerImage;
+
+    [SerializeField]
+    GameObject _inventory;
+    [SerializeField]
+    Image _image_test;
      
+
     Player_Test _currentPlayer;
 
     //어떤 유닛을 클릭했을 때 hp
@@ -23,15 +36,15 @@ public class UI_Test : MonoBehaviour
     Slider _anyUnitHPBar; 
     Unit_Test _anyUnit;
 
-    PlayerMovingShift _playerMovingShift;
-    Ray_Camera_UI _ray_Test;
+    PlayerShift _playerMovingShift;
+    Ray_UI _ray_Test;
     private RaycastHit _hit;
 
 
     void Start()
     {
-        _playerMovingShift = GetComponent<PlayerMovingShift>();
-        _ray_Test = GetComponent<Ray_Camera_UI>();
+        _playerMovingShift = GetComponent<PlayerShift>();
+        _ray_Test = GetComponent<Ray_UI>();
 
         if (_playerHPBar == null)
         {
@@ -58,16 +71,26 @@ public class UI_Test : MonoBehaviour
         //현재 선택된 캐릭터 hp
         _currentPlayer = _playerMovingShift.Player;
         _playerHPBar.value = (float)_currentPlayer.HP / _currentPlayer.MAXHP;
-
+        //_text.text = "HP" + (float)_currentPlayer.HP / _currentPlayer.MAXHP;
         _turnButton.onClick.AddListener(CurrentPlayerTurn);
-
+       
         //현재 플레이어 turn 넘김 버튼
         void CurrentPlayerTurn()
         {
-            _currentPlayer.TurnEnd = true;
+            if(_currentPlayer.TurnEnable)
+            {
+                _currentPlayer.TurnEnd = true;
+            }
+            
         }
+        //현재 유닛 이미지
+        _playerImage.sprite = _currentPlayer._image;
 
-
+        if(Input.GetKeyDown(KeyCode.I))
+        {
+            Instantiate(_image_test, _inventory.transform);
+        }    
+        
         //유닛 hp
         if (!EventSystem.current.IsPointerOverGameObject())
         {
@@ -95,7 +118,6 @@ public class UI_Test : MonoBehaviour
         }    
 
         _anyUnitHPBar.value = (float)_anyUnit.HP / _anyUnit.MAXHP;
-
- 
+        _textMeshPro.text = $"{(float)_anyUnit.HP} / {_anyUnit.MAXHP}";
     }
 }

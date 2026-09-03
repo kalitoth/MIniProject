@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Unit_Test : MonoBehaviour
@@ -19,13 +20,21 @@ public class Unit_Test : MonoBehaviour
     private int _maxHp;
     private int _basicHp = 10;
 
+    private int _exp;
     private int _level = 1;
 
-    private bool _turnEnable;
+    private int _usingSkillNum;
 
+    private bool _turnEnable;
     private bool _turnEnd;
 
-    
+    private bool _battleReady = true;
+    private bool _battleStart = true;
+
+    private bool _alive = true;
+
+    public Sprite _image;
+
     public int HP
     {
         get { return _hp; }
@@ -56,10 +65,20 @@ public class Unit_Test : MonoBehaviour
         get { return _speed; }
         set { _speed = value; }
     }
+    public int Exp
+    {
+        get { return _exp; }
+        set { _exp = value; }
+    }
     public int Level
     {
         get { return _level; }
         set { _level = value; }
+    }
+    public int UsingSkillNum
+    {
+        get { return _usingSkillNum; }
+        set { _usingSkillNum = value; }
     }
     public bool TurnEnable
     {
@@ -71,12 +90,33 @@ public class Unit_Test : MonoBehaviour
         get { return _turnEnd; }
         set { _turnEnd = value; }
     }
-
-
-    public void BattleTurnTrigger()
+    public bool BattleReady
     {
-        TurnEnable = true;
+        get { return _battleReady; }
+        set { _battleReady = value; }
     }
+    public bool BattleStart
+    {
+        get { return _battleStart; }
+        set { _battleStart = value; }
+    }
+    public bool Alive
+    {
+        get { return _alive; }
+        set { _alive = value; }
+    }
+
+    public void Die()
+    {
+        if(_hp <= 0)
+        {
+            _alive = false;
+            //this.gameObject.SetActive(false);
+            Destroy(this.gameObject);
+        }
+         
+    }
+  
 
      State _state = State.None;
 
@@ -95,9 +135,15 @@ public class Unit_Test : MonoBehaviour
        Skill = 0b0010,
        Battle = 0b0100,
    }
-
-   public void EnterBattleUnit()
+   public void BattleTurnTrigger()
    {
-       _state = State.Battle;
+       BattleStart = true;
+       TurnEnable = true;
+       UsingSkillNum = 1;
+       _state |= State.None;
    }
+    public void EnterBattleUnit()
+    {
+        _state = State.Battle;
+    }
 }

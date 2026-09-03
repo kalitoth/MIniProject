@@ -34,7 +34,7 @@ public class Player_Test : Unit_Test
     }
     //게임 초상화 이미지
     //이건 캐릭터 선택에서 부여해야 한다
-    public Sprite _image;
+    //public Sprite _image;
 
     //스킬 고유 번호
     public int _skillIndex;
@@ -49,8 +49,9 @@ public class Player_Test : Unit_Test
      
 
     //배틀 턴 
-    private bool _battleReady = true;
-    private bool _battleStart = true;
+    
+    
+    //private bool _battleStart = true;
   
    
     private void Awake()
@@ -106,7 +107,7 @@ public class Player_Test : Unit_Test
        
             if (UnitState.HasFlag(State.Battle))
             {
-                if(_battleReady)
+                if(BattleReady)
                 {
                     // 이건 배틀 상태가 될 때 한번
                     if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
@@ -115,20 +116,20 @@ public class Player_Test : Unit_Test
                         _playerMoving.Animator.SetFloat("FMoving", 0);
                     }
                     //배틀이 끝나면 다시 켜기
-                    _battleReady = false;
+                    BattleReady = false;
                 }
                 
             if (TurnEnable)
                 {
                  
                     // 배틀 시작할 때 주는 것
-                   if(_battleStart)
+                   if(BattleStart)
                    {
 
                     UnitState |= State.None;
 
                     //턴 넘기기 버튼에서 true
-                       _battleStart = false;
+                       BattleStart = false;
                    }
 
 
@@ -136,53 +137,40 @@ public class Player_Test : Unit_Test
                 {
                     Movement -= _playerMoving.CharacterController.velocity.magnitude * Time.deltaTime;
                     //Debug.Log($"무브먼트  : {Movement}");
+
+                    if (Movement <= 0)
+                    {
+                        Debug.Log($"이동불가");
+
+                        UnitState &= ~State.None;
+                        if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                        {
+                            _playerMoving.RayHitPoint = transform.position;
+                            _playerMoving.Animator.SetFloat("FMoving", 0);
+                        }
+
+                        
+                    }
                 }
                     
                 //배틀 도중에 없어져야 할 것
                 //스킬 횟수 공격 횟수
-                if (Movement <= 0)
-                {
-                    Debug.Log($"이동불가");
-
-                    UnitState &= ~State.None;
-                    if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-                    {
-                        _playerMoving.RayHitPoint = transform.position;
-                        _playerMoving.Animator.SetFloat("FMoving", 0);
-                    }
-
-                    Movement = 9;
-                }
-               
-                
-                     
-                
+                 
 
                 if(TurnEnd)
                 {
                     Debug.Log("턴 끝");
                     TurnEnable = false;
-                    _battleStart = true;
 
-                    
+                    Movement = 9;
+
                 }
             }
             }
-       
+             
+         
+        Die();
 
-            //임시
-        if(Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            TurnEnable = true;
-            Debug.Log("턴 시작");
-        }
-        
-        if(Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            UnitState = State.Battle;
-            Debug.Log("배틀 시작");
-        }
-        
     }
 
     void PlayerUseSkill()

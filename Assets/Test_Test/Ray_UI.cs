@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Ray_Camera_UI : MonoBehaviour
+public class Ray_UI : MonoBehaviour
 {
 
     [SerializeField]
@@ -21,7 +21,7 @@ public class Ray_Camera_UI : MonoBehaviour
     float _distance = 500f;
     private void Awake()
     {
-        _layer = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Monster");
+        _layer = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Monster") | 1 <<LayerMask.NameToLayer("Ground");
     }
     void Start()
     {

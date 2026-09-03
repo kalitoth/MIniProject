@@ -11,6 +11,7 @@ public class Monster_Test : Unit_Test
     GameObject _BattleSystem;
 
     GameObject _instSight;
+    GameObject _BattleColosseum;
 
     MonsterSight _getSight;
 
@@ -46,24 +47,25 @@ public class Monster_Test : Unit_Test
             return;
         }
 
-
-        if(UnitState == State.None)
-        {
-            if (_getSight._playerList.Count > 0)
-            {
-
-                 Instantiate(_BattleSystem,transform.position,transform.rotation, transform);
-
-                UnitState = State.Battle;
-            }
-        }
+        
+      if (UnitState == State.None)
+      {
+          if (_getSight._playerList.Count > 0)
+          {
+      
+              _BattleColosseum = Instantiate(_BattleSystem,transform.position,transform.rotation);
+              _BattleColosseum.SetActive(true);
+             UnitState = State.Battle;
+          }
+      }
          
-        if(UnitState == State.Battle)
+        if(UnitState.HasFlag(State.Battle))
         {
             if(TurnEnable)
             {
                 //여기에 ai
                 Debug.Log("몬스터 행동");
+
 
                 TurnEnable = false;
                 TurnEnd = true;
@@ -71,7 +73,14 @@ public class Monster_Test : Unit_Test
             }
 
         }
+        Die();
+         
     }
 
-   
+    private void OnDisable()
+    {
+        
+    }
+
+
 }

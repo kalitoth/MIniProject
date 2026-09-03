@@ -22,14 +22,18 @@ public class Ray_Skill_SkillButton : MonoBehaviour
     //현재 플레이어
     Player_Test _player;
 
-    PlayerMovingShift _movingShift;
+    public Player_Test Skll_Player
+        { get { return _player; } }
+
+
+     PlayerShift _movingShift;
     private void Awake()
     {
         _layer = 1 << LayerMask.NameToLayer("Player");
     }
     void Start()
     {
-        _movingShift = GetComponent<PlayerMovingShift>();
+        _movingShift = GetComponent<PlayerShift>();
 
         if (_camera == null)
         {
@@ -45,6 +49,7 @@ public class Ray_Skill_SkillButton : MonoBehaviour
     {
         if (!EventSystem.current.IsPointerOverGameObject())
         {
+            
             if (Input.GetMouseButtonDown(0))
             {
                 _player = _movingShift.Player;

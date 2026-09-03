@@ -60,10 +60,10 @@ public class Skill_Manage : MonoBehaviour
         }
         // 모든 캐릭터의 스킬트리 만들기 + 모든 스킬 active false
         _button.MakeSkillTree();
-        // 현재 캐릭터의 스킬트리만 active true
-        _button.ReviveSkillButton();
 
         _player = _playerParty[0];
+        // 현재 캐릭터의 스킬트리만 active true
+        _button.ReviveSkillButton(_player);
 
     }
 
@@ -78,31 +78,32 @@ public class Skill_Manage : MonoBehaviour
 
         
         //플레이어 바꾸기
-        if (_ray_Test.Hit.collider != null)
+        //플레이어의 스킬을 얻을 때만 사용?
+       if (_ray_Test.Hit.collider != null)
+       {
+           if (_hit.collider == _ray_Test.Hit.collider)
+           {
+               //Debug.Log("리턴 때문에 못들어감");
+               return;
+           }
+       
+           //if (_ray_Test.Hit.collider.gameObject.CompareTag("Player"))
+           {
+               //_hit = _ray_Test.Hit;
+               _player = _ray_Test.Skll_Player;
+              // Debug.Log("스킬 플레이어 바꾸기");
+           }
+       }
+        
+        
+       //스킬 에드
+       //SkillAdd함수와 그안에 index만 넣어주면 스킬 add가 된다
+        if (Input.GetKeyDown(KeyCode.Alpha7))
         {
-            if (_hit.collider == _ray_Test.Hit.collider)
-            {
-                //Debug.Log("리턴 때문에 못들어감");
-                return;
-            }
-
-            if (_ray_Test.Hit.collider.gameObject.CompareTag("Player"))
-            {
-                _hit = _ray_Test.Hit;
-                _player = _hit.collider.gameObject.GetComponent<Player_Test>();
-                Debug.Log("스킬 플레이어 바꾸기");
-            }
+            Debug.Log("스킬 ADD");
+            int skillIndex = 4;
+            SkillAdd(skillIndex);
         }
-        
-        
-        //스킬 에드
-        //SkillAdd함수와 그안에 index만 넣어주면 스킬 add가 된다
-        //if (Input.GetKeyDown(KeyCode.Alpha7))
-        //{
-        //    Debug.Log("스킬 ADD");
-        //    int moving = 2;
-        //    SkillAdd(moving);
-        //}
 
     }
 

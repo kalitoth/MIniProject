@@ -35,6 +35,7 @@ public class Skill_List : MonoBehaviour
         _skillList.Add(1, Bow);
         _skillList.Add(2, Fireball);
         _skillList.Add(3, Scroll);
+        _skillList.Add(4, Jump);
     }
  
     #region 스킬 목록
@@ -54,8 +55,17 @@ public class Skill_List : MonoBehaviour
             {
                 LineColorChangable(player, hit, sqrRange);
 
-               if (Input.GetMouseButtonDown(0))
+                if (player.UnitState.HasFlag(Unit_Test.State.Battle))
+                {
+                    if (player.UsingSkillNum == 0)
+                    {
+                        return;
+                    }
+                }
+
+                if (Input.GetMouseButtonDown(0))
                {
+                    
                     if ((hit.point - player.transform.position).sqrMagnitude <= sqrRange)
                     {
                        Monster_Test monster = hit.collider.gameObject.GetComponent<Monster_Test>();
@@ -84,8 +94,18 @@ public class Skill_List : MonoBehaviour
             {
                 LineColorChangable(player, hit, sqrRange);
 
+                if (player.UnitState.HasFlag(Unit_Test.State.Battle))
+                {
+                    if (player.UsingSkillNum == 0)
+                    {
+                        return;
+                    }
+                }
+
+
                 if (Input.GetMouseButtonDown(0))
                 {
+
                     if ((hit.point - player.transform.position).sqrMagnitude <= sqrRange)
                     {
                         Monster_Test monster = hit.collider.gameObject.GetComponent<Monster_Test>();
@@ -114,9 +134,18 @@ public class Skill_List : MonoBehaviour
             {
                 LineColorChangable(player, hit, sqrRange);
 
+                if (player.UnitState.HasFlag(Unit_Test.State.Battle))
+                {
+                    if (player.UsingSkillNum == 0)
+                    {
+                        return;
+                    }
+                }
+
 
                 if (Input.GetMouseButtonDown(0))
                 {
+
                     if ((hit.point - player.transform.position).sqrMagnitude <= sqrRange)
                     {
                         Debug.Log("여기 들어오니?111");
@@ -167,8 +196,18 @@ public class Skill_List : MonoBehaviour
             {
                 LineColorChangable(player, hit, sqrRange);
 
+                //배틀인 상태일때만
+                if( player.UnitState.HasFlag(Unit_Test.State.Battle))
+                {
+                    if (player.UsingSkillNum == 0)
+                    {
+                        return;
+                    }
+                }
+                
                 if (Input.GetMouseButtonDown(0))
                 {
+
                     if ((hit.point - player.transform.position).sqrMagnitude <= sqrRange)
                     {
                             Debug.Log($"스크롤 들어오나?1111");
@@ -202,10 +241,11 @@ public class Skill_List : MonoBehaviour
         } 
         Debug.Log("Scroll");
     }
-    public void Moving(Player_Test player, RaycastHit hit)
+    public void Jump(Player_Test player, RaycastHit hit)
     {
-        Debug.Log("Moving");
+        Debug.Log("Jump");
     }
+
     #endregion
 
 
@@ -239,11 +279,18 @@ public class Skill_List : MonoBehaviour
 
         }
     }
+
+    void SkillNum(Player_Test player)
+    {
+        
+    }
     void Initialized(Player_Test player)
     {
         player.UnitState &= ~Unit_Test.State.Skill;
         player.GetComponent<PlayerMoving>().enabled = true;
         player._lineRenderer.enabled = false;
+
+        player.UsingSkillNum = 0;
     }
 
     #endregion

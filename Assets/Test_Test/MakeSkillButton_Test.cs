@@ -21,8 +21,14 @@ public class MakeSkillButton_Test : MonoBehaviour
     Dictionary<int, Sprite> _skillsprites = new Dictionary<int, Sprite>();
      
     //플레이어 스킬
-    [SerializeField]
+   
     Player_Test _player;
+
+    public Player_Test PlayerButton
+    {
+        get { return _player; }
+        set { _player = value; }
+    }
     [SerializeField]
     Player_Test[] _playerParty = new Player_Test[4];
 
@@ -39,12 +45,17 @@ public class MakeSkillButton_Test : MonoBehaviour
         _skillsprites.Add(2, Resources.Load<Sprite>("Fireball"));
         _skillAction.Add(3, Scroll);
         _skillsprites.Add(3, Resources.Load<Sprite>("Scroll"));
- 
+        _skillAction.Add(4, Jump);
+        _skillsprites.Add(4, Resources.Load<Sprite>("Jump"));
+        
+         
+
+
     }
     void Start()
     { 
         _ray_Test = GetComponent<Ray_Skill_SkillButton>();
-       
+        _player = _playerParty[0];
     }
     
     void Update()
@@ -68,9 +79,9 @@ public class MakeSkillButton_Test : MonoBehaviour
                 _hit = _ray_Test.Hit;
 
                 Debug.Log("버튼 삭제먼저?");
-                RemoveSkillButton();
-                _player = _hit.collider.gameObject.GetComponent<Player_Test>();
-                ReviveSkillButton();
+                RemoveSkillButton(_player);
+                _player = _ray_Test.Skll_Player;
+                ReviveSkillButton(_player);
             }
         }
         
@@ -128,22 +139,40 @@ public class MakeSkillButton_Test : MonoBehaviour
     }
 
     //현재 플레이어의 스킬 버튼 비활성화
-    void RemoveSkillButton()
+    public void RemoveSkillButton(Player_Test _player)
     {
         for (int i = 0; i < _player.SkillButton.Count; i++)
         {
             _player.SkillButton[i].gameObject.SetActive(false);
-
+            
         }
+       
     }
     //현재 플레이어의 스킬 버튼 활성화
-    public void ReviveSkillButton()
+    public void ReviveSkillButton(Player_Test _player)
     {
         for (int i = 0; i < _player.SkillButton.Count; i++)
         {
-            _player.SkillButton[i].gameObject.SetActive(true);
-
+           _player.SkillButton[i].gameObject.SetActive(true);
+           
         }
+        
+    }
+    public void SkillButtonInteractT(Player_Test _player)
+    {
+        for (int i = 0; i < _player.SkillButton.Count; i++)
+        {
+            _player.SkillButton[i].interactable = true;
+        }
+        
+    }
+    public void SkillButtonInteractF(Player_Test _player)
+    {
+        for (int i = 0; i < _player.SkillButton.Count; i++)
+        {
+            _player.SkillButton[i].interactable = false;
+        }
+        
     }
 
     
@@ -197,6 +226,12 @@ public class MakeSkillButton_Test : MonoBehaviour
     {
         int Index = 3;
         Switch(Index); 
+    }
+
+    void Jump()
+    {
+        int Index = 4;
+        Switch(Index);
     }
     #endregion
 }

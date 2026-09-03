@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic; 
 using UnityEngine;
 using UnityEngine.EventSystems; 
-public class PlayerMovingShift : MonoBehaviour
+public class PlayerShift : MonoBehaviour
 {
     
     //초기 플레이어 
@@ -11,8 +11,8 @@ public class PlayerMovingShift : MonoBehaviour
     //이거 나중에 고치기
     //플레이어 4명일때 
     [SerializeField]
-    Player_Test[] _players = new Player_Test[4];
-
+    Player_Test[] _playerParty = new Player_Test[4];
+     
     //레이
     [SerializeField]
     private Camera _camera;
@@ -21,7 +21,13 @@ public class PlayerMovingShift : MonoBehaviour
     LayerMask _layerMask;
     float _rayMaxDistance = 500f;
 
-    public Player_Test Player => _player;
+    //public Player_Test Player => _player;
+
+    public Player_Test Player
+    {
+        get { return _player;}
+        set { _player = value; }
+    }
 
     private void Awake()
     {
@@ -39,7 +45,7 @@ public class PlayerMovingShift : MonoBehaviour
     }
     public void Update()
     {
-        MovingShift();
+        MovingShift(); 
     }
     public void MovingShift()
     {
@@ -72,8 +78,8 @@ public class PlayerMovingShift : MonoBehaviour
             }
         }
 
-        
     }
+
 
     public void RayCamTo(out RaycastHit hit, LayerMask layerMask)
     {

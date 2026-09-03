@@ -12,9 +12,9 @@ public class Camera_test : MonoBehaviour
     
     private Player_Test _curruntPlayer;
     [SerializeField]
-    PlayerMovingShift _playerMovingShift;
-    [SerializeField]
-    Ray_Camera_UI _ray_Test;
+    PlayerShift _playerMovingShift;
+    //[SerializeField]
+    //Ray_UI _ray_Test;
       
     [Header("캠 이동속도")]
     [SerializeField]
@@ -23,8 +23,8 @@ public class Camera_test : MonoBehaviour
     private float _interpolePos;
     private float _interpoleRot;
     //이거 캠 스피드 옵션으로 뺄 수 있도록 
-    private float _camSpeed = 3;
-    private float _camWheelSpeed = 60;
+    private float _camSpeed = 10;
+    private float _camWheelSpeed = 120;
     
     //내부
     RaycastHit _hit;
@@ -43,14 +43,11 @@ public class Camera_test : MonoBehaviour
     }
 
     void Start()
-    {
-        
-
-         
-        if (_ray_Test == null)
-        {
-            Debug.Log("카메라에 레이 인스펙터가 없다");
-        }
+    { 
+       //if (_ray_Test == null)
+       //{
+       //    Debug.Log("카메라에 레이 인스펙터가 없다");
+       //}
 
         _curruntPlayer = _playerMovingShift.Player;
     }
@@ -64,15 +61,15 @@ public class Camera_test : MonoBehaviour
            
         
         //레이 정보
-        if (!EventSystem.current.IsPointerOverGameObject())
-        {
-            if (Input.GetMouseButtonDown(0))
+           // if (!EventSystem.current.IsPointerOverGameObject())
             {
-                 _curruntPlayer = _playerMovingShift.Player;
- 
+                //if (Input.GetMouseButtonDown(0))
+                {
+                    _curruntPlayer = _playerMovingShift.Player;
+                }
 
+               
             }
-        }
         }
 
         //자유 이동
