@@ -11,14 +11,19 @@ public class Player_Test : Unit_Test
     Camera _camera;
     [SerializeField]
     GameObject _playerSight;
+    [SerializeField]
+    ShareRepository _share;
 
     RaycastHit _hit;
+    public RaycastHit Hit => _hit;
     LayerMask _layerMask;
     float _distance = 500;
     //이동 
     public PlayerMoving _playerMoving;
     public LineRenderer _lineRenderer;
 
+    //스킬 포인트
+    int skillPoint = 0;
     //스킬 리스트
     Dictionary<int, Action<Player_Test,RaycastHit>> _playerSkill = new Dictionary<int, Action<Player_Test, RaycastHit>>();
     //스킬 버튼
@@ -86,7 +91,7 @@ public class Player_Test : Unit_Test
     
     void Update()
     {
-         
+        
 
         //임시 - 네브메쉬 들어가면 뺄 것
         if (Input.GetKeyDown(KeyCode.BackQuote))
@@ -125,7 +130,7 @@ public class Player_Test : Unit_Test
                     // 배틀 시작할 때 주는 것
                    if(BattleStart)
                    {
-
+                    Movement += 100;
                     UnitState |= State.None;
 
                     //턴 넘기기 버튼에서 true
@@ -136,7 +141,7 @@ public class Player_Test : Unit_Test
                 if (UnitState.HasFlag(State.None))
                 {
                     Movement -= _playerMoving.CharacterController.velocity.magnitude * Time.deltaTime;
-                    //Debug.Log($"무브먼트  : {Movement}");
+                    //Debug.Log($"플레이어 이동력  : {Movement}");
 
                     if (Movement <= 0)
                     {
@@ -161,15 +166,32 @@ public class Player_Test : Unit_Test
                 {
                     Debug.Log("턴 끝");
                     TurnEnable = false;
+                    UnitState &= ~State.None;
 
-                    Movement = 9;
-
+                    if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                    {
+                        _playerMoving.RayHitPoint = transform.position;
+                        _playerMoving.Animator.SetFloat("FMoving", 0);
+                    }
                 }
             }
             }
              
          
         Die();
+
+        if(_share.shareExp > MaxExp)
+        {
+            if(Input.GetKeyDown(KeyCode.P))
+            {
+                Level++;
+                MaxExp += MaxExp * Level;
+                //스텟 선택
+                //스킬 선택
+                //스킬 포인트
+                skillPoint++;
+            }
+        }
 
     }
 

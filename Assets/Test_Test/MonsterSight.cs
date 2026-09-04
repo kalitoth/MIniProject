@@ -32,6 +32,22 @@ public class MonsterSight : MonoBehaviour
     {
         transform.position = _unit.position + _unit.rotation * (Vector3.forward * _forward + Vector3.up * _up);
 
+        if(_playerList.Count > 0)
+        {
+            for (int i = 0; i < dictionarySize; i++)
+            {
+                if(_playerList.ContainsKey(i))
+                {
+                    if(!_playerList[i].gameObject.activeSelf || _playerList[i].gameObject == null)
+                    {
+                        _playerListRev.Remove(_playerList[i]);
+                        _playerList.Remove(i);
+                    }
+                    
+                }
+            }
+        }
+        
     }
     private void OnTriggerEnter(Collider other)
     {

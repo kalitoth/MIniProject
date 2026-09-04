@@ -15,6 +15,8 @@ public class BattleSystem : MonoBehaviour
     Image _character;
     [SerializeField]
     ScrollRect _rect;
+    [SerializeField]
+    ShareRepository _shareRepository;
 
     bool _sortTrigger = true;
     bool _battleTrigger = true;
@@ -61,33 +63,42 @@ public class BattleSystem : MonoBehaviour
             {
                     //플레이어 전환
                for (int i = 0; i < _players.Count; i++)
-               { 
-                  
+               {
+                    if(_battleList[_battleIndex].CompareTag("Monster"))
+                    {
+                        _button.SkillButtonInteractF(_players[i]);
+                        break;
+                    }
+                    else
+                    {
+                        _button.SkillButtonInteractT(_players[i]);
+                    }
 
-                  if (_battleList[_battleIndex] == _players[i])
-                  {
-                      Debug.Log($"배틀시스템에 플레이어가 들어감");
+                     
+                    if (_battleList[_battleIndex] == _players[i])
+                    {
+                        Debug.Log($"배틀시스템에 플레이어가 들어감");
 
-                      //플레이어 전환
-                      _playerShift.Player = _players[i];
-                      //이동
-                      _players[i]._playerMoving.enabled = true;
+                        //플레이어 전환
+                        _playerShift.Player = _players[i];
+                        //이동
+                        _players[i]._playerMoving.enabled = true;
 
-                      //스킬 주체
-                      _button.PlayerButton = _players[i];
+                        //스킬 주체
+                        _button.PlayerButton = _players[i];
 
-                      //스킬 버튼
-                      _button.ReviveSkillButton(_players[i]); 
-                      
-                  }
-                  else
-                  {
+                        //스킬 버튼
+                        _button.ReviveSkillButton(_players[i]);
+                        _button.SkillButtonInteractT(_players[i]);
+                    }
+                    else
+                    {
+                        _button.SkillButtonInteractF(_players[i]);
                         _button.RemoveSkillButton(_players[i]);
                         //이동
                         _players[i]._playerMoving.enabled = false;
-                  } 
-
-               } 
+                    }
+                } 
             
                  Debug.Log($"배틀 인덱스{_battleIndex}");
                  Debug.Log($"배틀리스트 카운트 {_battleList.Count}");
@@ -128,16 +139,20 @@ public class BattleSystem : MonoBehaviour
 
             }
 
-            //종료 조건
+            //죽었을 때
             for (int i = 0; i < _battleList.Count; i++)
             {
-                if (!_battleList[i].Alive)
+                if (!_battleList[i].Alive || _battleList[i].UnitState == Unit_Test.State.None)
                 {
                     if(i <= _battleIndex)
                     {
                         _battleIndex--;
                     }
 
+                    if(_battleList[i].CompareTag("Monster"))
+                    {
+                        _shareRepository.shareExp += _battleList[i].Exp;
+                    }
                     Destroy(_colliderImage[_UnitCollider[_battleList[i]]].gameObject);
                     _colliderImage.Remove(_UnitCollider[_battleList[i]]);
                     _ColliderUnit.Remove(_UnitCollider[_battleList[i]]);
@@ -148,10 +163,17 @@ public class BattleSystem : MonoBehaviour
 
                 
             }
-
+            //종료 조건
             if (_battleList.Count == _players.Count || _players.Count == 0)
             {
-
+                if(_players.Count > 0)
+                {
+                    for (int i = 0; i < _players.Count; i++)
+                    {
+                        _button.SkillButtonInteractT(_players[i]);
+                    }
+                }    
+                
                 for (int i = 0; i < _battleList.Count; i++)
                 {
                     _battleList[i].UnitState = Unit_Test.State.None;
@@ -170,15 +192,9 @@ public class BattleSystem : MonoBehaviour
                 }
 
                 
-                Destroy(this);
+                Destroy(this.gameObject);
             }
 
-            
-            //if (_players.Count == 0 || _players.Count == _battleList.Count)
-            //{
-            //     
-            //    Destroy(this);
-            //}
         }
 
 
@@ -262,6 +278,7 @@ public class BattleSystem : MonoBehaviour
             {
                player._playerMoving.enabled = true;
             }
+            _button.SkillButtonInteractT(player);
         }
 
         _battleList.Remove(_ColliderUnit[other]);

@@ -72,6 +72,8 @@ public class Camera_test : MonoBehaviour
             }
         }
 
+        
+
         //자유 이동
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) || Input.GetAxisRaw("Mouse ScrollWheel") != 0)
         {
@@ -123,8 +125,10 @@ public class Camera_test : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, _curruntPlayer.transform.position + offset, _interpolePos);
             transform.rotation = Quaternion.Lerp(transform.rotation, camToSomething, _interpoleRot); 
         }
-        else if (camState == CamState.Skill)
+        else if (_curruntPlayer.UnitState == Unit_Test.State.Skill)
         {
+            _hit = _curruntPlayer.Hit;
+
             //플레이어가 스킬을 썼을 때
             //플레이어가 스킬을 썼다는 것이 필요
             //플레이어의 레이 캐스트가 히트 한 몬스터의 좌표가 필요

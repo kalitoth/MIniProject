@@ -45,7 +45,16 @@ public class PlayerShift : MonoBehaviour
     }
     public void Update()
     {
-        MovingShift(); 
+        MovingShift();
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            _player = _playerParty[0];
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            _player = _playerParty[1];
+        }
     }
     public void MovingShift()
     {

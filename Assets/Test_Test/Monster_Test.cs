@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
+using System.Collections.Generic; 
 using UnityEngine;
 
 public class Monster_Test : Unit_Test
@@ -13,22 +13,26 @@ public class Monster_Test : Unit_Test
     GameObject _instSight;
     GameObject _BattleColosseum;
 
-    MonsterSight _getSight;
+    protected MonsterSight _getSight;
 
-  
-    private void Awake()
-    {
-        MAXHP = BasicHp + Mathf.FloorToInt((Constitution - 10) * 0.5f) * Level;
-        HP = MAXHP;
+    protected CharacterController _characterController;
+    protected Animator _animator;
 
+     
+    protected Vector3 _firstPlayer;
+
+
+    public Vector3 _initialPosition;
+
+    void Start()
+    { 
         _instSight = Instantiate(_monsterSight, this.transform);
         Debug.Log("_monsterSight를 생성");
-    }
-    void Start()
-    {
+
         _getSight = _instSight.gameObject.GetComponent<MonsterSight>();
-         
-        if(_getSight == null)
+        _characterController = GetComponent<CharacterController>();
+        _animator = GetComponent<Animator>();
+        if (_getSight == null)
         {
             Debug.Log("_getSight가 null");
         }
@@ -36,10 +40,13 @@ public class Monster_Test : Unit_Test
         {
             Debug.Log("_getSight._playerList가 null");
         }
+
+
+        _initialPosition = transform.position;
     }
 
     
-    void Update()
+    protected virtual void Update()
     {
         if(_getSight._playerList == null)
         {
@@ -50,36 +57,36 @@ public class Monster_Test : Unit_Test
         
       if (UnitState == State.None)
       {
-          if (_getSight._playerList.Count > 0)
-          {
-      
+            if((_initialPosition - transform.position).sqrMagnitude > 0.5f)
+            {
+                transform.rotation = Quaternion.LookRotation((_initialPosition - transform.position).normalized, Vector3.up);
+            }
+               
+            _characterController.Move((_initialPosition - transform.position)*Time.deltaTime);
+            _animator.SetFloat("FMoving", (_initialPosition - transform.position).magnitude);
+
+           
+            if (_getSight._playerList.Count > 0)
+            {
+                for(int i = 0; i < 4 ; i++)
+                {
+                    if(!_getSight._playerList.ContainsKey(i))
+                    {
+                        continue;
+                    }
+
+                    _firstPlayer = _getSight._playerList[i].transform.position;
+                    break;
+                }
+                
               _BattleColosseum = Instantiate(_BattleSystem,transform.position,transform.rotation);
               _BattleColosseum.SetActive(true);
-             UnitState = State.Battle;
-          }
-      }
-         
-        if(UnitState.HasFlag(State.Battle))
-        {
-            if(TurnEnable)
-            {
-                //여기에 ai
-                Debug.Log("몬스터 행동");
-
-
-                TurnEnable = false;
-                TurnEnd = true;
-                Debug.Log("몬스터 턴 끝");
+              UnitState = State.Battle;
             }
-
-        }
+      }
+          
         Die();
          
-    }
-
-    private void OnDisable()
-    {
-        
     }
 
 

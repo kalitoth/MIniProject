@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class Unit_Test : MonoBehaviour
 {
+
+
     private int _strength = 10;
     private int _intelligence = 10;
     private int _dexterity = 10;
@@ -21,6 +23,7 @@ public class Unit_Test : MonoBehaviour
     private int _basicHp = 10;
 
     private int _exp;
+    private int _maxExp;
     private int _level = 1;
 
     private int _usingSkillNum;
@@ -70,6 +73,11 @@ public class Unit_Test : MonoBehaviour
         get { return _exp; }
         set { _exp = value; }
     }
+    public int MaxExp
+    {
+        get { return _maxExp; }
+        set { _maxExp = value; }
+    }
     public int Level
     {
         get { return _level; }
@@ -111,8 +119,16 @@ public class Unit_Test : MonoBehaviour
         if(_hp <= 0)
         {
             _alive = false;
-            //this.gameObject.SetActive(false);
-            Destroy(this.gameObject);
+            
+            if(this.CompareTag("Monster"))
+            {
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                this.gameObject.SetActive(false);
+            }
+            
         }
          
     }
@@ -140,10 +156,12 @@ public class Unit_Test : MonoBehaviour
        BattleStart = true;
        TurnEnable = true;
        UsingSkillNum = 1;
-       _state |= State.None;
+        Movement = 6;
+        _state |= State.None;
    }
     public void EnterBattleUnit()
     {
         _state = State.Battle;
     }
+ 
 }

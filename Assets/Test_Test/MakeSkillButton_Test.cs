@@ -65,7 +65,19 @@ public class MakeSkillButton_Test : MonoBehaviour
             return;
         }
 
-        
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            RemoveSkillButton(_player);
+            _player = _playerParty[0];
+            ReviveSkillButton(_player);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            RemoveSkillButton(_player);
+            _player = _playerParty[1];
+            ReviveSkillButton(_player);
+        }
+
         //클릭한 캐릭터의 스킬로 전환
         if (_ray_Test.Hit.collider != null)
         {
