@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
+using static UnityEditor.Experimental.GraphView.GraphView;
 public class BattleSystem : MonoBehaviour
 {
     [SerializeField]
@@ -12,7 +13,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField]  
     MakeSkillButton_Test _button;
     [SerializeField]
-    Image _character;
+    Button _character;
     [SerializeField]
     ScrollRect _rect;
     [SerializeField]
@@ -22,6 +23,10 @@ public class BattleSystem : MonoBehaviour
     bool _battleTrigger = true;
     bool triggerExit = true;
     int _battleListAdd = 0;
+
+    bool _firstPlayer = true;
+
+    Player_Test _player;
  
     List<Player_Test> _players = new List<Player_Test>(4);
 
@@ -29,7 +34,7 @@ public class BattleSystem : MonoBehaviour
    Dictionary< Unit_Test,Collider> _UnitCollider = new Dictionary<Unit_Test, Collider>(20); 
     List<Unit_Test> _battleList = new List<Unit_Test>(20);
 
-    Dictionary<Collider,Image> _colliderImage = new Dictionary<Collider,Image>(20);
+    Dictionary<Collider, Button> _colliderImage = new Dictionary<Collider, Button>(20);
 
     int _battleIndex;
     private void Awake()
@@ -64,55 +69,56 @@ public class BattleSystem : MonoBehaviour
                     //플레이어 전환
                for (int i = 0; i < _players.Count; i++)
                {
-                    if(_battleList[_battleIndex].CompareTag("Monster"))
+                    if(_battleList[_battleIndex].CompareTag("Player"))
                     {
-                        _button.SkillButtonInteractF(_players[i]);
-                        break;
-                    }
-                    else
-                    {
-                        _button.SkillButtonInteractT(_players[i]);
-                    }
+                        //현재 클릭된 플레이어를 지워야 한다
+                        if(_firstPlayer)
+                        {
+                            _player = _playerShift.Player;
+                            _firstPlayer = false;
+                        }
 
-                     
                     if (_battleList[_battleIndex] == _players[i])
                     {
+
+                            
+                            //이전 플레이어 버튼 지우기
+                            _button.RemoveSkillButton(_player);
+                            //플레이어 변경
+                            _player = _players[i];
                         Debug.Log($"배틀시스템에 플레이어가 들어감");
 
                         //플레이어 전환
-                        _playerShift.Player = _players[i];
-                        //이동
-                        _players[i]._playerMoving.enabled = true;
+                        _playerShift.Player = _player;
+                            //이동
+                        _player._playerMoving.enabled = true;
 
                         //스킬 주체
-                        _button.PlayerButton = _players[i];
+                        _button.PlayerButton = _player;
 
                         //스킬 버튼
-                        _button.ReviveSkillButton(_players[i]);
-                        _button.SkillButtonInteractT(_players[i]);
+                        _button.ReviveSkillButton(_player);
                     }
                     else
                     {
-                        _button.SkillButtonInteractF(_players[i]);
-                        _button.RemoveSkillButton(_players[i]);
-                        //이동
-                        _players[i]._playerMoving.enabled = false;
+                        
+                        //다른 플레이어 이동 불가
+                        //_players[i]._playerMoving.enabled = false;
+                    }
                     }
                 } 
             
                  Debug.Log($"배틀 인덱스{_battleIndex}");
                  Debug.Log($"배틀리스트 카운트 {_battleList.Count}");
-                 
-                 //턴 주기
+
+                _colliderImage[_UnitCollider[_battleList[_battleIndex]]].interactable = true;
+                //턴 주기
                 _battleList[_battleIndex].BattleTurnTrigger();
                 _battleTrigger = false;
                 
                 triggerExit = true;
 
-                
-                
-
-                
+                 
 
             }
             
@@ -123,11 +129,11 @@ public class BattleSystem : MonoBehaviour
                 _battleList[_battleIndex].TurnEnd = false;
                 _battleTrigger = true;
 
+                _colliderImage[_UnitCollider[_battleList[_battleIndex]]].interactable = false;
                 _battleIndex++;
 
-               
 
-                 Debug.Log($"턴 끝나고 배틀 인덱스{_battleIndex}");
+                Debug.Log($"턴 끝나고 배틀 인덱스{_battleIndex}");
                 
                 if (_battleIndex >= _battleList.Count)
                 {
@@ -149,10 +155,10 @@ public class BattleSystem : MonoBehaviour
                         _battleIndex--;
                     }
 
-                    if(_battleList[i].CompareTag("Monster"))
-                    {
-                        _shareRepository.shareExp += _battleList[i].Exp;
-                    }
+                   //if(_battleList[i].CompareTag("Monster"))
+                   //{
+                   //    _shareRepository.shareExp += _battleList[i].Exp;
+                   //}
                     Destroy(_colliderImage[_UnitCollider[_battleList[i]]].gameObject);
                     _colliderImage.Remove(_UnitCollider[_battleList[i]]);
                     _ColliderUnit.Remove(_UnitCollider[_battleList[i]]);
@@ -176,13 +182,19 @@ public class BattleSystem : MonoBehaviour
                 
                 for (int i = 0; i < _battleList.Count; i++)
                 {
+                    
                     _battleList[i].UnitState = Unit_Test.State.None;
+                    _battleList[i].BattleReady = true;
+                    _battleList[i].BattleStart = false;
+                    _battleList[i].TurnEnd = true;
+                    _battleList[i].TurnEnable = false;
                 }
 
                 for (int i = _battleList.Count-1; i >= 0; i--)
                 {
                     if (_battleList[i].Alive)
                     {
+                        _colliderImage[_UnitCollider[_battleList[i]]].interactable = true;
                         Destroy(_colliderImage[_UnitCollider[_battleList[i]]].gameObject);
                         _colliderImage.Remove(_UnitCollider[_battleList[i]]);
                         _ColliderUnit.Remove(_UnitCollider[_battleList[i]]);
@@ -226,10 +238,11 @@ public class BattleSystem : MonoBehaviour
             }
 
             //여기서 addUnit의 초상화 가져와서 ui만들기
-            Image charcterImage = Instantiate(_character, _rect.content);
-            charcterImage.sprite = addUnit._image;
-
+            Button charcterImage = Instantiate(_character, _rect.content);
+            charcterImage.image.sprite = addUnit._image;
+            
             _colliderImage.Add(other, charcterImage);
+            charcterImage.interactable = false;
        }  
         
     }
@@ -272,13 +285,13 @@ public class BattleSystem : MonoBehaviour
 
             if (_players.Count > 0)
             {
-                _button.RemoveSkillButton(player);
+                //_button.RemoveSkillButton(player);
             }
             else
             {
                player._playerMoving.enabled = true;
             }
-            _button.SkillButtonInteractT(player);
+            //_button.SkillButtonInteractT(player);
         }
 
         _battleList.Remove(_ColliderUnit[other]);

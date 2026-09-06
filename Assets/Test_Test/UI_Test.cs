@@ -22,10 +22,7 @@ public class UI_Test : MonoBehaviour
     [SerializeField]
     Image _playerImage;
 
-    [SerializeField]
-    GameObject _inventory;
-    [SerializeField]
-    Image _image_test;
+
      
 
     Player_Test _currentPlayer;
@@ -77,19 +74,19 @@ public class UI_Test : MonoBehaviour
         //현재 플레이어 turn 넘김 버튼
         void CurrentPlayerTurn()
         {
-            if(_currentPlayer.TurnEnable)
+            if(_currentPlayer.UnitState.HasFlag(Unit_Test.State.Battle))
             {
-                _currentPlayer.TurnEnd = true;
+                if (_currentPlayer.TurnEnable)
+                {
+                    _currentPlayer.TurnEnd = true;
+                }
             }
             
         }
         //현재 유닛 이미지
         _playerImage.sprite = _currentPlayer._image;
 
-        if(Input.GetKeyDown(KeyCode.I))
-        {
-            Instantiate(_image_test, _inventory.transform);
-        }    
+       
         
         //유닛 hp
         if (!EventSystem.current.IsPointerOverGameObject())

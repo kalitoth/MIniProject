@@ -37,9 +37,8 @@ public class Camera_test : MonoBehaviour
     CamState camState = CamState.None;
     enum CamState
     {
-        None,
-        Skill,
-        Free,
+        None, 
+        Free
     }
 
     void Start()
@@ -119,25 +118,29 @@ public class Camera_test : MonoBehaviour
         _interpolePos = 1 - Mathf.Exp(-_sharpnessPos * Time.deltaTime);
         _interpoleRot = 1 - Mathf.Exp(-_sharpnessRot * Time.deltaTime);
 
-        if (camState == CamState.None)
-        { 
+        
+        if (_curruntPlayer.UnitState.HasFlag(Unit_Test.State.Skill) && camState != CamState.Free)
+        {
+            if (!EventSystem.current.IsPointerOverGameObject())
+            {
+                  _hit = _curruntPlayer.Hit;
+              if(_curruntPlayer.Hit.transform == null)
+              {
+                  return;
+              }
+            } 
+            transform.position = Vector3.Lerp(transform.position, (_curruntPlayer.transform.position + _hit.point) * 0.5f + offset, _interpolePos);
+            camToSomething = Quaternion.LookRotation((_curruntPlayer.transform.position + _hit.point) * 0.5f - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, camToSomething, _interpoleRot);
+                
+        }
+        else if (camState == CamState.None)
+        {
+            _hit.point = _curruntPlayer.transform.position;
             camToSomething = Quaternion.LookRotation(_curruntPlayer.transform.position - transform.position);
             transform.position = Vector3.Lerp(transform.position, _curruntPlayer.transform.position + offset, _interpolePos);
-            transform.rotation = Quaternion.Lerp(transform.rotation, camToSomething, _interpoleRot); 
+            transform.rotation = Quaternion.Lerp(transform.rotation, camToSomething, _interpoleRot);
         }
-        else if (_curruntPlayer.UnitState == Unit_Test.State.Skill)
-        {
-            _hit = _curruntPlayer.Hit;
-
-            //플레이어가 스킬을 썼을 때
-            //플레이어가 스킬을 썼다는 것이 필요
-            //플레이어의 레이 캐스트가 히트 한 몬스터의 좌표가 필요
-            //지면이 아니라 몬스터를 맞추었을 때의 좌표가 필요
-            transform.position = Vector3.Lerp(transform.position, (_curruntPlayer.transform.position + _hit.transform.position) * 0.5f + offset, _interpolePos);
-            camToSomething = Quaternion.LookRotation((_curruntPlayer.transform.position + _hit.transform.position) * 0.5f - transform.position);
-            transform.rotation = Quaternion.Slerp(transform.rotation, camToSomething, _interpoleRot);
-        }
-
 
 
     }

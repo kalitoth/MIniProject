@@ -46,14 +46,92 @@ public class PlayerShift : MonoBehaviour
     public void Update()
     {
         MovingShift();
+        
+        if(Input.GetKeyDown(KeyCode.BackQuote))
+        {
+
+            for (int i = 0; i < _playerParty.Length; i++)
+            {
+                if (_playerParty[i] == null)
+                {
+                    continue;
+                }
+                _playerParty[i]._playerMoving.enabled = true;
+            }
+
+            //_player = _player;
+        }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
+            if(_playerParty[0] == null)
+            {
+                return;
+            }
+            for(int i = 0; i < _playerParty.Length; i++)
+            {
+                if(_playerParty[i] == null)
+                {
+                    continue;
+                }
+                _playerParty[i]._playerMoving.enabled = false;
+            }
             _player = _playerParty[0];
+            _player._playerMoving.enabled = true;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
+            if (_playerParty[1] == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < _playerParty.Length; i++)
+            {
+                if (_playerParty[i] == null)
+                {
+                    continue;
+                }
+                _playerParty[i]._playerMoving.enabled = false;
+            }
             _player = _playerParty[1];
+            _player._playerMoving.enabled = true;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            if (_playerParty[2] == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < _playerParty.Length; i++)
+            {
+                if (_playerParty[i] == null)
+                {
+                    continue;
+                }
+                _playerParty[i]._playerMoving.enabled = false;
+            }
+            _player = _playerParty[2];
+            _player._playerMoving.enabled = true;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            if (_playerParty[3] == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < _playerParty.Length; i++)
+            {
+                if (_playerParty[i] == null)
+                {
+                    continue;
+                }
+                _playerParty[i]._playerMoving.enabled = false;
+            }
+            _player = _playerParty[3];
+            _player._playerMoving.enabled = true;
         }
     }
     public void MovingShift()

@@ -13,9 +13,17 @@ public class Player_Test : Unit_Test
     GameObject _playerSight;
     [SerializeField]
     ShareRepository _share;
+    
+    MakeSkillButton_Test _makeSkillButton;
 
-    RaycastHit _hit;
-    public RaycastHit Hit => _hit;
+
+    public RaycastHit _hit;
+     
+    public RaycastHit Hit
+    {
+        get { return _hit; }
+        set { _hit = value; }
+    }
     LayerMask _layerMask;
     float _distance = 500;
     //이동 
@@ -84,21 +92,15 @@ public class Player_Test : Unit_Test
     }
     void Start()
     {
-         
+        _makeSkillButton = _share.gameObject.GetComponent<MakeSkillButton_Test>();
+
         
     }
 
     
     void Update()
     {
-        
-
-        //임시 - 네브메쉬 들어가면 뺄 것
-        if (Input.GetKeyDown(KeyCode.BackQuote))
-        {
-            _playerMoving.enabled = true;
-        }
-
+         
         if (UnitState.HasFlag(State.None))
         {
             _playerMoving.Moving(); 
@@ -120,8 +122,10 @@ public class Player_Test : Unit_Test
                         _playerMoving.RayHitPoint = transform.position;
                         _playerMoving.Animator.SetFloat("FMoving", 0);
                     }
-                    //배틀이 끝나면 다시 켜기
-                    BattleReady = false;
+                //배틀이 끝나면 다시 켜기
+                _makeSkillButton.SkillButtonInteractF(this);
+                _playerMoving.enabled = false;
+                BattleReady = false;
                 }
                 
             if (TurnEnable)
@@ -130,12 +134,14 @@ public class Player_Test : Unit_Test
                     // 배틀 시작할 때 주는 것
                    if(BattleStart)
                    {
+                    BattleStart = false;
+
                     Movement += 100;
                     UnitState |= State.None;
-
+                     
+                    _makeSkillButton.SkillButtonInteractT(this);
                     //턴 넘기기 버튼에서 true
-                       BattleStart = false;
-                   }
+                    }
 
 
                 if (UnitState.HasFlag(State.None))
@@ -167,6 +173,8 @@ public class Player_Test : Unit_Test
                     Debug.Log("턴 끝");
                     TurnEnable = false;
                     UnitState &= ~State.None;
+                    _playerMoving.enabled = false;
+                    _makeSkillButton.SkillButtonInteractF(this);
 
                     if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
                     {
@@ -209,16 +217,19 @@ public class Player_Test : Unit_Test
             _playerMoving.RayHitPoint = transform.position;
             _playerMoving.Animator.SetFloat("FMoving", 0);
         }
- 
+
+        _playerMoving.Animator.SetBool("BSkillReady", true);
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
         {
+            _playerMoving.Animator.SetBool("BSkillReady", false);
             _playerMoving.enabled = true;
             _lineRenderer.enabled = false;
             //_state = State.None;
             UnitState &= ~State.Skill;
             _skillNum = 0;
         }
-
+        //스킬 사용
+        
         PlayerTarget();
 
         _playerSkill[_skillIndex](this, _hit);

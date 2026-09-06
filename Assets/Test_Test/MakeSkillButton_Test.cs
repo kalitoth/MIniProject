@@ -67,14 +67,46 @@ public class MakeSkillButton_Test : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
+            if (_playerParty[0] == null)
+            {
+                return;
+            }
+
             RemoveSkillButton(_player);
             _player = _playerParty[0];
             ReviveSkillButton(_player);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
+            if (_playerParty[1] == null)
+            {
+                return;
+            }
+
             RemoveSkillButton(_player);
             _player = _playerParty[1];
+            ReviveSkillButton(_player);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            if (_playerParty[2] == null)
+            {
+                return;
+            }
+
+            RemoveSkillButton(_player);
+            _player = _playerParty[2];
+            ReviveSkillButton(_player);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            if (_playerParty[3] == null)
+            {
+                return;
+            }
+
+            RemoveSkillButton(_player);
+            _player = _playerParty[3];
             ReviveSkillButton(_player);
         }
 
@@ -100,7 +132,7 @@ public class MakeSkillButton_Test : MonoBehaviour
         
             
     }
-
+   
     //초기 스킬트리
   public void MakeSkillTree()
   {
@@ -204,15 +236,22 @@ public class MakeSkillButton_Test : MonoBehaviour
         }
         else
         {
+            //스킬 바꾸면 그대로
             if (Index != _player._skillIndex)
             {
                 _player._skillIndex = Index;
                 _player._skillNum = 0;
                 return;
             }
+
+            //스킬 끔
+             
             _player.UnitState &= ~Unit_Test.State.Skill;
+            //왜 안되는 거지?
+            //_player.Hit.point = _player.transform.position;
             _player._playerMoving.enabled = true;
             _player._lineRenderer.enabled = false;
+            //_player.Hit.point
         }
         _player._skillIndex = Index;
         _player._skillNum = 0;

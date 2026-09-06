@@ -70,7 +70,7 @@ public class Skill_List : MonoBehaviour
                     {
                        Monster_Test monster = hit.collider.gameObject.GetComponent<Monster_Test>();
                        monster.HP -= 1;
-
+                        
                         Initialized(player);
                     }
                }
@@ -110,7 +110,7 @@ public class Skill_List : MonoBehaviour
                     {
                         Monster_Test monster = hit.collider.gameObject.GetComponent<Monster_Test>();
                         monster.HP -= 1;
-
+                        
                         Initialized(player);
                     }
                 }
@@ -157,20 +157,13 @@ public class Skill_List : MonoBehaviour
                         Debug.Log($"{monsterNumber}");
                         Debug.Log($"{_layerMaskUnit}");
 
-
-                        if(monsterNumber == 0)
-                        {
-                            Debug.Log("혹시 0?"); 
-
+                         
+                        for(int i = 0;  i < monsterNumber; i++)
+                        { 
+                          _colliders[i].gameObject.GetComponent<Unit_Test>().HP -= 1;
                         }
 
-                          for(int i = 0;  i < monsterNumber; i++)
-                          {
-                             
-                            _colliders[i].gameObject.GetComponent<Unit_Test>().HP -= 1;
-                          } 
-                            Debug.Log("여기 들어오니?333");
-
+                       
                         Initialized(player);
 
                     }
@@ -229,9 +222,9 @@ public class Skill_List : MonoBehaviour
                             {
                                 _monster[i].HP -= 1;
                             }
-
                             Initialized(player);
                             player._skillNum = 0;
+                            
                         }
                          
                     }
@@ -286,6 +279,10 @@ public class Skill_List : MonoBehaviour
     }
     void Initialized(Player_Test player)
     {
+        player._playerMoving.Animator.Play("SkillActivate");
+        //player._playerMoving.Animator.SetTrigger("TSkillActivate");
+        player._playerMoving.Animator.SetBool("BSkillReady", false);
+
         player.UnitState &= ~Unit_Test.State.Skill;
         player.GetComponent<PlayerMoving>().enabled = true;
         player._lineRenderer.enabled = false;

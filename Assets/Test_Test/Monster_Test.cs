@@ -1,20 +1,29 @@
 using System.Collections;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Monster_Test : Unit_Test
 {
     //시야 직렬화
     [SerializeField]
     GameObject _monsterSight;
+    //배틀 오브젝트
     [SerializeField]
     GameObject _BattleSystem;
 
+    //플레이어 인벤토리와 각자 아이템 버튼
+    [SerializeField]
+    protected ShareRepository _playerInventory; 
+
+    //몬스터 시야와 전투
     GameObject _instSight;
     GameObject _BattleColosseum;
 
     protected MonsterSight _getSight;
 
+    //몬스터 이동
     protected CharacterController _characterController;
     protected Animator _animator;
 
@@ -23,6 +32,11 @@ public class Monster_Test : Unit_Test
 
 
     public Vector3 _initialPosition;
+
+    //죽었을 때 몬스터가 주는 것 + 각자 아이템
+    [Header("몬스터가 주는 것")]
+    protected int _monsterGold;
+    protected int _monsterExp;
 
     void Start()
     { 
@@ -89,5 +103,7 @@ public class Monster_Test : Unit_Test
          
     }
 
+    //죽을 때 드랍? or 바로 들어가게?
+ 
 
 }

@@ -133,4 +133,19 @@ public class PlayerMoving : MonoBehaviour
 
     }
 
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+         
+        if (hit.gameObject.CompareTag("Player"))
+        {
+            if ((_rayHitPoint - _playertransform.position).magnitude < 2.2f)
+            {
+
+                _rayHitPoint = transform.position;
+                Debug.Log("히트가 들어온다");
+            }
+        }
+    }
+     
+
 }

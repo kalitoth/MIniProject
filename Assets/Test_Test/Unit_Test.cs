@@ -22,7 +22,6 @@ public class Unit_Test : MonoBehaviour
     private int _maxHp;
     private int _basicHp = 10;
 
-    private int _exp;
     private int _maxExp;
     private int _level = 1;
 
@@ -67,11 +66,6 @@ public class Unit_Test : MonoBehaviour
     {
         get { return _speed; }
         set { _speed = value; }
-    }
-    public int Exp
-    {
-        get { return _exp; }
-        set { _exp = value; }
     }
     public int MaxExp
     {
