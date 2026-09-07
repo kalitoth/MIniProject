@@ -89,10 +89,12 @@ public class Skill_Manage : MonoBehaviour
        
            //if (_ray_Test.Hit.collider.gameObject.CompareTag("Player"))
            {
+                //_button.RemoveSkillButton(_player);
                //_hit = _ray_Test.Hit;
                _player = _ray_Test.Skll_Player;
-              // Debug.Log("스킬 플레이어 바꾸기");
-           }
+                //_button.ReviveSkillButton(_player);
+                // Debug.Log("스킬 플레이어 바꾸기");
+            }
        }
         
         

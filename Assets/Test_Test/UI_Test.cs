@@ -22,10 +22,10 @@ public class UI_Test : MonoBehaviour
     [SerializeField]
     Image _playerImage;
 
+    Player_Test _currentPlayer;
 
      
 
-    Player_Test _currentPlayer;
 
     //어떤 유닛을 클릭했을 때 hp
     // 상속이 필요하다
@@ -37,7 +37,9 @@ public class UI_Test : MonoBehaviour
     Ray_UI _ray_Test;
     private RaycastHit _hit;
 
-
+    [SerializeField]
+    Image _option;
+    bool _timePause;
     void Start()
     {
         _playerMovingShift = GetComponent<PlayerShift>();
@@ -86,6 +88,36 @@ public class UI_Test : MonoBehaviour
         //현재 유닛 이미지
         _playerImage.sprite = _currentPlayer._image;
 
+        if(!_currentPlayer.UnitState.HasFlag(Unit_Test.State.Skill))
+        {
+            
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                //동기화
+                if (_option.gameObject.activeSelf)
+                {
+                    _timePause = true;
+                }
+                else
+                {
+                    _timePause = false;
+                }
+
+                _timePause = !_timePause;
+
+                if(_timePause)
+                {
+                    Time.timeScale = 0f;
+                }
+                else
+                {
+                    Time.timeScale = 1f;
+                }
+
+                _option.gameObject.SetActive(_timePause);
+            }
+        }
        
         
         //유닛 hp

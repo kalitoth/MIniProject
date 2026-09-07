@@ -115,9 +115,9 @@ public class MakeSkillButton_Test : MonoBehaviour
         {
             if (_hit.collider == _ray_Test.Hit.collider)
             {
+           
                 return;
             }
-
             if (_ray_Test.Hit.collider.gameObject.CompareTag("Player"))
             {
                 _hit = _ray_Test.Hit;
@@ -225,7 +225,9 @@ public class MakeSkillButton_Test : MonoBehaviour
 
     #region 버튼 목록
     void Switch(int Index)
-    { 
+    {
+        Debug.Log($"너 누군데 : {_player}");
+        
         if (!_player.UnitState.HasFlag(Unit_Test.State.Skill))
         {
             _player.UnitState |= Unit_Test.State.Skill;

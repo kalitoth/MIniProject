@@ -53,7 +53,7 @@ public class Ray_Skill_SkillButton : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 _player = _movingShift.Player;
-
+                Debug.Log($"스킬버튼의 플레이어 {_player}");
                 RaycastHit hit;
 
                 _ray = _camera.ScreenPointToRay(Input.mousePosition);
@@ -62,6 +62,7 @@ public class Ray_Skill_SkillButton : MonoBehaviour
 
                 if (hit.collider != null)
                 {
+                    Debug.Log("스킬 바꿈?");
                    if (!_player.UnitState.HasFlag(Unit_Test.State.Skill))
                    {
                        _hit = hit;

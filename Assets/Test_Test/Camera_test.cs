@@ -24,15 +24,19 @@ public class Camera_test : MonoBehaviour
     private float _interpoleRot;
     //이거 캠 스피드 옵션으로 뺄 수 있도록 
     private float _camSpeed = 10;
-    private float _camWheelSpeed = 120;
+    private float _camWheelSpeed = 240;
+
     
     //내부
     RaycastHit _hit;
-    Vector3 offset = new Vector3(0,10,-5);
+    
+    Vector3 offset = new Vector3(0,20,-10);
     Vector3 mouseWheel = Vector3.zero;
     Quaternion camToSomething;
 
-    
+
+    bool active = true;
+    float a;
 
     CamState camState = CamState.None;
     enum CamState
@@ -54,7 +58,9 @@ public class Camera_test : MonoBehaviour
 
     private void LateUpdate()
     {
-
+        _interpolePos = 1 - Mathf.Exp(-_sharpnessPos * Time.deltaTime);
+        _interpoleRot = 1 - Mathf.Exp(-_sharpnessRot * Time.deltaTime);
+       
         if (!_curruntPlayer.UnitState.HasFlag(Unit_Test.State.Skill))
         {
            
@@ -70,8 +76,46 @@ public class Camera_test : MonoBehaviour
                
             }
         }
-
-        
+       //if (!_curruntPlayer.UnitState.HasFlag(Unit_Test.State.Skill))
+       //{
+       //    if (Input.GetMouseButton(1))
+       //    {
+       //        //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+       //
+       //        float ray = Input.mousePosition.x;
+       //        if (active)
+       //        {
+       //            Debug.Log("들어오지?11");
+       //            a = ray;
+       //            active = false;
+       //        }
+       //        
+       //
+       //        //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(ray.direction), _interpoleRot);
+       //        //transform.Rotate(Vector3.up);
+       //        //ray.direction
+       //        //offset.z += 1f;
+       //        if(a > ray)
+       //        {
+       //            transform.rotation = Quaternion.AngleAxis(-1f, Vector3.up) * transform.rotation;
+       //            Debug.Log("들어오지?22");
+       //        }
+       //        else if(a < ray)
+       //        {
+       //            transform.rotation = Quaternion.AngleAxis(1f, Vector3.up) * transform.rotation;
+       //            Debug.Log("들어오지?2233");
+       //        }
+       //
+       //
+       //        
+       //    }
+       //    if (Input.GetMouseButtonUp(1))
+       //    {
+       //        Debug.Log("들어오지?33");
+       //        active = true;
+       //    }
+       //}
+           
 
         //자유 이동
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) || Input.GetAxisRaw("Mouse ScrollWheel") != 0)
@@ -81,19 +125,23 @@ public class Camera_test : MonoBehaviour
 
         if(Input.GetKey(KeyCode.W))
         {
+            //transform.Translate(Vector3.forward * _camSpeed * Time.deltaTime);
             transform.position += Vector3.forward* _camSpeed *Time.deltaTime;
         }
         if(Input.GetKey(KeyCode.S))
         {
+            //transform.Translate(Vector3.back * _camSpeed * Time.deltaTime);
             transform.position += Vector3.back * _camSpeed * Time.deltaTime;
         }
         if( Input.GetKey(KeyCode.A))
         {
+            //transform.Translate(Vector3.left * _camSpeed * Time.deltaTime);
             transform.position += Vector3.left * _camSpeed * Time.deltaTime;
         }
         if( Input.GetKey (KeyCode.D))
         {
-            transform.position += Vector3.right * _camSpeed * Time.deltaTime;
+            //transform.Translate(Vector3.right * _camSpeed * Time.deltaTime);
+           transform.position += Vector3.right * _camSpeed * Time.deltaTime;
         }
 
         //휠 
@@ -115,8 +163,7 @@ public class Camera_test : MonoBehaviour
         // free > None 어떻게?
  
    
-        _interpolePos = 1 - Mathf.Exp(-_sharpnessPos * Time.deltaTime);
-        _interpoleRot = 1 - Mathf.Exp(-_sharpnessRot * Time.deltaTime);
+        
 
         
         if (_curruntPlayer.UnitState.HasFlag(Unit_Test.State.Skill) && camState != CamState.Free)

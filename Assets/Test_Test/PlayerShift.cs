@@ -16,7 +16,15 @@ public class PlayerShift : MonoBehaviour
     //레이
     [SerializeField]
     private Camera _camera;
-    private RaycastHit _hit;
+    private RaycastHit _playerShiftHit;
+    private RaycastHit _SkillShiftHit;
+
+    public RaycastHit SkillShiftHit
+    {
+        get { return _playerShiftHit; }
+        set { _playerShiftHit = value; }
+    }
+
     Ray _ray;
     LayerMask _layerMask;
     float _rayMaxDistance = 500f;
@@ -46,8 +54,71 @@ public class PlayerShift : MonoBehaviour
     public void Update()
     {
         MovingShift();
-        
-        if(Input.GetKeyDown(KeyCode.BackQuote))
+        ChangePlayer();
+
+    }
+    public void MovingShift()
+    {
+        if(_player.UnitState.HasFlag(Unit_Test.State.Skill))
+        {
+            return;
+        }
+       
+        if (!EventSystem.current.IsPointerOverGameObject())
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                RayCamTo(out _playerShiftHit, _layerMask);
+                Debug.Log("무빙시프트에서 레이 발사");
+
+                if (_playerShiftHit.collider != null)
+                {
+                    if (_playerShiftHit.collider.gameObject.CompareTag("Player"))
+                    {
+                        Debug.Log("여기 들어오나?");
+                       if(_player != null)
+                       {
+                            _player._playerMoving.enabled = false; 
+                       }
+                        _player = _playerShiftHit.collider.gameObject.GetComponent<Player_Test>(); 
+                        _player._playerMoving.enabled = true;
+                        Debug.Log($"무빙시프트의 플레이어 {_player}");
+                    }
+                }
+
+
+                RaycastHit hit;
+
+                _ray = _camera.ScreenPointToRay(Input.mousePosition);
+
+                Physics.Raycast(_ray, out hit, _rayMaxDistance, _layerMask);
+
+                if (hit.collider != null)
+                {
+                    Debug.Log("스킬 바꿈?");
+                    if (!_player.UnitState.HasFlag(Unit_Test.State.Skill))
+                    {
+                        _SkillShiftHit = hit;
+                    }
+                }
+
+            }
+        }
+
+    }
+
+
+    public void RayCamTo(out RaycastHit hit, LayerMask layerMask)
+    {
+        _ray = _camera.ScreenPointToRay(Input.mousePosition);
+
+        Physics.Raycast(_ray, out hit, _rayMaxDistance, layerMask);
+         
+    }
+
+    void ChangePlayer()
+    {
+        if (Input.GetKeyDown(KeyCode.BackQuote))
         {
 
             for (int i = 0; i < _playerParty.Length; i++)
@@ -64,13 +135,13 @@ public class PlayerShift : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            if(_playerParty[0] == null)
+            if (_playerParty[0] == null)
             {
                 return;
             }
-            for(int i = 0; i < _playerParty.Length; i++)
+            for (int i = 0; i < _playerParty.Length; i++)
             {
-                if(_playerParty[i] == null)
+                if (_playerParty[i] == null)
                 {
                     continue;
                 }
@@ -133,46 +204,5 @@ public class PlayerShift : MonoBehaviour
             _player = _playerParty[3];
             _player._playerMoving.enabled = true;
         }
-    }
-    public void MovingShift()
-    {
-        if(_player.UnitState.HasFlag(Unit_Test.State.Skill))
-        {
-            return;
-        }
-
-        if (!EventSystem.current.IsPointerOverGameObject())
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                RayCamTo(out _hit, _layerMask);
-                Debug.Log("무빙시프트에서 레이 발사");
-
-                if (_hit.collider != null)
-                {
-                    if (_hit.collider.gameObject.CompareTag("Player"))
-                    {
-                        Debug.Log("여기 들어오나?");
-                       if(_player != null)
-                       {
-                            _player._playerMoving.enabled = false; 
-                       }
-                        _player = _hit.collider.gameObject.GetComponent<Player_Test>(); 
-                        _player._playerMoving.enabled = true;
-                    }
-                }
-
-            }
-        }
-
-    }
-
-
-    public void RayCamTo(out RaycastHit hit, LayerMask layerMask)
-    {
-        _ray = _camera.ScreenPointToRay(Input.mousePosition);
-
-        Physics.Raycast(_ray, out hit, _rayMaxDistance, layerMask);
-         
     }
 }

@@ -65,7 +65,6 @@ public class Player_Test : Unit_Test
     
     
     //private bool _battleStart = true;
-  
    
     private void Awake()
     {
@@ -111,7 +110,7 @@ public class Player_Test : Unit_Test
             PlayerUseSkill();
         }
 
-       
+    
             if (UnitState.HasFlag(State.Battle))
             {
                 if(BattleReady)
@@ -242,8 +241,8 @@ public class Player_Test : Unit_Test
         {
             Ray target = _camera.ScreenPointToRay(Input.mousePosition);
 
-            Physics.Raycast(target, out _hit, _distance,_layerMask);
- 
+            Physics.Raycast(target, out _hit, _distance, _layerMask);
+            //
             Debug.DrawLine(transform.position, _hit.point, Color.blue, 0.000001f);
 
           

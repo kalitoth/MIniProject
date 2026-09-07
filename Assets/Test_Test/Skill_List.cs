@@ -69,7 +69,7 @@ public class Skill_List : MonoBehaviour
                     if ((hit.point - player.transform.position).sqrMagnitude <= sqrRange)
                     {
                        Monster_Test monster = hit.collider.gameObject.GetComponent<Monster_Test>();
-                       monster.HP -= 1;
+                       monster.HP -= 3;
                         
                         Initialized(player);
                     }
@@ -160,7 +160,7 @@ public class Skill_List : MonoBehaviour
                          
                         for(int i = 0;  i < monsterNumber; i++)
                         { 
-                          _colliders[i].gameObject.GetComponent<Unit_Test>().HP -= 1;
+                          _colliders[i].gameObject.GetComponent<Unit_Test>().HP -= 2;
                         }
 
                        

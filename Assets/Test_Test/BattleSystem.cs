@@ -4,8 +4,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
-using UnityEngine.UI;
-using static UnityEditor.Experimental.GraphView.GraphView;
+using UnityEngine.UI; 
 public class BattleSystem : MonoBehaviour
 {
     [SerializeField]
