@@ -8,6 +8,9 @@ using UnityEngine.EventSystems;
 
 public class Skill_List : MonoBehaviour
 {
+    //프리팹
+    [SerializeField]
+    GameObject _SkillObject;
      
 
     Dictionary<int, Action<Player_Test,RaycastHit>> _skillList = new Dictionary<int, Action<Player_Test, RaycastHit>>();
@@ -37,7 +40,7 @@ public class Skill_List : MonoBehaviour
         _skillList.Add(3, Scroll);
         _skillList.Add(4, Jump);
     }
- 
+ //근접 공격은 구체 없다
     #region 스킬 목록
 
     //  1. 근접 단일 공격
@@ -68,9 +71,9 @@ public class Skill_List : MonoBehaviour
                     
                     if ((hit.point - player.transform.position).sqrMagnitude <= sqrRange)
                     {
-                       Monster_Test monster = hit.collider.gameObject.GetComponent<Monster_Test>();
-                       monster.HP -= 3;
-                        
+                        Unit_Test monster = hit.collider.gameObject.GetComponent<Unit_Test>();
+                        monster.HP -= (1 +Mathf.RoundToInt((player.Strength-10)*0.5f));
+                        monster.Animator.SetTrigger("BGetHit");
                         Initialized(player);
                     }
                }
@@ -108,9 +111,9 @@ public class Skill_List : MonoBehaviour
 
                     if ((hit.point - player.transform.position).sqrMagnitude <= sqrRange)
                     {
-                        Monster_Test monster = hit.collider.gameObject.GetComponent<Monster_Test>();
+                        Unit_Test monster = hit.collider.gameObject.GetComponent<Unit_Test>();
                         monster.HP -= 1;
-                        
+                        monster.Animator.SetTrigger("BGetHit");
                         Initialized(player);
                     }
                 }
@@ -151,19 +154,22 @@ public class Skill_List : MonoBehaviour
                         Debug.Log("여기 들어오니?111");
                     
                         
-                          int monsterNumber = Physics.OverlapSphereNonAlloc(hit.point, fierballRange, _colliders, _layerMaskUnit);
+                          //int monsterNumber = Physics.OverlapSphereNonAlloc(hit.point, fierballRange, _colliders, _layerMaskUnit);
 
                         Debug.Log("여기 들어오니?222");
-                        Debug.Log($"{monsterNumber}");
+                       // Debug.Log($"{monsterNumber}");
                         Debug.Log($"{_layerMaskUnit}");
 
-                         
-                        for(int i = 0;  i < monsterNumber; i++)
-                        { 
-                          _colliders[i].gameObject.GetComponent<Unit_Test>().HP -= 2; 
-                        }
-
+                        Fireball skillObject = Instantiate(_SkillObject, hit.point, player.transform.rotation).AddComponent<Fireball>();
                         
+                        skillObject.SkillDamageUnitStat(player);
+
+                        //for (int i = 0;  i < monsterNumber; i++)
+                        //{ 
+                        //  _colliders[i].gameObject.GetComponent<Unit_Test>().HP -= 2; 
+                        //}
+
+
 
                         Initialized(player);
 

@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class Unit_Test : MonoBehaviour
 {
-
+    Animator _animator;
+    public Animator Animator => _animator;
 
     private int _strength = 10;
     private int _intelligence = 10;
@@ -36,6 +37,23 @@ public class Unit_Test : MonoBehaviour
     private bool _alive = true;
 
     public Sprite _image;
+
+    public int Strength
+    {
+        get { return _strength; }
+        set { _strength = value; }
+    }
+    public int Intelligence
+    {
+        get { return _intelligence; }
+        set { _intelligence = value; }
+    }
+    public int Dexterity
+    {
+        get { return _dexterity; }
+        set { _dexterity = value; }
+    }
+
 
     public int HP
     {
