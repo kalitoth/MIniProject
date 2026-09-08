@@ -45,7 +45,7 @@ public class PlayerMoving : MonoBehaviour
     }
  
     public CharacterController CharacterController => _characterController;
-   public Animator Animator => _animator;
+   //public Animator Animator => _animator;
     private void Awake()
     {
         //½ÇÇè

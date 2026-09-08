@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI; 
 
@@ -12,12 +13,14 @@ public class MakeSkillButton_Test : MonoBehaviour
     Button _button;
     [SerializeField]
     private ScrollRect _scrollRect;
+    [SerializeField]
+    private ScrollRect _addSkillRect;
 
-    Ray_Skill_SkillButton _ray_Test;
+   // Ray_Skill_SkillButton _ray_Test;
     RaycastHit _hit;
 
     [Header("버튼 스킬 저장소")]
-    Dictionary<int, UnityEngine.Events.UnityAction> _skillAction = new Dictionary<int, UnityEngine.Events.UnityAction>();
+    Dictionary<int, UnityAction> _skillAction = new Dictionary<int, UnityAction>();
     Dictionary<int, Sprite> _skillsprites = new Dictionary<int, Sprite>();
      
     //플레이어 스킬
@@ -60,7 +63,7 @@ public class MakeSkillButton_Test : MonoBehaviour
         {
             Debug.Log("_playerShift가 null");
         }
-        _ray_Test = GetComponent<Ray_Skill_SkillButton>();
+        //_ray_Test = GetComponent<Ray_Skill_SkillButton>();
         _player = _playerParty[0];
     }
     
@@ -71,50 +74,9 @@ public class MakeSkillButton_Test : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            if (_playerParty[0] == null)
-            {
-                return;
-            }
 
-            RemoveSkillButton(_player);
-            _player = _playerParty[0];
-            ReviveSkillButton(_player);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            if (_playerParty[1] == null)
-            {
-                return;
-            }
-
-            RemoveSkillButton(_player);
-            _player = _playerParty[1];
-            ReviveSkillButton(_player);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            if (_playerParty[2] == null)
-            {
-                return;
-            }
-
-            RemoveSkillButton(_player);
-            _player = _playerParty[2];
-            ReviveSkillButton(_player);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            if (_playerParty[3] == null)
-            {
-                return;
-            }
-
-            RemoveSkillButton(_player);
-            _player = _playerParty[3];
-            ReviveSkillButton(_player);
-        }
+        ChangePlayerButton();
+        
 
         //클릭한 캐릭터의 스킬로 전환
         if (_playerShift.SkillShiftHit.collider != null)
@@ -130,9 +92,11 @@ public class MakeSkillButton_Test : MonoBehaviour
                 _hit = _playerShift.SkillShiftHit;
 
                 Debug.Log("버튼 삭제먼저?");
+                RemoveAddSkillButton(_player);
                 RemoveSkillButton(_player);
                 _player = _playerShift.Player;
                 ReviveSkillButton(_player);
+                ReviveAddSkillButton(_player);
             }
         }
         
@@ -164,7 +128,34 @@ public class MakeSkillButton_Test : MonoBehaviour
             
             
         }
-    }
+  }
+
+
+  //찍을 수 있는 스킬트리
+   public void AddSkillTree()
+ {
+       foreach (Player_Test _player in _playerParty)
+       { 
+           if(_player != null)
+           {
+               foreach (KeyValuePair<int, UnityAction> skill in _player.AddSkill)
+               {
+                   Button insbutton = Instantiate(_button, _addSkillRect.content);
+ 
+                   
+                   _player.AddSkillButton.Add(insbutton);
+ 
+                   insbutton.onClick.AddListener(_player.AddSkill[skill.Key]); 
+                   insbutton.image.sprite = _skillsprites[skill.Key];
+                   insbutton.gameObject.SetActive(false);
+ 
+               }
+               Debug.Log("버튼이 생성됐나?");
+           }
+           
+           
+       }
+ }
 
     #region 옵션
     //스킬 추가 버튼
@@ -209,6 +200,7 @@ public class MakeSkillButton_Test : MonoBehaviour
         }
         
     }
+    //스킬 인터렉트
     public void SkillButtonInteractT(Player_Test _player)
     {
         for (int i = 0; i < _player.SkillButton.Count; i++)
@@ -226,7 +218,80 @@ public class MakeSkillButton_Test : MonoBehaviour
         
     }
 
-    
+    //add스킬트리
+    public void RemoveAddSkillButton(Player_Test _player)
+    {
+        for (int i = 0; i < _player.SkillButton.Count; i++)
+        {
+            _player.AddSkillButton[i].gameObject.SetActive(false);
+
+        }
+
+    }
+    public void ReviveAddSkillButton(Player_Test _player)
+    {
+        for (int i = 0; i < _player.SkillButton.Count; i++)
+        {
+            _player.AddSkillButton[i].gameObject.SetActive(true);
+
+        }
+
+    }
+
+    //번호로 바꾸기
+    void ChangePlayerButton()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            if (_playerParty[0] == null)
+            {
+                return;
+            }
+            RemoveAddSkillButton(_player);
+            RemoveSkillButton(_player);
+            _player = _playerParty[0];
+            ReviveSkillButton(_player);
+            ReviveAddSkillButton(_player);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            if (_playerParty[1] == null)
+            {
+                return;
+            }
+            RemoveAddSkillButton(_player);
+            RemoveSkillButton(_player);
+            _player = _playerParty[1];
+            ReviveSkillButton(_player);
+            ReviveAddSkillButton(_player);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            if (_playerParty[2] == null)
+            {
+                return;
+            }
+            RemoveAddSkillButton(_player);
+            RemoveSkillButton(_player);
+            _player = _playerParty[2];
+            ReviveSkillButton(_player);
+            ReviveAddSkillButton(_player);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            if (_playerParty[3] == null)
+            {
+                return;
+            }
+            RemoveAddSkillButton(_player);
+            RemoveSkillButton(_player);
+            _player = _playerParty[3];
+            ReviveSkillButton(_player);
+            ReviveAddSkillButton(_player);
+        }
+    }
+
+
     #endregion
 
 
@@ -237,6 +302,7 @@ public class MakeSkillButton_Test : MonoBehaviour
         
         if (!_player.UnitState.HasFlag(Unit_Test.State.Skill))
         {
+            
             _player.UnitState |= Unit_Test.State.Skill;
             _player._playerMoving.enabled = false; 
             _player._lineRenderer.enabled = true;

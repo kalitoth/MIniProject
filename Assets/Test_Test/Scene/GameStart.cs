@@ -33,7 +33,7 @@ public class GameStart : MonoBehaviour
         while (_time < _duration)
         {
 
-            _time += Time.deltaTime;
+            _time += Time.unscaledDeltaTime;
 
             _interpolate = Mathf.Clamp01( _time / _duration);
 

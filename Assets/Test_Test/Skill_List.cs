@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems; 
 
@@ -19,12 +20,12 @@ public class Skill_List : MonoBehaviour
     Color _abledColor = Color.red;
     Color _ableColor = Color.blue;
 
-    Monster_Test[] _monster = new Monster_Test[20];
+    Unit_Test[] _monster = new Unit_Test[20];
     //List<Monster_Test> _monster = new List<Monster_Test>(20);
     Collider[] _colliders = new Collider[20];
     LayerMask _layerMaskUnit;
 
-     
+    RaycastHit[] _hitsArray = new RaycastHit[10]; 
     public Dictionary<int, Action<Player_Test, RaycastHit>> SkillList
     {
         get { return _skillList; }
@@ -111,9 +112,12 @@ public class Skill_List : MonoBehaviour
 
                     if ((hit.point - player.transform.position).sqrMagnitude <= sqrRange)
                     {
-                        Unit_Test monster = hit.collider.gameObject.GetComponent<Unit_Test>();
-                        monster.HP -= 1;
-                        monster.Animator.SetTrigger("BGetHit");
+                        Bow skillObject = Instantiate(_SkillObject, hit.point, player.transform.rotation).AddComponent<Bow>();
+                        skillObject.SkillDamageUnitStat(player);
+
+                        //Unit_Test monster = hit.collider.gameObject.GetComponent<Unit_Test>();
+                        //monster.HP -= 1;
+                        //monster.Animator.SetTrigger("BGetHit");
                         Initialized(player);
                     }
                 }
@@ -127,7 +131,7 @@ public class Skill_List : MonoBehaviour
     {
         float range = 15;
         float sqrRange = range * range;
-        float fierballRange = 3f;
+        //float fierballRange = 3f;
 
         if (!EventSystem.current.IsPointerOverGameObject())
         {
@@ -211,15 +215,15 @@ public class Skill_List : MonoBehaviour
                     if ((hit.point - player.transform.position).sqrMagnitude <= sqrRange)
                     {
                             Debug.Log($"스크롤 들어오나?1111");
-                        Monster_Test monster = hit.collider.gameObject.GetComponent<Monster_Test>();
+                        //Unit_Test monster = hit.collider.gameObject.GetComponent<Unit_Test>();
 
-                        if (monster == null)
+                        if (hit.point == null)
                         {
                             Debug.Log($"monster가 null");
                             return;
                         }
-
-                        _monster[player._skillNum] = monster;
+                        _hitsArray[player._skillNum] = hit;
+                      
                         player._skillNum++;
                             Debug.Log($"스크롤 들어오나?2222");
                             Debug.Log($"{player._skillNum}");
@@ -227,8 +231,9 @@ public class Skill_List : MonoBehaviour
                         {
                             for(int i = 0; i < player._skillNum; i++)
                             {
-                                _monster[i].HP -= 1;
-                                _monster[i].Animator.SetTrigger("BGetHit");
+                                MagicMissile skillObject = Instantiate(_SkillObject, _hitsArray[i].point,player.transform.rotation).AddComponent<MagicMissile>();
+                                skillObject.SkillDamageUnitStat(player);
+                              
                             }
                             Initialized(player);
                             player._skillNum = 0;
@@ -287,9 +292,9 @@ public class Skill_List : MonoBehaviour
     }
     void Initialized(Player_Test player)
     {
-        player._playerMoving.Animator.Play("SkillActivate");
+        player.Animator.Play("SkillActivate");
         //player._playerMoving.Animator.SetTrigger("TSkillActivate");
-        player._playerMoving.Animator.SetBool("BSkillReady", false);
+        player.Animator.SetBool("BSkillReady", false);
 
         player.UnitState &= ~Unit_Test.State.Skill;
         player.GetComponent<PlayerMoving>().enabled = true;

@@ -8,6 +8,7 @@ TagManager:
   - Monster
   - Unit
   - Battle
+  - Skill
   layers:
   - Default
   - TransparentFX

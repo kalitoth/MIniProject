@@ -35,8 +35,8 @@ public class Camera_test : MonoBehaviour
     Quaternion camToSomething;
 
 
-    bool active = true;
-    float a;
+    //bool active = true;
+    //float a;
 
     CamState camState = CamState.None;
     enum CamState
@@ -64,9 +64,9 @@ public class Camera_test : MonoBehaviour
         if (!_curruntPlayer.UnitState.HasFlag(Unit_Test.State.Skill))
         {
            
-        
-        //레이 정보
-           // if (!EventSystem.current.IsPointerOverGameObject())
+
+            //레이 정보
+            // if (!EventSystem.current.IsPointerOverGameObject())
             {
                 //if (Input.GetMouseButtonDown(0))
                 {
@@ -168,12 +168,13 @@ public class Camera_test : MonoBehaviour
         
         if (_curruntPlayer.UnitState.HasFlag(Unit_Test.State.Skill) && camState != CamState.Free)
         {
+            
             if (!EventSystem.current.IsPointerOverGameObject())
             {
                   _hit = _curruntPlayer.Hit;
               if(_curruntPlayer.Hit.transform == null)
-              {
-                  return;
+              { 
+                    return;
               }
             } 
             transform.position = Vector3.Lerp(transform.position, (_curruntPlayer.transform.position + _hit.point) * 0.5f + offset, _interpolePos);
@@ -183,6 +184,7 @@ public class Camera_test : MonoBehaviour
         }
         else if (camState == CamState.None)
         {
+            
             _hit.point = _curruntPlayer.transform.position;
             camToSomething = Quaternion.LookRotation(_curruntPlayer.transform.position - transform.position);
             transform.position = Vector3.Lerp(transform.position, _curruntPlayer.transform.position + offset, _interpolePos);
@@ -192,10 +194,6 @@ public class Camera_test : MonoBehaviour
 
     }
 
-    private void FixedUpdate()
-    {
-        
-    }
 
 
 }

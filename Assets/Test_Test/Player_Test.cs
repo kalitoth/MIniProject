@@ -30,8 +30,7 @@ public class Player_Test : Unit_Test
     public PlayerMoving _playerMoving;
     public LineRenderer _lineRenderer;
 
-    //스킬 포인트
-    int skillPoint = 0;
+    
     //스킬 리스트
     Dictionary<int, Action<Player_Test,RaycastHit>> _playerSkill = new Dictionary<int, Action<Player_Test, RaycastHit>>();
     //스킬 버튼
@@ -45,6 +44,27 @@ public class Player_Test : Unit_Test
     {
         get {  return _skillButton; }
     }
+
+    //스킬 포인트
+    public int skillPoint = 0;
+
+    //스킬 add 버튼
+    Dictionary<int, UnityEngine.Events.UnityAction> _AddSkill = new Dictionary<int, UnityEngine.Events.UnityAction>();
+
+    List<Button> _addSkillButton = new List<Button>(10);
+
+    public Dictionary<int, UnityEngine.Events.UnityAction> AddSkill
+    {
+        get { return _AddSkill; }
+        set { _AddSkill = value; }
+    }
+
+    public List<Button> AddSkillButton
+    {
+        get { return _addSkillButton; }
+        set { _addSkillButton = value; }
+    }
+
     //게임 초상화 이미지
     //이건 캐릭터 선택에서 부여해야 한다
     //public Sprite _image;
@@ -56,18 +76,11 @@ public class Player_Test : Unit_Test
     public int _attackNum = 0;
 
     float _lineWidth = 0.05f;
-
-    //상태
-     
-     
-
-    //배틀 턴 
-    
-    
-    //private bool _battleStart = true;
-   
-    private void Awake()
+  
+    protected override void Awake()
     {
+        base.Awake();
+
         UnitState = State.None;
         Instantiate(_playerSight,gameObject.transform);
         _layerMask = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Monster") | 1 << LayerMask.NameToLayer("Ground");
@@ -98,8 +111,7 @@ public class Player_Test : Unit_Test
 
     
     void Update()
-    {
-         
+    { 
         if (UnitState.HasFlag(State.None))
         {
             _playerMoving.Moving(); 
@@ -116,10 +128,10 @@ public class Player_Test : Unit_Test
                 if(BattleReady)
                 {
                     // 이건 배틀 상태가 될 때 한번
-                    if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                    if (!Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
                     {
                         _playerMoving.RayHitPoint = transform.position;
-                        _playerMoving.Animator.SetFloat("FMoving", 0);
+                        Animator.SetFloat("FMoving", 0);
                     }
                 //배틀이 끝나면 다시 켜기
                 _makeSkillButton.SkillButtonInteractF(this);
@@ -153,10 +165,10 @@ public class Player_Test : Unit_Test
                         Debug.Log($"이동불가");
 
                         UnitState &= ~State.None;
-                        if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                        if (!Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
                         {
                             _playerMoving.RayHitPoint = transform.position;
-                            _playerMoving.Animator.SetFloat("FMoving", 0);
+                            Animator.SetFloat("FMoving", 0);
                         }
 
                         
@@ -175,10 +187,10 @@ public class Player_Test : Unit_Test
                     _playerMoving.enabled = false;
                     _makeSkillButton.SkillButtonInteractF(this);
 
-                    if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                    if (!Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
                     {
                         _playerMoving.RayHitPoint = transform.position;
-                        _playerMoving.Animator.SetFloat("FMoving", 0);
+                        Animator.SetFloat("FMoving", 0);
                     }
                 }
             }
@@ -205,7 +217,7 @@ public class Player_Test : Unit_Test
     void PlayerUseSkill()
     {
 
-        if (!_playerMoving.Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+        if (!Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
             //스킬 쓰면 스킬 취소
             //_playerMoving.enabled = true;
@@ -214,13 +226,13 @@ public class Player_Test : Unit_Test
 
             //스킬 쓰면 이동 취소 
             _playerMoving.RayHitPoint = transform.position;
-            _playerMoving.Animator.SetFloat("FMoving", 0);
+            Animator.SetFloat("FMoving", 0);
         }
-
-        _playerMoving.Animator.SetBool("BSkillReady", true);
+        
+        Animator.SetBool("BSkillReady", true);
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
         {
-            _playerMoving.Animator.SetBool("BSkillReady", false);
+            Animator.SetBool("BSkillReady", false);
             _playerMoving.enabled = true;
             _lineRenderer.enabled = false;
             //_state = State.None;
@@ -242,11 +254,9 @@ public class Player_Test : Unit_Test
             Ray target = _camera.ScreenPointToRay(Input.mousePosition);
 
             Physics.Raycast(target, out _hit, _distance, _layerMask);
-            //
+            
             Debug.DrawLine(transform.position, _hit.point, Color.blue, 0.000001f);
-
-          
-
+             
            _lineRenderer.SetPosition(0, transform.position);
             
             if(_hit.collider == null)

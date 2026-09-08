@@ -8,27 +8,39 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 public class UI_Test : MonoBehaviour
 {
- 
+
     //초상화 옆 플레이어 hp
+    [Header("플레이어 체력바")]
     [SerializeField]
     Slider _playerHPBar;
-    [SerializeField]
-    Text _text;
-    [SerializeField]
-    TextMeshProUGUI _textMeshPro;
+    //[SerializeField]
+    //Text _text;
+    
+    [Header("턴 버튼")]
     [SerializeField]
     Button _turnButton;
     
+    [Header("플레이어 이미지")]
     [SerializeField]
     Image _playerImage;
 
     Player_Test _currentPlayer;
 
-     
+
+    [Header("스킬 AddList")]
+    [SerializeField]
+    Image _addSkillList;
+    [Header("스킬 포인트")]
+    [SerializeField]
+    TextMeshProUGUI _skillPoint;
+    bool _addSkill;
 
 
     //어떤 유닛을 클릭했을 때 hp
-    // 상속이 필요하다
+    // 상속이 필요하다 
+    [Header("Any 유닛 체력")]
+    [SerializeField]
+    TextMeshProUGUI _textMeshPro;
     [SerializeField]
     Slider _anyUnitHPBar; 
     Unit_Test _anyUnit;
@@ -37,6 +49,7 @@ public class UI_Test : MonoBehaviour
     Ray_UI _ray_Test;
     private RaycastHit _hit;
 
+    [Header("옵션")]
     [SerializeField]
     Image _option;
     bool _timePause;
@@ -88,7 +101,18 @@ public class UI_Test : MonoBehaviour
         //현재 유닛 이미지
         _playerImage.sprite = _currentPlayer._image;
 
-        if(!_currentPlayer.UnitState.HasFlag(Unit_Test.State.Skill))
+        //add스킬
+        if(Input.GetKeyDown(KeyCode.K))
+        {
+            _addSkill = !_addSkill;
+
+            _addSkillList.gameObject.SetActive(_addSkill);
+        }
+        //스킬 포인트
+        _skillPoint.text = $"{_currentPlayer.skillPoint}";
+
+        // ESC옵션
+        if (!_currentPlayer.UnitState.HasFlag(Unit_Test.State.Skill))
         {
             
 

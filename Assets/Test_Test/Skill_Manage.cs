@@ -48,24 +48,49 @@ public class Skill_Manage : MonoBehaviour
     }
     private void Start()
     {
+        Warrior warrior;
+        Wizard wizard;
         //기본 스킬
         foreach (Player_Test player in _playerParty)
         {
             if (player != null)
             {
-                for (int i = 0; i < 4; i++)
-                {
-                    player.PlayerSkill.Add(i, Skill_List.SkillList[i]);
-                }
+               // for (int i = 0; i < 4; i++)
+                //{
+                     
+                    if(player.TryGetComponent<Warrior>(out _))
+                    {
+                        if (!player.PlayerSkill.ContainsKey(0))
+                        {
+                            player.PlayerSkill.Add(0, Skill_List.SkillList[0]);
+                            player.AddSkill.Add(2,AddFireball);
+                        }
+                            
+                    }
+                    if (player.TryGetComponent<Wizard>(out _))
+                    { 
+                        if (!player.PlayerSkill.ContainsKey(1))
+                        {
+                            player.PlayerSkill.Add(1, Skill_List.SkillList[1]);
+                            player.AddSkill.Add(3, AddMagicMissale);
+                        }
+                           
+                    }
+                    //player.PlayerSkill.Add(i, Skill_List.SkillList[i]);
+                //}
 
             }
         }
         // 모든 캐릭터의 스킬트리 만들기 + 모든 스킬 active false
         _button.MakeSkillTree();
+        _button.AddSkillTree();
 
         _player = _playerParty[0];
         // 현재 캐릭터의 스킬트리만 active true
         _button.ReviveSkillButton(_player);
+        _button.ReviveAddSkillButton(_player);
+
+
 
     }
 
@@ -74,7 +99,7 @@ public class Skill_Manage : MonoBehaviour
 
         if (_player.UnitState.HasFlag(Unit_Test.State.Skill))
         {
-            Debug.Log("스킬바꾸기 안들어감");
+            //Debug.Log("스킬바꾸기 안들어감");
             return;
         }
 
@@ -124,6 +149,28 @@ public class Skill_Manage : MonoBehaviour
         _button.AddSkillButton(skillIndex);
     }
 
+    #region 스킬 add목록
 
+ 
+    public void AddFireball()
+    {
+        if(_player.skillPoint == 0)
+        {
+            return;
+        }
+        int skillIndex = 2;
+        SkillAdd(skillIndex);
+    }
+    public void AddMagicMissale()
+    {
+        if (_player.skillPoint == 0)
+        {
+            return;
+        }
+        int skillIndex = 3;
+        SkillAdd(skillIndex);
+    }
+
+    #endregion
 }
 

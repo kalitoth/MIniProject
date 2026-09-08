@@ -26,14 +26,14 @@ public class Monster_Test : Unit_Test
 
     //몬스터 이동
     protected NavMeshAgent _agent;
-    protected CharacterController _characterController;
-    protected Animator _animator;
+    //protected CharacterController _characterController;
+    //protected Animator _animator;
 
-    public Animator Animator
-    {
-        get { return _animator; }
-        set { _animator = value; }
-    }
+   //public Animator Animator
+   //{
+   //    get { return _animator; }
+   //    set { _animator = value; }
+   //}
     protected Vector3 _firstPlayer;
 
 
@@ -50,19 +50,27 @@ public class Monster_Test : Unit_Test
     float _radius = 0.001f;
 
 
-    float _rayDistance = 500f;
     LayerMask _Battlelayer;
-    void Start()
+
+    protected override void Awake()
     {
+        base.Awake();
+
         _agent = GetComponent<NavMeshAgent>();
 
         _Battlelayer = 1 << LayerMask.NameToLayer("Battle");
+    }
+    void Start()
+    {
+        
+
+        
         _instSight = Instantiate(_monsterSight, this.transform);
         Debug.Log("_monsterSight를 생성");
 
         _getSight = _instSight.gameObject.GetComponent<MonsterSight>();
-        _characterController = GetComponent<CharacterController>();
-        _animator = GetComponent<Animator>();
+        //_characterController = GetComponent<CharacterController>();
+         
         if (_getSight == null)
         {
             Debug.Log("_getSight가 null");
@@ -94,7 +102,7 @@ public class Monster_Test : Unit_Test
            //}
             _agent.SetDestination(_initialPosition);
             //_characterController.Move((_initialPosition - transform.position)*Time.deltaTime);
-            _animator.SetFloat("FMoving", (_initialPosition - transform.position).magnitude);
+            Animator.SetFloat("FMoving", (_initialPosition - transform.position).magnitude);
 
             if((_initialPosition - transform.position).sqrMagnitude < 0.5f)
             {
@@ -139,7 +147,18 @@ public class Monster_Test : Unit_Test
          
     }
 
-    //죽을 때 드랍? or 바로 들어가게?
- 
+    //스킬에 맞으면 배틀 시작
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.collider.CompareTag("Skill"))
+        {
+            if(!UnitState.HasFlag(State.Battle))
+            {
+                _BattleColosseum = Instantiate(_BattleSystem, transform.position, transform.rotation);
+                _BattleColosseum.SetActive(true);
+            }
+        }
+    }
+
 
 }

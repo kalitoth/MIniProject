@@ -9,26 +9,28 @@ using UnityEngine.UI;
 public class SkeletonNew : Monster_Test
 {
 
-     
+
+    //배틀 시스템 플레이어 받아오기
     BattleSystem _battleSystem;
 
-    Vector3 _playerPosition;
-    Vector3 _position;
-
+    //가장 거리가 짧은 플레이어 찾기
     float _distanceMin;
+    bool _distanceFirst = true;
+
+    Vector3 _playerPosition;
     int _playerIndex;
 
-
-
-    bool _distanceFirst = true;
+    //몬스터 사거리
+    float _monsterRange = 3f;
 
     //float _movingSpeed = 0.5f;
     //추적 시간
     //float _time;
-    void Awake()
+    override protected void Awake()
     {
         
-        
+        base.Awake();
+
         // 여기에 몬스터 스텟 넣기
         MAXHP = BasicHp + Mathf.FloorToInt((Constitution - 10) * 0.5f) * Level;
         HP = MAXHP;
@@ -100,15 +102,16 @@ public class SkeletonNew : Monster_Test
                 
                 _agent.SetDestination(_playerPosition);
 
-                _animator.SetFloat("FMoving", (_playerPosition - transform.position).magnitude);
+                Animator.SetFloat("FMoving", (_playerPosition - transform.position).magnitude);
 
                 Movement -= _agent.velocity.magnitude* Time.deltaTime;
 
                 if (UsingSkillNum > 0)
                 {
-                    if((_playerPosition - transform.position).sqrMagnitude < 9f)
+                    float sqrRange = _monsterRange * _monsterRange;
+                    if ((_playerPosition - transform.position).sqrMagnitude < sqrRange)
                     {
-                        _animator.SetTrigger("TSkillActivate");
+                        Animator.SetTrigger("TSkillActivate");
                         _battleSystem.Players[_playerIndex].HP -= 1;
                         UsingSkillNum--;
                         Debug.Log($"스킬넘버에 들어오니? {UsingSkillNum}");
@@ -127,7 +130,7 @@ public class SkeletonNew : Monster_Test
                     Debug.Log($"몬스터 추적 끝");
                      
                     _playerPosition = transform.position;
-                    _animator.SetFloat("FMoving", 0);
+                    Animator.SetFloat("FMoving", 0);
                    
                     _agent.isStopped = true;
                     TurnEnable = false;
@@ -197,6 +200,12 @@ public class SkeletonNew : Monster_Test
 
         _playerInventory._skeletonGem += 1;
 
+    }
+
+    public void Reference(BattleSystem battleSystem, ShareRepository playerInventory)
+    {
+        _battleSystem = battleSystem;
+        _playerInventory = playerInventory;
     }
 
 }

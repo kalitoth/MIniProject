@@ -20,8 +20,7 @@ public class BattleSystem : MonoBehaviour
 
     bool _sortTrigger = true;
     bool _battleTrigger = true;
-    bool triggerExit = true;
-    int _battleListAdd = 0;
+    bool triggerExit = true; 
 
     bool _firstPlayer = true;
 
@@ -294,7 +293,7 @@ public class BattleSystem : MonoBehaviour
             }
             //_button.SkillButtonInteractT(player);
         }
-
+        _UnitCollider.Remove(_ColliderUnit[other]);
         _battleList.Remove(_ColliderUnit[other]);
         _ColliderUnit.Remove(other);
         Destroy(_colliderImage[other].gameObject);

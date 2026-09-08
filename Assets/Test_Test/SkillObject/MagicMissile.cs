@@ -8,23 +8,32 @@ public class MagicMissile : MonoBehaviour
 {
 
     int _damage = 1;
-    
-  public void SkillDamageUnitStat(Unit_Test unitStat)
+    float _size = 0.1f;
+
+    private void Awake()
+    {
+        transform.localScale = Vector3.one * _size;
+    }
+    public void SkillDamageUnitStat(Unit_Test unitStat)
   {
         _damage += Mathf.RoundToInt((unitStat.Intelligence - 10) * 0.5f);
   }
 
-    //소환된 물체는 다음 프레임부터 업데이트 적용
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.CompareTag("Monster"))
-        {
-            Unit_Test unit = other.GetComponent<Unit_Test>();
 
-            unit.HP -= 1;
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Monster"))
+        {
+            Unit_Test unit = collision.gameObject.GetComponent<Unit_Test>();
+
+            unit.HP -= _damage;
+            unit.Animator.SetTrigger("BGetHit");
+            Debug.Log("콜라이더 히트 안들어오나?");
         }
 
 
         this.gameObject.SetActive(false);
     }
+    
+ 
 }

@@ -7,8 +7,15 @@ using UnityEngine;
 public class Unit_Test : MonoBehaviour
 {
     Animator _animator;
-    public Animator Animator => _animator;
-
+    public Animator Animator
+    {
+        get { return _animator; }
+        set { _animator = value; }
+    }
+    protected virtual void Awake()
+    {
+        _animator = GetComponent<Animator>();
+    }
     private int _strength = 10;
     private int _intelligence = 10;
     private int _dexterity = 10;
