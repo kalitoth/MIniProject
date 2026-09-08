@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor; 
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
@@ -14,6 +15,8 @@ public class PlayerMoving : MonoBehaviour
     private CharacterController _characterController;
     private Transform _playertransform;
 
+    //실험
+    NavMeshAgent _agent;
   // private Player_Test _player;
   // [Header("무빙시프트")]
   // [SerializeField]
@@ -45,6 +48,9 @@ public class PlayerMoving : MonoBehaviour
    public Animator Animator => _animator;
     private void Awake()
     {
+        //실험
+        _agent = GetComponent<NavMeshAgent>();
+
         _layerMask = 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Monster");
 
         //_player = GetComponent<Player_Test>();
@@ -103,9 +109,10 @@ public class PlayerMoving : MonoBehaviour
                              return;
                          }
                           _rayHitPoint = _hit.point;
-                     
-                          Debug.Log($"무빙{_hit.point}");
-                          _playertransform.rotation = Quaternion.LookRotation((_rayHitPoint - _playertransform.position).normalized, Vector3.up);
+                        
+                        
+                        Debug.Log($"무빙{_hit.point}");
+                        _playertransform.rotation = Quaternion.LookRotation((_rayHitPoint - _playertransform.position).normalized, Vector3.up);
                                
                      
                       }
@@ -113,15 +120,16 @@ public class PlayerMoving : MonoBehaviour
             }
 
         }
-        
-        _projectionRay = Vector3.ProjectOnPlane(_rayHitPoint, Vector3.up);
-       _projectionPlayer = Vector3.ProjectOnPlane(_playertransform.position, Vector3.up);
-       move = _projectionRay - _projectionPlayer;
-       move.y = gravity;
-         
-       _characterController.Move(move * Time.deltaTime);
-         
-        //y가 다르게 생성되면 뛰면서 생성
+        //실험
+        //_agent.SetDestination(_rayHitPoint);
+      _projectionRay = Vector3.ProjectOnPlane(_rayHitPoint, Vector3.up);
+     _projectionPlayer = Vector3.ProjectOnPlane(_playertransform.position, Vector3.up);
+     move = _projectionRay - _projectionPlayer;
+     move.y = gravity;
+       
+     _characterController.Move(move * Time.deltaTime);
+       
+      //y가 다르게 생성되면 뛰면서 생성
         _animator.SetFloat("FMoving", (_rayHitPoint - _playertransform.position).magnitude);
         
     }

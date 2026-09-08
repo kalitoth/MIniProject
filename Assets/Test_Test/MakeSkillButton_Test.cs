@@ -32,7 +32,7 @@ public class MakeSkillButton_Test : MonoBehaviour
     [SerializeField]
     Player_Test[] _playerParty = new Player_Test[4];
 
-     
+    PlayerShift _playerShift;
 
     private void Awake()
     { 
@@ -53,7 +53,13 @@ public class MakeSkillButton_Test : MonoBehaviour
 
     }
     void Start()
-    { 
+    {
+        _playerShift = GetComponent<PlayerShift>();
+
+        if(_playerShift == null )
+        {
+            Debug.Log("_playerShift가 null");
+        }
         _ray_Test = GetComponent<Ray_Skill_SkillButton>();
         _player = _playerParty[0];
     }
@@ -111,20 +117,21 @@ public class MakeSkillButton_Test : MonoBehaviour
         }
 
         //클릭한 캐릭터의 스킬로 전환
-        if (_ray_Test.Hit.collider != null)
+        if (_playerShift.SkillShiftHit.collider != null)
         {
-            if (_hit.collider == _ray_Test.Hit.collider)
+            if (_hit.collider == _playerShift.SkillShiftHit.collider)
             {
            
                 return;
             }
-            if (_ray_Test.Hit.collider.gameObject.CompareTag("Player"))
+            if (_playerShift.SkillShiftHit.collider.gameObject.CompareTag("Player"))
             {
-                _hit = _ray_Test.Hit;
+                
+                _hit = _playerShift.SkillShiftHit;
 
                 Debug.Log("버튼 삭제먼저?");
                 RemoveSkillButton(_player);
-                _player = _ray_Test.Skll_Player;
+                _player = _playerShift.Player;
                 ReviveSkillButton(_player);
             }
         }

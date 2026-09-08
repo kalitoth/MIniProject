@@ -49,32 +49,43 @@ public class MonsterSight : MonoBehaviour
         }
         
     }
+    private void OnTriggerStay(Collider other)
+    {
+        
+    }
     private void OnTriggerEnter(Collider other)
     {
+            Debug.Log($"콜라이더 감지?");
         if (other.CompareTag("Player"))
         {
-            Player_Test currentPlayer = other.GetComponent<Player_Test>();
+            Debug.Log($"플레이어 감지?");
+            if (Physics.Raycast(transform.position, other.transform.position - transform.position))
+            { 
+            Debug.Log($"레이캐스팅 감지?");
+                 Player_Test currentPlayer = other.GetComponent<Player_Test>();
+                
+                 for(int i = 0; i < dictionarySize; i++)
+                 {
+                     if (_playerList.ContainsKey(playerindex))
+                     {
+                         playerindex++;
+                
+                         if (playerindex == 4)
+                         {
+                             playerindex = 0;
+                         }
+                     }
+                     else
+                     {
+                         _playerList.Add(playerindex, currentPlayer);
+                         _playerListRev.Add(currentPlayer, playerindex);
+                         Debug.Log($"현재 플레이어 Enter 인덱스 : {playerindex}");
+                         Debug.Log($"현재 플레이어 Enter _playerList.Count : {_playerList.Count}");
+                         
+                         break;
+                     }
+                 }
 
-            for(int i = 0; i < dictionarySize; i++)
-            {
-                if (_playerList.ContainsKey(playerindex))
-                {
-                    playerindex++;
-
-                    if (playerindex == 4)
-                    {
-                        playerindex = 0;
-                    }
-                }
-                else
-                {
-                    _playerList.Add(playerindex, currentPlayer);
-                    _playerListRev.Add(currentPlayer, playerindex);
-                    Debug.Log($"현재 플레이어 Enter 인덱스 : {playerindex}");
-                    Debug.Log($"현재 플레이어 Enter _playerList.Count : {_playerList.Count}");
-                    
-                    break;
-                }
             }
 
         }
@@ -84,15 +95,22 @@ public class MonsterSight : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            
             Player_Test currentPlayer = other.GetComponent<Player_Test>();
 
-            int currentPlayerIndex = _playerListRev[currentPlayer];
+            if(_playerListRev.ContainsKey(currentPlayer))
+            {
 
-            _playerList.Remove(currentPlayerIndex);
-            _playerListRev.Remove(currentPlayer);
+                int currentPlayerIndex = _playerListRev[currentPlayer];
 
-            Debug.Log($"현재 플레이어 Exit 인덱스 : {currentPlayerIndex}");
-            Debug.Log($"현재 플레이어 Exit _playerList.Count : {_playerList.Count}");
+                _playerList.Remove(currentPlayerIndex);
+                _playerListRev.Remove(currentPlayer);
+
+                Debug.Log($"현재 플레이어 Exit 인덱스 : {currentPlayerIndex}");
+                Debug.Log($"현재 플레이어 Exit _playerList.Count : {_playerList.Count}");
+
+            }
+            
 
 
         }

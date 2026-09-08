@@ -77,8 +77,9 @@ public class ShareRepository : MonoBehaviour
         {
             _skeletonGemNum.text = $"{_skeletonGem}";
         }
-        
 
-   
+        _gold.text = $"Gold : {shareGold}";
+
+
     }
 }

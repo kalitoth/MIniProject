@@ -29,6 +29,8 @@ public class BattleSystem : MonoBehaviour
  
     List<Player_Test> _players = new List<Player_Test>(4);
 
+    public List<Player_Test> Players => _players;
+
    Dictionary<Collider, Unit_Test> _ColliderUnit = new Dictionary<Collider, Unit_Test>(20); 
    Dictionary< Unit_Test,Collider> _UnitCollider = new Dictionary<Unit_Test, Collider>(20); 
     List<Unit_Test> _battleList = new List<Unit_Test>(20);
@@ -39,7 +41,7 @@ public class BattleSystem : MonoBehaviour
     private void Awake()
     {
         _battleIndex = 0;
-        
+        Debug.Log($"배틀시스템 온");
     }
     
     void Update()

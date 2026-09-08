@@ -92,6 +92,10 @@ public class Skeleton : Monster_Test
                 {
                     Debug.Log("플레이어 트랜스폼이 null");
                     _playerPosition = _firstPlayer;
+                    if(_firstPlayer == Vector3.zero)
+                    {
+                        _playerPosition = transform.position;
+                    }
                     return;
                 }
 
@@ -180,6 +184,28 @@ public class Skeleton : Monster_Test
                 Debug.Log($"몬스터 이동력 {Movement}");
 
                 Debug.Log("몬스터 턴 끝");
+
+                if((_playerPosition - transform.position).sqrMagnitude < 0.2f)
+                {
+                    _time += Time.deltaTime;
+
+                    if(_time > 3)
+                    {
+                        if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                        {
+                            _projectionPlayer = transform.position;
+                            _animator.SetFloat("FMoving", 0);
+                        }
+
+                        _tracingIndex--;
+                        TurnEnable = false;
+                        TurnEnd = true;
+
+                        _time = 0;
+                    }
+                }
+
+               
             }
 
         }

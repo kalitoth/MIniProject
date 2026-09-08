@@ -42,7 +42,7 @@ public class GameStart : MonoBehaviour
 
         }
 
-        sceneManager = SceneManager.LoadSceneAsync("MainScene");
+        sceneManager = SceneManager.LoadSceneAsync("MainSceneTest");
 
         _time = 0f;
         //sceneManager.allowSceneActivation = false;

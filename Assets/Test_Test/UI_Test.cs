@@ -33,7 +33,7 @@ public class UI_Test : MonoBehaviour
     Slider _anyUnitHPBar; 
     Unit_Test _anyUnit;
 
-    PlayerShift _playerMovingShift;
+    PlayerShift _playerShift;
     Ray_UI _ray_Test;
     private RaycastHit _hit;
 
@@ -42,7 +42,7 @@ public class UI_Test : MonoBehaviour
     bool _timePause;
     void Start()
     {
-        _playerMovingShift = GetComponent<PlayerShift>();
+        _playerShift = GetComponent<PlayerShift>();
         _ray_Test = GetComponent<Ray_UI>();
 
         if (_playerHPBar == null)
@@ -60,7 +60,7 @@ public class UI_Test : MonoBehaviour
 
         _anyUnitHPBar.gameObject.SetActive(false);
 
-        _currentPlayer = _playerMovingShift.Player;
+        _currentPlayer = _playerShift.Player;
     }
      
     void Update()
@@ -68,7 +68,7 @@ public class UI_Test : MonoBehaviour
 
         //ui 동기화
         //현재 선택된 캐릭터 hp
-        _currentPlayer = _playerMovingShift.Player;
+        _currentPlayer = _playerShift.Player;
         _playerHPBar.value = (float)_currentPlayer.HP / _currentPlayer.MAXHP;
         //_text.text = "HP" + (float)_currentPlayer.HP / _currentPlayer.MAXHP;
         _turnButton.onClick.AddListener(CurrentPlayerTurn);

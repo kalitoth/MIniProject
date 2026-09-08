@@ -11,6 +11,7 @@ using UnityEngine.UIElements;
 
 public class Skill_Manage : MonoBehaviour
 {
+    PlayerShift _playerShift;
     Ray_Skill_SkillButton _ray_Test;
     private RaycastHit _hit;
      
@@ -28,6 +29,7 @@ public class Skill_Manage : MonoBehaviour
 
     private void Awake()
     {
+        _playerShift = GetComponent<PlayerShift>();
         Skill_List = GetComponent<Skill_List>();
         _button = GetComponent<MakeSkillButton_Test>();
         _ray_Test = GetComponent<Ray_Skill_SkillButton>();
@@ -36,9 +38,9 @@ public class Skill_Manage : MonoBehaviour
         {
             Debug.Log("스킬 리스트에 버튼이 없다");
         }
-        if (_ray_Test == null)
+        if (_playerShift == null)
         {
-            Debug.Log("스킬 리스트에 레이가 없다");
+            Debug.Log("스킬 리스트에 플레이어시프트가 없다");
         }
 
         
@@ -79,9 +81,9 @@ public class Skill_Manage : MonoBehaviour
         
         //플레이어 바꾸기
         //플레이어의 스킬을 얻을 때만 사용?
-       if (_ray_Test.Hit.collider != null)
+       if (_playerShift.SkillShiftHit.collider != null)
        {
-           if (_hit.collider == _ray_Test.Hit.collider)
+           if (_hit.collider == _playerShift.SkillShiftHit.collider)
            {
                //Debug.Log("리턴 때문에 못들어감");
                return;
@@ -90,8 +92,8 @@ public class Skill_Manage : MonoBehaviour
            //if (_ray_Test.Hit.collider.gameObject.CompareTag("Player"))
            {
                 //_button.RemoveSkillButton(_player);
-               //_hit = _ray_Test.Hit;
-               _player = _ray_Test.Skll_Player;
+                //_hit = _ray_Test.Hit;
+                _player = _playerShift.Player;
                 //_button.ReviveSkillButton(_player);
                 // Debug.Log("스킬 플레이어 바꾸기");
             }

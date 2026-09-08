@@ -160,10 +160,11 @@ public class Skill_List : MonoBehaviour
                          
                         for(int i = 0;  i < monsterNumber; i++)
                         { 
-                          _colliders[i].gameObject.GetComponent<Unit_Test>().HP -= 2;
+                          _colliders[i].gameObject.GetComponent<Unit_Test>().HP -= 2; 
                         }
 
-                       
+                        
+
                         Initialized(player);
 
                     }
@@ -221,6 +222,7 @@ public class Skill_List : MonoBehaviour
                             for(int i = 0; i < player._skillNum; i++)
                             {
                                 _monster[i].HP -= 1;
+                                _monster[i].Animator.SetTrigger("BGetHit");
                             }
                             Initialized(player);
                             player._skillNum = 0;
