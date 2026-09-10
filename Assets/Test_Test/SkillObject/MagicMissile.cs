@@ -7,7 +7,7 @@ using UnityEngine;
 public class MagicMissile : MonoBehaviour
 {
 
-    int _damage = 1;
+    int _damage = 2;
     float _size = 0.1f;
 
     private void Awake()
@@ -15,9 +15,9 @@ public class MagicMissile : MonoBehaviour
         transform.localScale = Vector3.one * _size;
     }
     public void SkillDamageUnitStat(Unit_Test unitStat)
-  {
-        _damage += Mathf.RoundToInt((unitStat.Intelligence - 10) * 0.5f);
-  }
+    {
+          _damage += Mathf.RoundToInt((unitStat.Intelligence - 10) * 0.5f);
+    }
 
 
     private void OnCollisionEnter(Collision collision)
@@ -25,9 +25,7 @@ public class MagicMissile : MonoBehaviour
         if (collision.collider.CompareTag("Monster"))
         {
             Unit_Test unit = collision.gameObject.GetComponent<Unit_Test>();
-
-            unit.HP -= _damage;
-            unit.Animator.SetTrigger("BGetHit");
+            unit.TakeDamage(unit,_damage); 
             Debug.Log("콜라이더 히트 안들어오나?");
         }
 

@@ -8,6 +8,6 @@ public class Option : MonoBehaviour
 
   public void IntoOption()
   {
-       SceneManager.LoadSceneAsync("Option");
+     
   }
 }

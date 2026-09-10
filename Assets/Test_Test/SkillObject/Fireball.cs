@@ -7,7 +7,7 @@ using UnityEngine;
 public class Fireball : MonoBehaviour
 {
 
-    int _damage = 1;
+    int _damage = 2;
     float _size = 4f;
 
     private void Awake()
@@ -25,9 +25,9 @@ public class Fireball : MonoBehaviour
         if (collision.collider.CompareTag("Monster") || collision.collider.CompareTag("Player"))
         {
             Unit_Test unit = collision.gameObject.GetComponent<Unit_Test>();
-             
-            unit.HP -= _damage;
-            unit.Animator.SetTrigger("BGetHit");
+            unit.TakeDamage(unit, _damage);
+           //unit.HP -= _damage;
+           //unit.Animator.SetTrigger("TGetHit");
             Debug.Log("콜라이더 히트 안들어오나?");
         }
 

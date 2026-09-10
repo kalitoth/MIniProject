@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ShareRepository : MonoBehaviour
@@ -23,13 +24,7 @@ public class ShareRepository : MonoBehaviour
         get { return _item; }
         set { _item = value; }
     }
-    //소지품 들어갈 것 테스트
-   //[SerializeField]
-   //Image _image_test;
-   //
-   //TextMeshProUGUI _itemNum;
 
-   // Image aaa;
 
     [SerializeField]
     protected Button _itembutton;
@@ -49,6 +44,9 @@ public class ShareRepository : MonoBehaviour
 
     bool _active;
 
+    [Header("현재 플레이어")]
+    [SerializeField]
+    PlayerShift _playerShift;
     private void Update()
     {
 
@@ -69,17 +67,47 @@ public class ShareRepository : MonoBehaviour
     
         if (_skeletonGemNum == null && _skeletonGem != 0)
         {
-            _skeletonGemButton = Instantiate(_itembutton, Item.transform); 
+            _skeletonGemButton = Instantiate(_itembutton, Item.transform);
+            _skeletonGemButton.onClick.AddListener(HPRecovery);
             _skeletonGemNum = _skeletonGemButton.GetComponentInChildren<TextMeshProUGUI>();
         }
 
-        if(_skeletonGemNum != null)
+        if(_skeletonGemButton != null)
         {
-            _skeletonGemNum.text = $"{_skeletonGem}";
-        }
+            if (_skeletonGem <= 0)
+            {
+                _skeletonGemButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                _skeletonGemButton.gameObject.SetActive(true);
+            }
 
+            if (_skeletonGemNum != null)
+            {
+                _skeletonGemNum.text = $"{_skeletonGem}";
+            }
+
+        }
+        
+
+        //골드
         _gold.text = $"Gold : {shareGold}";
 
 
     }
+
+    public void HPRecovery()
+    {
+        if (_playerShift.Player != null)
+        {
+            if (_playerShift.Player.HP < _playerShift.Player.MAXHP && _skeletonGem > 0)
+            {
+                _playerShift.Player.HP += 10;
+                _skeletonGem -= 1;
+            }
+        }
+        
+    }
+
 }

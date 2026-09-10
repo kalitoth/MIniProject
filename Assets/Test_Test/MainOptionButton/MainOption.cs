@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainOption : MonoBehaviour
 {
@@ -9,7 +10,8 @@ public class MainOption : MonoBehaviour
     CanvasGroup _canvasGroup;
     AsyncOperation sceneManager;
 
-
+    [SerializeField]
+    Image _soundOption;
     float _time = 0;
     float _duration = 0.5f;
 
@@ -27,7 +29,8 @@ public class MainOption : MonoBehaviour
 
     public void OptionScene()
     {
-        StartCoroutine(IntroFadeout("Option"));
+        transform.parent.gameObject.SetActive(false);
+        _soundOption.gameObject.SetActive(true);
     }
 
     public void GameExit()

@@ -53,6 +53,10 @@ public class UI_Test : MonoBehaviour
     [SerializeField]
     Image _option;
     bool _timePause;
+
+    [Header("사운드옵션")]
+    [SerializeField]
+    Image _soundOption;
     void Start()
     {
         _playerShift = GetComponent<PlayerShift>();
@@ -115,35 +119,48 @@ public class UI_Test : MonoBehaviour
         if (!_currentPlayer.UnitState.HasFlag(Unit_Test.State.Skill))
         {
             
-
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if(!_soundOption.gameObject.activeSelf)
             {
-                //동기화
-                if (_option.gameObject.activeSelf)
+
+                if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    _timePause = true;
-                }
-                else
-                {
-                    _timePause = false;
+                    //동기화
+                    if (_option.gameObject.activeSelf)
+                    {
+                        _timePause = true;
+                    }
+                    else
+                    {
+                        _timePause = false;
+                    }
+
+                    _timePause = !_timePause;
+
+                    if (_timePause)
+                    {
+                        Time.timeScale = 0f;
+                    }
+                    else
+                    {
+                        Time.timeScale = 1f;
+                    }
+
+                    _option.gameObject.SetActive(_timePause);
                 }
 
-                _timePause = !_timePause;
-
-                if(_timePause)
+            }
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    Time.timeScale = 0f;
-                }
-                else
-                {
+                    _soundOption.gameObject.SetActive(false);
                     Time.timeScale = 1f;
                 }
-
-                _option.gameObject.SetActive(_timePause);
             }
         }
+
        
-        
+            
         //유닛 hp
         if (!EventSystem.current.IsPointerOverGameObject())
         {

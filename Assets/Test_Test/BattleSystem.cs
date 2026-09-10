@@ -18,6 +18,11 @@ public class BattleSystem : MonoBehaviour
     [SerializeField]
     ShareRepository _shareRepository;
 
+    [SerializeField]
+    AudioSource _controlTowerAudioSource;
+    [SerializeField]
+    AudioClip _turn;
+
     bool _sortTrigger = true;
     bool _battleTrigger = true;
     bool triggerExit = true; 
@@ -41,6 +46,10 @@ public class BattleSystem : MonoBehaviour
     {
         _battleIndex = 0;
         Debug.Log($"배틀시스템 온");
+        if(_controlTowerAudioSource.isPlaying)
+        {
+            _controlTowerAudioSource.mute = true;
+        }
     }
     
     void Update()
@@ -81,9 +90,9 @@ public class BattleSystem : MonoBehaviour
                     if (_battleList[_battleIndex] == _players[i])
                     {
 
-                            
+                           // _button.RemoveAddSkillButton(_player);
                             //이전 플레이어 버튼 지우기
-                            _button.RemoveSkillButton(_player);
+                            //_button.RemoveSkillButton(_player);
                             //플레이어 변경
                             _player = _players[i];
                         Debug.Log($"배틀시스템에 플레이어가 들어감");
@@ -94,10 +103,11 @@ public class BattleSystem : MonoBehaviour
                         _player._playerMoving.enabled = true;
 
                         //스킬 주체
-                        _button.PlayerButton = _player;
-
-                        //스킬 버튼
-                        _button.ReviveSkillButton(_player);
+                        //_button.PlayerButton = _player;
+                        //
+                        ////스킬 버튼
+                        //_button.ReviveSkillButton(_player);
+                       // _button.ReviveAddSkillButton(_player);
                     }
                     else
                     {
@@ -106,8 +116,10 @@ public class BattleSystem : MonoBehaviour
                         //_players[i]._playerMoving.enabled = false;
                     }
                     }
-                } 
-            
+                }
+                
+                _battleList[_battleIndex].UnitAudioSource.PlayOneShot( _turn );
+
                  Debug.Log($"배틀 인덱스{_battleIndex}");
                  Debug.Log($"배틀리스트 카운트 {_battleList.Count}");
 
@@ -154,11 +166,11 @@ public class BattleSystem : MonoBehaviour
                     {
                         _battleIndex--;
                     }
-
-                   //if(_battleList[i].CompareTag("Monster"))
-                   //{
-                   //    _shareRepository.shareExp += _battleList[i].Exp;
-                   //}
+                    if(_battleList[i].CompareTag("Player"))
+                    {
+                        //적절한 것으로 바꾸기?
+                        _players.Remove(_battleList[i].gameObject.GetComponent<Player_Test>());
+                    }
                     Destroy(_colliderImage[_UnitCollider[_battleList[i]]].gameObject);
                     _colliderImage.Remove(_UnitCollider[_battleList[i]]);
                     _ColliderUnit.Remove(_UnitCollider[_battleList[i]]);
@@ -203,7 +215,7 @@ public class BattleSystem : MonoBehaviour
                     }
                 }
 
-                
+                _controlTowerAudioSource.mute = false;
                 Destroy(this.gameObject);
             }
 
@@ -251,7 +263,10 @@ public class BattleSystem : MonoBehaviour
     {
         Debug.Log("트리거 엑시트 들어오나?");
         //_battleList[_battleList.IndexOf(_ColliderUnit[other])].TurnEnd = true;
+        if(other.CompareTag("Monster") || other.CompareTag("Player"))
+        {
 
+        
         _ColliderUnit[other].BattleStart = false;
         _ColliderUnit[other].TurnEnd = true;
         _ColliderUnit[other].TurnEnable = false;
@@ -307,6 +322,8 @@ public class BattleSystem : MonoBehaviour
         if (_battleIndex >= _battleList.Count)
         {
             _battleIndex = 0;
+        }
+
         }
 
     }
