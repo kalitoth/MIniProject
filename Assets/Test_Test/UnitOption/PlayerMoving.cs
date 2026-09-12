@@ -44,6 +44,7 @@ public class PlayerMoving : MonoBehaviour
         set { _rayHitPoint = value; }
     }
  
+    public NavMeshAgent Agent => _agent;
     public CharacterController CharacterController => _characterController;
    //public Animator Animator => _animator;
     private void Awake()
@@ -113,7 +114,7 @@ public class PlayerMoving : MonoBehaviour
                         
                         Debug.Log($"무빙{_hit.point}");
                         _playertransform.rotation = Quaternion.LookRotation((_rayHitPoint - _playertransform.position).normalized, Vector3.up);
-                               
+                        //_agent.velocity = Vector3.zero;     
                      
                       }
                  }
@@ -122,14 +123,15 @@ public class PlayerMoving : MonoBehaviour
         }
         //실험
         //_agent.SetDestination(_rayHitPoint);
-      _projectionRay = Vector3.ProjectOnPlane(_rayHitPoint, Vector3.up);
-     _projectionPlayer = Vector3.ProjectOnPlane(_playertransform.position, Vector3.up);
-     move = _projectionRay - _projectionPlayer;
-     move.y = gravity;
-       
-     _characterController.Move(move * Time.deltaTime);
-       
-      //y가 다르게 생성되면 뛰면서 생성
+        _projectionRay = Vector3.ProjectOnPlane(_rayHitPoint, Vector3.up);
+        _projectionPlayer = Vector3.ProjectOnPlane(_playertransform.position, Vector3.up);
+        move = _projectionRay - _projectionPlayer;
+        move.y = gravity;
+
+         
+        _characterController.Move(move * Time.deltaTime);
+
+        //y가 다르게 생성되면 뛰면서 생성
         _animator.SetFloat("FMoving", (_rayHitPoint - _playertransform.position).magnitude);
         
     }

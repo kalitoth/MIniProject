@@ -116,7 +116,7 @@ public class Camera_test : MonoBehaviour
        //    }
        //}
            
-
+        
         //자유 이동
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) || Input.GetAxisRaw("Mouse ScrollWheel") != 0)
         {

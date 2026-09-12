@@ -67,7 +67,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e7d29a79bc7fae248887c8a08a160303, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e52ea25af699fd445b7046374f81a5b9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -159,11 +159,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3916987599297580629, guid: 33e8edbfe151dc1499aeaae7b253cb3a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 160
+      value: 23.7461
       objectReference: {fileID: 0}
     - target: {fileID: 3916987599297580629, guid: 33e8edbfe151dc1499aeaae7b253cb3a, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 30
+      value: 8.3745
       objectReference: {fileID: 0}
     - target: {fileID: 3916987599297580629, guid: 33e8edbfe151dc1499aeaae7b253cb3a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -195,11 +195,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3916987599297580629, guid: 33e8edbfe151dc1499aeaae7b253cb3a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -80
+      value: -11.8732
       objectReference: {fileID: 0}
     - target: {fileID: 3916987599297580629, guid: 33e8edbfe151dc1499aeaae7b253cb3a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 15
+      value: 4.1872
       objectReference: {fileID: 0}
     - target: {fileID: 3916987599297580629, guid: 33e8edbfe151dc1499aeaae7b253cb3a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -223,11 +223,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6780838079050224302, guid: 33e8edbfe151dc1499aeaae7b253cb3a, type: 3}
       propertyPath: m_margin.x
-      value: 129.11923
+      value: 0.029663086
       objectReference: {fileID: 0}
     - target: {fileID: 6780838079050224302, guid: 33e8edbfe151dc1499aeaae7b253cb3a, type: 3}
       propertyPath: m_margin.y
-      value: 21.423859
+      value: 0.0637207
       objectReference: {fileID: 0}
     - target: {fileID: 6780838079050224302, guid: 33e8edbfe151dc1499aeaae7b253cb3a, type: 3}
       propertyPath: m_fontSizeBase

@@ -13,9 +13,9 @@ public class UI_Test : MonoBehaviour
     [Header("플레이어 체력바")]
     [SerializeField]
     Slider _playerHPBar;
-    //[SerializeField]
-    //Text _text;
-    
+    [SerializeField]
+    TextMeshProUGUI _playerHPText;
+
     [Header("턴 버튼")]
     [SerializeField]
     Button _turnButton;
@@ -23,6 +23,9 @@ public class UI_Test : MonoBehaviour
     [Header("플레이어 이미지")]
     [SerializeField]
     Image _playerImage;
+
+    
+    
 
     Player_Test _currentPlayer;
 
@@ -57,6 +60,10 @@ public class UI_Test : MonoBehaviour
     [Header("사운드옵션")]
     [SerializeField]
     Image _soundOption;
+
+    [Header("컨트롤키옵션")]
+    [SerializeField]
+    Image _controlKey;
     void Start()
     {
         _playerShift = GetComponent<PlayerShift>();
@@ -70,48 +77,44 @@ public class UI_Test : MonoBehaviour
         {
             Debug.Log("ray_Test 인스펙터 비어있다");
         }
+        
+
+        _anyUnitHPBar.gameObject.SetActive(false);
+
+        _currentPlayer = _playerShift.Player;
+
         if (_currentPlayer == null)
         {
             Debug.Log("현재 플레이어 비어있다");
         }
 
-        _anyUnitHPBar.gameObject.SetActive(false);
+        _playerImage.sprite = _currentPlayer._image;
 
-        _currentPlayer = _playerShift.Player;
+        _turnButton.onClick.AddListener(CurrentPlayerTurn);
     }
      
     void Update()
     {
 
         //ui 동기화
-        //현재 선택된 캐릭터 hp
-        _currentPlayer = _playerShift.Player;
-        _playerHPBar.value = (float)_currentPlayer.HP / _currentPlayer.MAXHP;
-        //_text.text = "HP" + (float)_currentPlayer.HP / _currentPlayer.MAXHP;
-        _turnButton.onClick.AddListener(CurrentPlayerTurn);
-       
-        //현재 플레이어 turn 넘김 버튼
-        void CurrentPlayerTurn()
-        {
-            if(_currentPlayer.UnitState.HasFlag(Unit_Test.State.Battle))
-            {
-                if (_currentPlayer.TurnEnable)
-                {
-                    _currentPlayer.TurnEnd = true;
-                }
-            }
-            
+        if (_currentPlayer != _playerShift.Player)
+        {   
+            _currentPlayer = _playerShift.Player;
+            //현재 유닛 이미지
+            _playerImage.sprite = _currentPlayer._image;
         }
-        //현재 유닛 이미지
-        _playerImage.sprite = _currentPlayer._image;
+             //현재 선택된 캐릭터 hp
+       _playerHPBar.value = (float)_currentPlayer.HP / _currentPlayer.MAXHP;
+        _playerHPText.text = $"{_currentPlayer.HP} / {_currentPlayer.MAXHP}";
 
         //add스킬
-        if(Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.K))
         {
             _addSkill = !_addSkill;
 
             _addSkillList.gameObject.SetActive(_addSkill);
         }
+
         //스킬 포인트
         _skillPoint.text = $"{_currentPlayer.skillPoint}";
 
@@ -119,7 +122,7 @@ public class UI_Test : MonoBehaviour
         if (!_currentPlayer.UnitState.HasFlag(Unit_Test.State.Skill))
         {
             
-            if(!_soundOption.gameObject.activeSelf)
+            if(!_soundOption.gameObject.activeSelf && !_controlKey.gameObject.activeSelf)
             {
 
                 if (Input.GetKeyDown(KeyCode.Escape))
@@ -149,7 +152,7 @@ public class UI_Test : MonoBehaviour
                 }
 
             }
-            else
+            else if(_soundOption.gameObject.activeSelf)
             {
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
@@ -157,12 +160,32 @@ public class UI_Test : MonoBehaviour
                     Time.timeScale = 1f;
                 }
             }
+            else if(_controlKey.gameObject.activeSelf)
+            {
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    _controlKey.gameObject.SetActive(false);
+                    Time.timeScale = 1f;
+                }
+            }
+
         }
 
-       
-            
-        //유닛 hp
+        //아이템이면 파괴
         if (!EventSystem.current.IsPointerOverGameObject())
+        {
+            if (_ray_Test.Hit.collider != null)
+            {
+                if(_ray_Test.Hit.collider.CompareTag("Item"))
+                {
+                    Destroy(_ray_Test.Hit.collider.gameObject);
+                }
+            }
+        }
+           
+
+            //유닛 hp
+            if (!EventSystem.current.IsPointerOverGameObject())
         {
            if (_ray_Test.Hit.collider == null)
            {
@@ -189,5 +212,17 @@ public class UI_Test : MonoBehaviour
 
         _anyUnitHPBar.value = (float)_anyUnit.HP / _anyUnit.MAXHP;
         _textMeshPro.text = $"{(float)_anyUnit.HP} / {_anyUnit.MAXHP}";
+    }
+    //현재 플레이어 turn 넘김 버튼
+    void CurrentPlayerTurn()
+    {
+        if (_currentPlayer.UnitState.HasFlag(Unit_Test.State.Battle))
+        {
+            if (_currentPlayer.TurnEnable)
+            {
+                _currentPlayer.TurnEnd = true;
+            }
+        }
+
     }
 }

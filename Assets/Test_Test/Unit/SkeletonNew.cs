@@ -24,9 +24,9 @@ public class SkeletonNew : Monster_Test
     float _monsterRange = 3f;
 
     int _damage = 1;
-    //float _movingSpeed = 0.5f;
-    //추적 시간
-    //float _time;
+
+    bool _dieOneShot = true;
+    
     override protected void Awake()
     {  
         base.Awake();
@@ -44,27 +44,34 @@ public class SkeletonNew : Monster_Test
 
         if (!Alive)
         {
-            if (!UnitAudioSource.isPlaying)
+            if(_dieOneShot)
             {
                 UnitAudioSource.PlayOneShot(DieAudio());
+                
+                _dieOneShot = false;
             }
-               
+            
         }
 
         if (UnitState.HasFlag(State.Battle))
         {
+            if (BattleReady)
+            {
+                oneDestination = true;
+                BattleReady = false;
+            }
+
             if (TurnEnable)
             {
-                if (BattleReady)
+                //방향
+                if (BattleStart)
                 {
-                    //_tracingIndex = _initialTraceIndex;
-                    BattleReady = false;
+                    _agent.isStopped = false;
+                    //TurnEnd = false;
+
+                    BattleStart = false;
                 }
 
-                if(_battleSystem == null)
-                {
-                    Debug.Log("_battleSystem이 null");
-                }
                 //가장 거리가 짧은 플레이어 찾기
                 for (int i = 0; i < _battleSystem.Players.Count; i++)
                 {
@@ -73,7 +80,7 @@ public class SkeletonNew : Monster_Test
                         _distanceMin = (_battleSystem.Players[i].transform.position - transform.position).sqrMagnitude;
                         _playerIndex = i;
                         _playerPosition = _battleSystem.Players[i].transform.position;
-                       // _firstPlayer = _battleSystem.Players[i].transform.position;
+                        
                         _distanceFirst = false;
                         continue;
                     }
@@ -85,12 +92,12 @@ public class SkeletonNew : Monster_Test
                         _distanceMin = distance;
                         _playerIndex = i;
                         _playerPosition = _battleSystem.Players[i].transform.position;
-                       // _firstPlayer = _battleSystem.Players[i].transform.position;
+                        
                     }
                 }
                 _distanceFirst = true;
                  
-                //전투를 공유하는데 처음 포지션이 없으면?
+                 
 
                 //처음 감지된 것에서 
                 if (_playerPosition == null)
@@ -99,13 +106,7 @@ public class SkeletonNew : Monster_Test
                     return;
                 }
                  
-                //방향
-                if (BattleStart)
-                {
-                   // _time = 0;
-                    BattleStart = false;
-                    _agent.isStopped = false;
-                }
+                
                 
                 _agent.SetDestination(_playerPosition);
 
@@ -126,12 +127,7 @@ public class SkeletonNew : Monster_Test
                     }
                    
                 }
-
-               //Debug.Log(_agent.updatePosition);
-               //Debug.Log($"agent: {_agent.nextPosition}");
-               //Debug.Log($"transform: {transform.position}");
-
-  
+ 
 
                 if (Movement <= 0 || UsingSkillNum == 0)
                 {
@@ -141,15 +137,16 @@ public class SkeletonNew : Monster_Test
                     Animator.SetFloat("FMoving", 0);
                    
                     _agent.isStopped = true;
-                    TurnEnable = false;
                     TurnEnd = true;
+
+                    TurnEnable = false;
                 }
 
                
  
 
                 Debug.Log($"목표물 좌표 {_playerPosition}");
-                Debug.Log($"몬스터 좌표 {transform.position}");
+                //Debug.Log($"몬스터 좌표 {transform.position}");
 
                 Debug.Log($"몬스터 이동력 {Movement}");
 
@@ -162,33 +159,7 @@ public class SkeletonNew : Monster_Test
 
         }
     }
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        //Debug.Log("몬스터에 히트가 들어온다");
-//
-// if (hit.gameObject.CompareTag("Monster"))
-// {
-//     _time += Time.deltaTime;
-//
-//     if ((_projectionPlayer - transform.position).magnitude < 2.2f || _time > 3)
-//     {
-//
-//         if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-//         {
-//             _projectionPlayer = transform.position;
-//             _animator.SetFloat("FMoving", 0);
-//         }
-//
-//         _tracingIndex--;
-//         TurnEnable = false;
-//         TurnEnd = true;
-//
-//         _time = 0;
-//         Debug.Log("몬스터가 멈춘다");
-//     }
-// }
 
-    }
  
 
     private void OnTriggerEnter(Collider other)
@@ -215,7 +186,8 @@ public class SkeletonNew : Monster_Test
         _BattleColloseum = BattleColloseum; 
         _battleSystem = battleSystem;
         _playerInventory = playerInventory;
-
+       // _initialPosition = position;
+       // Animator.SetFloat("FMoving", 0);
     }
 
     AudioClip AttackAudio()

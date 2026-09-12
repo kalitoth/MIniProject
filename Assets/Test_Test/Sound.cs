@@ -31,6 +31,7 @@ public class Sound : MonoBehaviour
         audioMixer.SetFloat(_master, Mathf.Log10(_masterVolume) * 20);
         audioMixer.SetFloat(_BGM, Mathf.Log10(_BGMVolume) * 20);
         audioMixer.SetFloat(_effect, Mathf.Log10(_effectVolume) * 20);
-        
+
+         
     }
 }

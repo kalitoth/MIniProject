@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI; 
@@ -135,36 +136,16 @@ public class Player_Test : Unit_Test
          
         Die();
          
-        if(Input.GetKeyDown(KeyCode.O))
-        {
-            _share.shareExp += 100;
-            Debug.Log("경험치 + 100");
-        }
-        if(_share.shareExp >= MaxExp)
-        {
-            if(Input.GetKeyDown(KeyCode.P))
-            {
-                Level++;
-                MaxExp += MaxExp * Level;
-                //스텟 선택
-                //스킬 선택
-                //스킬 포인트
-                skillPoint++;
-                Debug.Log("레벨업");
-            }
-        }
-
     }
     void InBattle()
     {
         if (BattleReady)
         {
             // 이건 배틀 상태가 될 때 한번
-            if (!Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-            {
-                _playerMoving.RayHitPoint = transform.position;
-                Animator.SetFloat("FMoving", 0);
-            }
+             
+            _playerMoving.RayHitPoint = transform.position;
+            Animator.SetFloat("FMoving", 0);
+             
             //배틀이 끝나면 다시 켜기
             _makeSkillButton.SkillButtonInteractF(this);
             _playerMoving.enabled = false;
@@ -189,6 +170,7 @@ public class Player_Test : Unit_Test
 
             if (UnitState.HasFlag(State.None))
             {
+                //Movement -= _playerMoving.Agent.velocity.magnitude * Time.deltaTime;
                 Movement -= _playerMoving.CharacterController.velocity.magnitude * Time.deltaTime;
                 //Debug.Log($"플레이어 이동력  : {Movement}");
 
@@ -241,19 +223,15 @@ public class Player_Test : Unit_Test
     void PlayerUseSkill()
     {
 
-        if (!Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-        {
-            //스킬 쓰면 스킬 취소
-            //_playerMoving.enabled = true;
-            //_lineRenderer.enabled = false;
-            //_state = State.None;
-
+       // if (!Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+        {  
             //스킬 쓰면 이동 취소 
             _playerMoving.RayHitPoint = transform.position;
             Animator.SetFloat("FMoving", 0);
         }
         
         Animator.SetBool("BSkillReady", true);
+
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
         {
             Animator.SetBool("BSkillReady", false);
@@ -265,8 +243,9 @@ public class Player_Test : Unit_Test
         //스킬 사용
         
         PlayerTarget();
+
         if(!UnitAudioSource.isPlaying)
-        {
+        { 
             UnitAudioSource.PlayOneShot(SkillReadyAudio());
         }
         
@@ -281,10 +260,10 @@ public class Player_Test : Unit_Test
             Ray target = _camera.ScreenPointToRay(Input.mousePosition);
 
             Physics.Raycast(target, out _hit, _distance, _layerMask);
-            
-            Debug.DrawLine(transform.position, _hit.point, Color.blue, 0.000001f);
+            //
+            Debug.DrawLine(transform.position + Vector3.up, _hit.point, Color.blue, 0.000001f);
              
-           _lineRenderer.SetPosition(0, transform.position);
+           _lineRenderer.SetPosition(0, transform.position + Vector3.up);
             
             if(_hit.collider == null)
             {
@@ -295,6 +274,11 @@ public class Player_Test : Unit_Test
 
         }
       
+    }
+
+    void OnDisable()
+    {
+        _share._playerLife--;
     }
 
     AudioClip SkillReadyAudio()

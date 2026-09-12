@@ -9,7 +9,9 @@ public class MiddleBoss : Monster_Test
     [SerializeField]
     SkeletonNew _skeleton;
 
- 
+    [SerializeField]
+    GameEndObject _gameEndObject;
+
     //배틀 시스템 플레이어 받아오기
     BattleSystem _battleSystem;
 
@@ -22,22 +24,18 @@ public class MiddleBoss : Monster_Test
 
     float _monsterRange = 12f;
 
+    bool _dieOneShot = true;
 
+    int _damage = 2;
     override protected void Awake()
     {
 
         base.Awake();
 
-        // 여기에 몬스터 스텟 넣기
-        //MAXHP = BasicHp + Mathf.FloorToInt((Constitution - 10) * 0.5f) * Level;
-        //HP = MAXHP;
-
-        MAXHP = 100;
+        MAXHP = 50;
         HP = MAXHP;
         _monsterExp = 1000;
         _monsterGold = 1000;
-        _monsterExp = 10;
-        _monsterGold = 10;
     }
 
     protected override void Update()
@@ -46,12 +44,18 @@ public class MiddleBoss : Monster_Test
 
         if (!Alive)
         {
-            if (!UnitAudioSource.isPlaying)
+            if (_dieOneShot)
             {
-                UnitAudioSource.PlayOneShot(DieAudio());
-            }
+                if (UnitAudioSource.isPlaying)
+                { 
+                    UnitAudioSource.PlayOneShot(DieAudio());
+                }
+                 
+                GameEndObject gameobject = Instantiate(_gameEndObject, transform.position, transform.rotation);
+                gameobject.Reference(_playerInventory);
+                _dieOneShot = false;
 
-               
+            }
         }
 
         if (UnitState.HasFlag(State.Battle))
@@ -60,7 +64,7 @@ public class MiddleBoss : Monster_Test
             {
                 if (BattleReady)
                 {
-                    //_tracingIndex = _initialTraceIndex;
+                    oneDestination = true; 
                     BattleReady = false;
                 }
 
@@ -114,25 +118,45 @@ public class MiddleBoss : Monster_Test
 
                 Movement -= _agent.velocity.magnitude * Time.deltaTime;
 
+                
+                 
+
                 if (UsingSkillNum > 0)
                 {
                     float sqrRange = _monsterRange * _monsterRange;
-
+                    float bossPhase = HP / (float)MAXHP;
                     if ((_playerPosition - transform.position).sqrMagnitude < sqrRange)
                     {
-                        UnitAudioSource.PlayOneShot(AttackAudio());
-                        SkeletonNew skeleton = Instantiate(_skeleton, transform.position, transform.rotation);
-                        //일단 쓰자 
-                        skeleton.Reference(_BattleColloseum, _battleSystem, _playerInventory);
+                        if (bossPhase < 0.3f)
+                        {
+                            UnitAudioSource.PlayOneShot(CurseAudio());
+                            _battleSystem.Players[_playerIndex].MAXHP -= 1;
+                            
+                        }
+                        
+                        if(bossPhase < 0.8f)
+                        {
+                            UnitAudioSource.PlayOneShot(SqawnAudio());
+                            SkeletonNew skeleton = Instantiate(_skeleton, transform.position+ transform.forward, transform.rotation);
+                            skeleton.Reference(_BattleColloseum, _battleSystem, _playerInventory);
+
+                            Debug.Log($"스켈레톤 소환함 : {transform.position + transform.forward}");
+                        }
+                        else
+                        {
+                            TakeDamage(_battleSystem.Players[_playerIndex], _damage);
+                        }
+
+                        
                         Animator.SetTrigger("TSkillActivate");
-                        //_battleSystem.Players[_playerIndex].HP -= 1;
                         UsingSkillNum--;
-                        Debug.Log($"스킬넘버에 들어오니? {UsingSkillNum}");
                     }
 
+                    
                 }
                 
-             
+
+               
 
                 //턴 끝
                 if (Movement <= 0 || UsingSkillNum == 0)
@@ -154,9 +178,9 @@ public class MiddleBoss : Monster_Test
 
 
                 Debug.Log($"목표물 좌표 {_playerPosition}");
-                Debug.Log($"몬스터 좌표 {transform.position}");
+                //Debug.Log($"몬스터 좌표 {transform.position}");
 
-                Debug.Log($"몬스터 이동력 {Movement}");
+                //Debug.Log($"몬스터 이동력 {Movement}");
 
                 Debug.Log("몬스터 턴 끝");
 
@@ -183,11 +207,12 @@ public class MiddleBoss : Monster_Test
         _playerInventory.shareExp += _monsterExp;
         _playerInventory.shareGold += _monsterGold;
 
-        _playerInventory._skeletonGem += 1;
-
     }
 
-    AudioClip AttackAudio()
+ 
+
+
+    AudioClip SqawnAudio()
     {
         return UnitAudioClip[0];
     }
@@ -195,6 +220,10 @@ public class MiddleBoss : Monster_Test
     AudioClip DieAudio()
     {
         return UnitAudioClip[1];
+    }
+    AudioClip CurseAudio()
+    {
+        return UnitAudioClip[3];
     }
 }
 

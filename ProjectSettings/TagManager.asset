@@ -9,6 +9,7 @@ TagManager:
   - Unit
   - Battle
   - Skill
+  - Item
   layers:
   - Default
   - TransparentFX

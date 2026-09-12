@@ -17,6 +17,8 @@ public class MainOption : MonoBehaviour
 
     float _interpolate;
 
+    [SerializeField]
+    Image _controlKey;
 
  public void Resume()
  {
@@ -26,6 +28,12 @@ public class MainOption : MonoBehaviour
 
  }
 
+
+    public void ControlKey()
+    {
+        _controlKey.gameObject.SetActive(true);
+        transform.parent.gameObject.SetActive(false);
+    }
 
     public void OptionScene()
     {

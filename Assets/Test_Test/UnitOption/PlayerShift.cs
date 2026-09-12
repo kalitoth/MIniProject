@@ -11,7 +11,9 @@ public class PlayerShift : MonoBehaviour
     //플레이어 4명일때 
     [SerializeField]
     Player_Test[] _playerParty = new Player_Test[4];
-     
+
+    public Player_Test[] PlayerParty => _playerParty;
+    
     //레이
     [SerializeField]
     private Camera _camera;
@@ -39,23 +41,25 @@ public class PlayerShift : MonoBehaviour
     private void Awake()
     {
         _layerMask = 1 << LayerMask.NameToLayer("Player") ;
-         
+
+        if (_player == null)
+        {
+            Debug.Log("무빙 시프트에 플레이어가 없다");
+        }
+        _player = _playerParty[0];
+        
+
     }
     void Start()
     {
-       
-       if(_player == null)
-       {
-           Debug.Log("무빙 시프트에 플레이어가 없다");
-       }
-        _player = _playerParty[0];
-        _player._playerMoving.enabled = true; 
+        _player._playerMoving.enabled = true;
+
     }
     public void Update()
     {
         MovingShift();
         ChangePlayer();
-
+         
     }
     public void MovingShift()
     {

@@ -38,6 +38,8 @@ public class Ray_UI : MonoBehaviour
             {
                 RayCamTo(out _hit);
                 RayVisual();
+
+                
             }
         }
     }

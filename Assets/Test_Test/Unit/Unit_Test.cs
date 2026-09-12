@@ -160,6 +160,7 @@ public class Unit_Test : MonoBehaviour
 
             _animator.SetTrigger("TDie");
 
+            
         }
          
     }

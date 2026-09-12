@@ -27,7 +27,7 @@ public class BattleSystem : MonoBehaviour
     bool _battleTrigger = true;
     bool triggerExit = true; 
 
-    bool _firstPlayer = true;
+    //bool _firstPlayer = true;
 
     Player_Test _player;
  
@@ -81,16 +81,16 @@ public class BattleSystem : MonoBehaviour
                     if(_battleList[_battleIndex].CompareTag("Player"))
                     {
                         //현재 클릭된 플레이어를 지워야 한다
-                        if(_firstPlayer)
-                        {
-                            _player = _playerShift.Player;
-                            _firstPlayer = false;
-                        }
+                      //if(_firstPlayer)
+                      //{
+                      //    _player = _playerShift.Player; 
+                      //    _firstPlayer = false;
+                      //}
 
                     if (_battleList[_battleIndex] == _players[i])
                     {
-
-                           // _button.RemoveAddSkillButton(_player);
+                            
+                            // _button.RemoveAddSkillButton(_player);
                             //이전 플레이어 버튼 지우기
                             //_button.RemoveSkillButton(_player);
                             //플레이어 변경
@@ -122,6 +122,7 @@ public class BattleSystem : MonoBehaviour
 
                  Debug.Log($"배틀 인덱스{_battleIndex}");
                  Debug.Log($"배틀리스트 카운트 {_battleList.Count}");
+                 Debug.Log($"배틀리스트 카운트 TurnEnd {_battleList[_battleIndex].TurnEnd}");
 
                 _colliderImage[_UnitCollider[_battleList[_battleIndex]]].interactable = true;
                 //턴 주기
@@ -137,7 +138,7 @@ public class BattleSystem : MonoBehaviour
             //BattleEnd가 true면 턴 넘어간다
             if (_battleList[_battleIndex].TurnEnd)
             {
-                Debug.Log($"어디서 멈추나");
+                Debug.Log($"TurnEnd 눌러진 후");
                 _battleList[_battleIndex].TurnEnd = false;
                 _battleTrigger = true;
 
@@ -198,7 +199,7 @@ public class BattleSystem : MonoBehaviour
                     _battleList[i].UnitState = Unit_Test.State.None;
                     _battleList[i].BattleReady = true;
                     _battleList[i].BattleStart = false;
-                    _battleList[i].TurnEnd = true;
+                    _battleList[i].TurnEnd = false;
                     _battleList[i].TurnEnable = false;
                 }
 
@@ -214,7 +215,7 @@ public class BattleSystem : MonoBehaviour
                         _battleList.RemoveAt(i);
                     }
                 }
-
+                 
                 _controlTowerAudioSource.mute = false;
                 Destroy(this.gameObject);
             }
@@ -232,14 +233,20 @@ public class BattleSystem : MonoBehaviour
        if (other.gameObject.CompareTag("Monster") || other.gameObject.CompareTag("Player"))
        {
            Unit_Test addUnit = other.GetComponent<Unit_Test>();
+
+            if(!addUnit.Alive)
+            {
+                Debug.Log("죽었을 때 들어오나?");
+                return;
+            }
             _UnitCollider.Add(addUnit, other);
            _ColliderUnit.Add(other, addUnit);
            _battleList.Add(addUnit);
             Debug.Log($"온트리거 발동");
             addUnit.UnitState = Unit_Test.State.Battle;
+            addUnit.Animator.SetFloat("FMoving", 0);
 
-
-            if(other.gameObject.CompareTag("Player"))
+            if (other.gameObject.CompareTag("Player"))
             {
                 Player_Test addPlayer = addUnit.GetComponent<Player_Test>();
 
@@ -247,6 +254,7 @@ public class BattleSystem : MonoBehaviour
                 {
                     _players.Add(addPlayer);
                 }
+                //addPlayer._playerMoving.enabled = false;
             }
 
             //여기서 addUnit의 초상화 가져와서 ui만들기

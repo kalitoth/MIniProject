@@ -362,17 +362,16 @@ public class Skill_List : MonoBehaviour
                             Debug.Log($"{player._skillNum}");
                         if(player._skillNum == 3)
                         {
-                            for(int i = 0; i < player._skillNum; i++)
-                            {
-                                
-                                MagicMissile _skillObject = _magicMissileQueue.Dequeue();
-                                _skillObject.gameObject.SetActive(true);
-                                _skillObject.gameObject.transform.position = _hitsArray[i].point;
-                                _skillObject.SkillDamageUnitStat(player);
-                                _magicMissileList.Add(_skillObject);
-                            }
+                           //for(int i = 0; i < player._skillNum; i++)
+                           //{
+                           //    
+                           //    MagicMissile _skillObject = _magicMissileQueue.Dequeue();
+                           //    _skillObject.gameObject.SetActive(true);
+                           //    _skillObject.gameObject.transform.position = _hitsArray[i].point;
+                           //    _skillObject.SkillDamageUnitStat(player);
+                           //    _magicMissileList.Add(_skillObject);
+                           //} 
                             StartCoroutine(MagicMissaileSound(player));
-                            //player.UnitAudioSource.PlayOneShot(clip[3]);
 
                             Initialized(player);
                             player._skillNum = 0;
@@ -428,11 +427,17 @@ public class Skill_List : MonoBehaviour
     IEnumerator MagicMissaileSound(Player_Test player)
     {
         
-        for (int i = 0; i < player._skillNum; i++)
+        for (int i = 0; i < 3; i++)
         {
+            MagicMissile _skillObject = _magicMissileQueue.Dequeue();
+            _skillObject.gameObject.SetActive(true);
+            _skillObject.gameObject.transform.position = _hitsArray[i].point;
+            _skillObject.SkillDamageUnitStat(player);
+            _magicMissileList.Add(_skillObject);
+
             player.UnitAudioSource.PlayOneShot(clip[3]);
             //yield return null;
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.1f);
         }
        
 
